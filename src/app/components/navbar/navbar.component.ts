@@ -1,6 +1,15 @@
 import { Component, OnInit, ElementRef } from "@angular/core";
 import { ROUTES } from "../sidebar/sidebar.component";
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
+import {AuthenticationService} from '../../Services/authentication.service';
+ 
+import { Globalconstants } from "../../Helper/globalconstants";
+import { OnlineExamServiceService } from "../../Services/online-exam-service.service";
+import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators, FormArray } from '@angular/forms';
+ 
+import { HttpEventType, HttpClient } from '@angular/common/http';
+import swal from "sweetalert2";
+import { DxiConstantLineModule } from "devextreme-angular/ui/nested";
 
 import {
   Location,
@@ -17,22 +26,28 @@ export class NavbarComponent implements OnInit {
   public focus;
   public listTitles: any[];
   public location: Location;
-  sidenavOpen: boolean = true;
+  UserName: any;
+  sidenavOpen: boolean = false;
+
   constructor(
     location: Location,
     private element: ElementRef,
+    private _onlineExamService: OnlineExamServiceService,
+    private _global: Globalconstants, 
+    private authService: AuthenticationService,
     private router: Router
   ) {
     this.location = location;
     this.router.events.subscribe((event: Event) => {
        if (event instanceof NavigationStart) {
            // Show loading indicator
-
+   
        }
        if (event instanceof NavigationEnd) {
            // Hide loading indicator
 
            if (window.innerWidth < 1200) {
+        
              document.body.classList.remove("g-sidenav-pinned");
              document.body.classList.add("g-sidenav-hidden");
              this.sidenavOpen = false;
@@ -48,10 +63,16 @@ export class NavbarComponent implements OnInit {
    });
 
   }
+ 
 
   ngOnInit() {
     this.listTitles = ROUTES.filter(listTitle => listTitle);
+    this.UserName= localStorage.getItem('UserName') ;
   }
+
+
+  
+
   getTitle() {
     var titlee = this.location.prepareExternalUrl(this.location.path());
     if (titlee.charAt(0) === "#") {
@@ -112,4 +133,32 @@ export class NavbarComponent implements OnInit {
       this.sidenavOpen = true;
     }
   }
+
+  Logout()
+  { 
+
+    if (localStorage.getItem('UserID') === null || typeof localStorage.getItem('UserID') === 'undefined') {
+      localStorage.clear();     
+      this.router.navigate(['/Login']);
+    }
+    if (localStorage.getItem('User_Token') === null || typeof localStorage.getItem('User_Token') === 'undefined') {
+      localStorage.clear();     
+      this.router.navigate(['/Login']);
+    }
+
+    const apiUrl = this._global.baseAPIUrl + 'UserLogin/Logout?UserID=' + localStorage.getItem('UserID') + '&user_Token=' + localStorage.getItem('User_Token');
+
+    // const apiUrl = this._global.baseAPIUrl + 'Template/GetTemplate?user_Token=' + this.FileStorageForm.get('User_Token').value
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
+       
+      localStorage.clear();     
+      this.router.navigate(['/Login']);
+    });
+
+  
+    //this.router.navigateByUrl('/dashboards/dashboard'); 
+ 
+  }
+  
+
 }

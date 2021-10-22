@@ -113,14 +113,14 @@
       font-weight: 700;
       content: "\f105";
       margin-left: auto;
-      color: $gray-400;
+      color: $gray-800;
       @include transition($transition-base);
     }
 
     // Expanded
     &[aria-expanded="true"] {
       &:after {
-        color: theme-color("primary");
+        color: $gray-800;
         transform: rotate(90deg);
       }
     }
@@ -153,13 +153,13 @@
         @include media-breakpoint-up(#{$breakpoint}) {
           display: block;
           position: fixed;
-          top: 0;
           bottom: 0;
           width: 100%;
           max-width: $navbar-vertical-width;
           overflow-y: auto;
           padding-left: 0;
           padding-right: 0;
+          top: 97px;
 
           .navbar-inner {
             padding-left: $navbar-vertical-padding-x;
@@ -486,4 +486,11 @@
       }
     }
   }
+}
+
+.navbar-vertical .navbar-nav .nav-link {
+  font-size: 1rem;
+  // font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: din-2014,Arial,sans-serif;
+  color: #212121;
 }

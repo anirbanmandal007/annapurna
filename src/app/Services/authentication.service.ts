@@ -17,9 +17,17 @@ const httpOptions = {
 export class AuthenticationService {
   authenticationState = new BehaviorSubject(false);
   currentUser: User;
+  loggedInUser = {
+    token : localStorage.getItem('User_Token'),
+    tid:  Number(localStorage.getItem('sysRoleID')),
+
+    // localStorage.setItem('UserID',that._LogData.id) ;
+    // localStorage.setItem('sysRoleID',that._LogData.sysRoleID) ;
+    // localStorage.setItem('User_Token',that._LogData.User_Token) ;
+  }
   constructor(private http: HttpClient) { 
    // this.plt.ready().then(() => {
-      this.checkToken();
+     // this.checkToken();
    // });
   }
   checkToken() {
@@ -50,12 +58,15 @@ export class AuthenticationService {
     if (user!=null) {       
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.authenticationState.next(true);
+        
     }
     return user;
 }));
  }
 
-
+ get getUserInfo() {
+  return this.loggedInUser
+}
 
  logout() {
   // remove user from local storage to log user out

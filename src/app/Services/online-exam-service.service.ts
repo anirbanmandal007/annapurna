@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Listboxclass } from '../Helper/listboxclass'; 
 
 
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse,HttpParams,HttpResponse } from '@angular/common/http';
 import { catchError, tap, map,filter } from 'rxjs/operators';
 const httpOptions = {
@@ -16,7 +16,10 @@ const httpOptions = {
 })
 export class OnlineExamServiceService {
 
-  allNotifications: Notification[]; 
+  allNotifications: Notification[];
+  private rolesChanged = new BehaviorSubject(new Date().getTime());
+  isRoleChanged = this.rolesChanged.asObservable();
+
 
   constructor(private http: HttpClient,
     private _global: Listboxclass
@@ -41,6 +44,12 @@ export class OnlineExamServiceService {
     return this.http.get(apiUrl,httpOptions).pipe(
       map(this.extractData));
   }
+
+  public DownloadFile(): string {
+    let ObjectRef: Object = {};
+    return 'http://localhost:50819/Temp/';
+  }
+
   getAllDataWithFormValue(data,apiUrl): Observable<any> {
     return this.http.post(apiUrl, data, httpOptions).pipe(
       map(this.extractData));
@@ -60,18 +69,24 @@ export class OnlineExamServiceService {
     let body = res;
     return body || { };
   }
+  
   getDataById(apiUrl: string): Observable<any> {
     return this.http.get(apiUrl).pipe(
       map(this.extractData));
   }
  
-  postData(data,apiUrl): Observable<any> {  
-   return this.http.post(apiUrl, data, httpOptions)
+  postData(data,apiUrl): Observable<any> {
+    return this.http.post(apiUrl, data, httpOptions)
      .pipe(  
        catchError(this.handleError),
        map(this.extractData)
      );
- } 
+  }
+
+  roleChanged() {
+    this.rolesChanged.next(new Date().getTime());
+  }
+
  updateData(data,apiUrl): Observable<any> {  
   return this.http.post(apiUrl, data, httpOptions)
     .pipe(      
@@ -85,9 +100,24 @@ deleteData(apiUrl: string): Observable<any> {
 }
 
 public download_test(data,apiUrl: string): Observable<Blob> {
+ 
   const headers = new HttpHeaders().set('content-type', 'multipart/form-data');
 
    return this.http.post(apiUrl,data,{ headers, responseType: 'blob' });
+}
+
+public downloadDoc(apiUrl: string): Observable<any> {
+ // let url = this.apiUrl + "api/myApi/download/" + Id;
+  return this.http.get(apiUrl, { responseType: "blob" });
+}
+
+DownloadpostData(data,apiUrl): Observable<any> {
+  return this.http.get(apiUrl, { responseType: "blob" });
+}
+
+public BulkDownload(data,apiUrl): Observable<any> {
+  return this.http.post(apiUrl, data, { responseType: "blob" })
+    
 }
 
 }

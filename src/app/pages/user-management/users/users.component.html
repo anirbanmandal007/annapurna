@@ -11,7 +11,7 @@
           >
             <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
               <li class=" breadcrumb-item">
-                <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+                <a href="javascript:void(0)"> <i class="fas fa-home" routerLink="/search/quick-search"> </i> </a>
               </li>
 
               <li class=" breadcrumb-item">
@@ -78,7 +78,8 @@
           </div>
 
           <ngx-datatable
-            class="bootstrap selection-cell"
+          *ngIf="_FilteredList"
+            class="material"
             [columnMode]="'force'"
             [headerHeight]="50"
             [footerHeight]="50"
@@ -94,7 +95,7 @@
             <ngx-datatable-column name="userid">User ID</ngx-datatable-column>
             <ngx-datatable-column name="email">Email</ngx-datatable-column>
             <ngx-datatable-column name="mobile">Mobile</ngx-datatable-column>
-            <ngx-datatable-column name="Role"></ngx-datatable-column>
+            <ngx-datatable-column name="roleName">Role</ngx-datatable-column>
             <ngx-datatable-column name="Action" sortable="false" prop="id">
               <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
                 <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-warning btn-icon-only rounded-circle" (click)="editEmployee(userFormPopup,value)">
@@ -119,24 +120,31 @@
         <div class=" card-header"><h3 class=" mb-0">Create User</h3></div>
 
         <div class="card-body">
-          <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit()">
+          <form  class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit()">
             <div class="form-row">
               <div class="col-md-12 mb-3">
                 <label class="form-control-label" for="name">
-                  Name
+                  Name* 
                 </label>
-                <input class="form-control" id="name" formControlName="name" placeholder="Name" type="text"/>
-                <div class="valid-feedback">Looks good!</div>
+                <input class="form-control" name="name" id="name" formControlName="name" placeholder="Name" type="text"/>
+
+                <div  class="errorMsg-feedback"
+                 *ngIf="f.name.touched && f.name.invalid && f.name.errors.required">Required</div>
+
+                <div style="margin-top: .25rem;" class="alert alert-danger"
+                *ngIf="f.name.touched && f.name.invalid && f.name.errors.required">Name is required</div>
+      
+      
+         
               </div>
             </div>
             <div class="form-row">
               <div class=" col-md-6 mb-3">
                 <label class=" form-control-label" for="userid">
-                  User Id
+                  User Id*
                 </label>
-                <input name="ToMail" id="userid" formControlName="userid" placeholder="User Id" type="text" class="form-control"/>
-                <div class=" valid-feedback">Looks good!</div>
-                <div class=" valid-feedback">UserId is required</div>
+                <input name="userid" id="userid" formControlName="userid" placeholder="User Id" type="text" class="form-control"/>
+                <div  class="errorMsg-feedback" *ngIf="f.userid.touched && f.userid.hasError('required')">Required</div>
               </div>
 
               <div class=" col-md-6 mb-3">
@@ -144,35 +152,36 @@
                   class=" form-control-label"
                   for="email"
                 >
-                  Email
+                  Email*
                 </label>
 
-                <input id="email" formControlName="email" placeholder="Email" type="email" class="form-control"/>
-
-                <div class=" invalid-feedback">Email is required</div>
+                <input   id="email" formControlName="email" placeholder="Email" type="email" class="form-control"/>
+                <div  class="errorMsg-feedback" *ngIf="f.email.touched && f.email.hasError('required')">Email Id Required</div>
+                <div  class="errorMsg-feedback" *ngIf="f.email.touched && f.email.errors?.pattern">Please Enter Valid Email Id</div>
               </div>
             </div>
 
             <div class=" form-row">
               <div class=" col-md-6 mb-3">
                 <label class=" form-control-label" for="loginPass">
-                  Password
+                  Password*
                 </label>
-                <input name="pwd" id="loginPass" formControlName="pwd" placeholder="Password" type="password" class="form-control">
-                <div class=" invalid-feedback">
-                  Password is required
-                </div>
+                <input name="pwd" id="loginPass" formControlName="pwd" required minlength="8" placeholder="Password" type="password" class="form-control">
+                <div  class="errorMsg-feedback" *ngIf="f.pwd.touched && f.pwd.hasError('required')">Password Required</div>
+                
+                <div  class="errorMsg-feedback"
+                *ngIf="f.pwd.touched && f.pwd.errors &&f.pwd.errors.minlength">Password should be 8 character</div>
               </div>
               <div class=" col-md-6 mb-3">
                 <label class=" form-control-label" for="confirmPass">
-                  Confirm Password
+                  Confirm Password*
                 </label>
 
                 <input name="confirmPass" id="confirmPass" formControlName="confirmPass" placeholder="Confirm Password" type="password" class="form-control">
-
-                <div class=" invalid-feedback">
-                  Confirm Password is required
-                </div>
+                <div  class="errorMsg-feedback" *ngIf="f.confirmPass.touched && f.confirmPass.hasError('required')">Confirm Password Required</div>
+                <div  class="errorMsg-feedback" *ngIf="f.confirmPass.touched && f.confirmPass.invalid && f.confirmPass.errors.confirmedValidator" >
+                  Password and Confirm Password must be match.</div>
+             
               </div>
             </div> 
             <div class=" form-row">
@@ -181,15 +190,12 @@
                   Mobile
                 </label>
 
-                <input name="mobile" id="mobile" formControlName="mobile" placeholder="Mobile" type="text" class="form-control"/>
-
-                <div class=" invalid-feedback">
-                  Please provide a valid mobile number.
-                </div>
+                <input name="mobile" id="mobile" maxlength="10" formControlName="mobile" placeholder="Mobile" type="text" class="form-control"/>
+                <div  class="errorMsg-feedback" *ngIf="f.mobile.touched && f.mobile.hasError('required')">Mobile No Required</div>
               </div>
               <div class=" col-md-6 mb-3">
                 <label class=" form-control-label" for="sysRoleID">
-                  Role
+                  Role*
                 </label>
                 <select class=" form-control" formControlName="sysRoleID" data-toggle="select" id="sysRoleID">
                   <option value="0"> Select Role Name </option>
@@ -197,10 +203,8 @@
                     {{_Role.roleName}}
                     </option>
                 </select>
-
-                <div class=" invalid-feedback">
-                  Please select a role.
-                </div>
+                <div  class="errorMsg-feedback" *ngIf="f.sysRoleID.touched && f.sysRoleID.hasError('required')">Role Required</div>
+               
               </div>
             </div>
             <div class=" form-row">
@@ -210,18 +214,14 @@
                 </label>
 
                 <input name="Remarks" id="Remarks" formControlName="Remarks" placeholder="Remarks" type="text" class="form-control"/>
-
-                <div class=" invalid-feedback">
-                  Please provide a valid mobile number.
-                </div>
               </div>
             </div>
 
 
-            <button class=" btn btn-primary" type="submit">
+            <button  class="btn btn-primary"  [disabled]="!AddUserForm.valid" type="submit">
               Submit
             </button>
-            <button type="button" class="btn btn-warning" (click)="OnReset()">Clear</button>
+            <button type="button" class="btn btn-warning" (click)="OnClose()">Close</button>
 
           </form>
         </div>

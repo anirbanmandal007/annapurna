@@ -15,7 +15,8 @@ import { VectorMapComponent1 } from "./vector-map/vector-map.component";
 import { RouterModule } from "@angular/router";
 import { CollapseModule } from "ngx-bootstrap/collapse";
 import { DxVectorMapModule } from "devextreme-angular";
-import { BsDropdownModule } from "ngx-bootstrap";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { CommonService } from "../Services/common.service";
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import { BsDropdownModule } from "ngx-bootstrap";
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    }
+    },
+    CommonService
   ]
 })
 export class ComponentsModule {}

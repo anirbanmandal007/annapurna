@@ -6,15 +6,28 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AdminLayoutComponent } from "./layouts/admin-layout/admin-layout.component";
 import { AuthLayoutComponent } from "./layouts/auth-layout/auth-layout.component";
 import { PresentationComponent } from "./pages/presentation/presentation.component";
+import { LoginNewComponent } from './pages/login-new/login-new.component';
+import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
+import { ForgetPasswordComponent } from "./pages/forget-password/forget-password.component";
+
+
 const routes: Routes = [
   {
     path: "",
-    redirectTo: "presentation",
+    redirectTo: "Login",
     pathMatch: "full"
   },
   {
-    path: "presentation",
-    component: PresentationComponent
+    path: "Login",
+    component: LoginNewComponent
+  },
+  {
+    path: "forgot-password",
+    component: ForgetPasswordComponent
+  },
+  {
+    path: "Forbidden",
+    component: ForbiddenComponent
   },
   {
     path: "",
@@ -31,6 +44,22 @@ const routes: Routes = [
       {
         path: "master",
         loadChildren: "./pages/master/master.module#MasterModule"
+      },
+      {
+        path: "process",
+        loadChildren: "./pages/process/process.module#ProcessModule"
+      },
+      {
+        path: "report",
+        loadChildren: "./pages/report/report.module#ReportModule"
+      },
+      {
+        path: "upload",
+        loadChildren: "./pages/upload/upload.module#UploadModule"
+      },
+      {
+        path: "search",
+        loadChildren: "./pages/search/search.module#SearchModule"
       },
       {
         path: "components",
@@ -79,8 +108,10 @@ const routes: Routes = [
   },
   {
     path: "**",
-    redirectTo: "dashboard"
+    redirectTo: "Login"
   }
+
+
 ];
 
 @NgModule({
@@ -88,8 +119,9 @@ const routes: Routes = [
     CommonModule,
     BrowserModule,
     RouterModule.forRoot(routes, {
-      useHash: true
-    })
+    useHash: true,
+    relativeLinkResolution: 'legacy'
+})
   ],
   exports: [RouterModule]
 })

@@ -1,20 +1,83 @@
 import { Routes } from "@angular/router";
-
 import { DepartmentComponent } from "./department/department.component";
 import { BranchMappingComponent } from './branch-mapping/branch-mapping.component';
+import { BranchComponent } from "./branch/branch.component";
+import { TemplateComponent } from "./template/template.component";
+import { DocumentTypeComponent } from "./document-type/document-type.component";
+import { DocTypeMappingComponent } from "./doctype-mapping/doctype-mapping.component";
+import { ViewCustomFormComponent } from "./view-customform/view-customform.component";
+import { TemplateMappingComponent } from "./template-mapping/template-mapping.component";
+import { AddFieldComponent } from "./addfield/addfield.component";
+import { TemplateconfigComponent } from "./templateconfig/templateconfig.component"; 
+import { RegionMappingComponent } from "./region-mapping/region-mapping.component";
+import { EntityComponent } from "./entity/entity.component";
+import { EntityMappingComponent } from "./entity-mapping/entity-mapping.component";
+import { RootfolderComponent } from "./rootfolder/rootfolder.component";
 
 export const DepartmentRoutes: Routes = [
   {
     path: "",
     children: [
       {
-        path: "department",
+        path: "cabinet",
         component: DepartmentComponent
       },
       {
-        path: "branch-mapping",
+        path: "folder-mapping",
         component: BranchMappingComponent
+      },
+      {
+        path: "folder",
+        component: BranchComponent
+      },
+      {
+        path: "template",
+        component: TemplateComponent
+      },
+      {
+        path: "template-mapping",
+        component: TemplateMappingComponent
+      },
+      {
+        path: "document-type",
+        component:  DocumentTypeComponent
+
+      },
+      {
+        path: "document-type-mapping",
+        component:  DocTypeMappingComponent
+      },
+      {
+        path: "view-custom-form",
+        component:  ViewCustomFormComponent
+      },
+      {
+        path: "addfield",
+        component:  AddFieldComponent
+      },
+      {
+        path: "TemplateConfiguration",
+        component:  TemplateconfigComponent
+      },
+      {
+        path: "cabinet-mapping",
+        component: RegionMappingComponent
+      },
+      {
+        path: "SubFolder",
+        component: EntityComponent
+      },   
+      {
+        path: "Subfoldermapping",
+        component: EntityMappingComponent
       }
+      ,   
+      {
+        path: "rootfolder",
+        component: RootfolderComponent
+      }
+
+      
     ]
   }
 ];

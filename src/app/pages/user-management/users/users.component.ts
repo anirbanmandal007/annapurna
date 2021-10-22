@@ -2,8 +2,9 @@ import { Globalconstants } from "./../../../Helper/globalconstants";
 import { OnlineExamServiceService } from "./../../../Services/online-exam-service.service";
 import { Component, OnInit, TemplateRef } from "@angular/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { FormGroup,FormControl, FormBuilder, Validators } from "@angular/forms";
 import swal from "sweetalert2";
+import { ToastrService } from "ngx-toastr";
 export enum SelectionType {
   single = "single",
   multi = "multi",
@@ -39,25 +40,51 @@ export class UsersComponent implements OnInit {
     private modalService: BsModalService,
     private formBuilder: FormBuilder,
     private _onlineExamService: OnlineExamServiceService,
-    private _global: Globalconstants
+    private _global: Globalconstants,
+    public toastr: ToastrService
   ) {}
   ngOnInit() {
     this.AddUserForm = this.formBuilder.group({
       id: [""],
-      name: ["", Validators.compose([Validators.required])],
+      name: new FormControl('', [Validators.required]),
       userid: ["", Validators.required],
-      pwd: ["", [Validators.required, Validators.minLength(6)]],
+      pwd: ["", Validators.required],
       confirmPass: ["", Validators.required],
       //Cpwd: ['', Validators.required],
-      email: ["", Validators.required],
-      mobile: ["", Validators.required],
+      email: ["", [Validators.required, Validators.pattern(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+    ]],
+      mobile: [""],
       sysRoleID: ["", Validators.required],
       Remarks: [""],
-      User_Token: "123123",
+      User_Token: localStorage.getItem('User_Token'),
+    },{ 
+      validator: this.ConfirmedValidator('pwd', 'confirmPass')
     });
+      
     this.geRoleList();
     this.geUserList();
   }
+
+  //Newly added code 
+    ConfirmedValidator(controlName: string, matchingControlName: string){
+    return (formGroup: FormGroup) => {
+        const control = formGroup.controls[controlName];
+        const matchingControl = formGroup.controls[matchingControlName];
+        if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
+            return;
+        }
+        if (control.value !== matchingControl.value) {
+            matchingControl.setErrors({ confirmedValidator: true });
+        } else {
+            matchingControl.setErrors(null);
+        }
+    }
+}
+  get f(){
+    return this.AddUserForm.controls;
+  }
+
+
 
   entriesChange($event) {
     this.entries = $event.target.value;
@@ -87,14 +114,16 @@ export class UsersComponent implements OnInit {
   }
 
   geRoleList() {
-    const apiUrl = this._global.baseAPIUrl + "Role/GetList?user_Token=123123";
+    const userToken = this.AddUserForm.get('User_Token').value || localStorage.getItem('User_Token');
+    const apiUrl = this._global.baseAPIUrl + "Role/GetList?user_Token="+userToken;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
       this._RoleList = data;
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())ser
     });
   }
   geUserList() {
-    const apiUrl = this._global.baseAPIUrl + "Admin/GetList?user_Token=123123";
+    const userToken = this.AddUserForm.get('User_Token').value || localStorage.getItem('User_Token');
+    const apiUrl = this._global.baseAPIUrl + "Admin/GetList?user_Token="+userToken;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
       this.UserList = data;
       this._FilteredList = data;
@@ -104,21 +133,26 @@ export class UsersComponent implements OnInit {
 
   OnReset() {
     this.Reset = true;
-    this.AddUserForm.reset({User_Token: "123123"});
+    this.AddUserForm.reset();
+  }
+
+  OnClose()
+  {
+    this.modalService.hide(1);
   }
 
   onSubmit() {
-    this.submitted = true;
-    console.log(this.AddUserForm);
-    
-    if (this.AddUserForm.invalid) {
-      alert("Please Fill the Fields");
+    this.submitted = true; 
+  if(!this.validateFields()) {
       return;
     }
 
+    if(this.AddUserForm.value.User_Token == null) {
+      this.AddUserForm.value.User_Token = localStorage.getItem('User_Token');
+    }
     if (this.AddUserForm.get('id').value) {
-      console.log('Form',this.AddUserForm.value);
-      console.log('Inside Edit');
+     // console.log('Form',this.AddUserForm.value);
+      //console.log('Inside Edit');
       const apiUrl = this._global.baseAPIUrl + "Admin/Update";
       this._onlineExamService
         .postData(this.AddUserForm.value, apiUrl)
@@ -126,16 +160,18 @@ export class UsersComponent implements OnInit {
         .subscribe((data) => {
           if (data != null) {
             alert("Record Updated Succesfully..");
+            this.modalService.hide(1);
             this.OnReset();
             //this.router.navigate(['/student']);
-            this.geUserList()
+            this.geUserList();
           } else {
-            alert("User already exists.");
+            // Open Modal like you have opned in other pages
+            //alert("User already exists.");
           }
         });
     } else {
-      console.log('Form',this.AddUserForm.value);
-      console.log('Inside Create');
+     // console.log('Form',this.AddUserForm.value);
+     // console.log('Inside Create');
       const apiUrl = this._global.baseAPIUrl + "Admin/Create";
       this._onlineExamService
         .postData(this.AddUserForm.value, apiUrl)
@@ -145,7 +181,8 @@ export class UsersComponent implements OnInit {
             alert("Record Saved Successfully..");
             this.OnReset();
             //this.router.navigate(['/student']);
-            this.geUserList()
+            this.geUserList();
+            this.modalService.hide(1);
           } else {
             alert("User already exists.");
           }
@@ -154,6 +191,34 @@ export class UsersComponent implements OnInit {
 
     //this.studentForm.patchValue({File: formData});
   }
+
+  editEmployee(template: TemplateRef<any>, value: any) {
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "Admin/GetDetails?ID=" +
+      value +"&user_Token=" + localStorage.getItem('User_Token');
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+      var that = this;
+      that._SingleUser = data;
+      console.log('data', data);
+      this.AddUserForm.patchValue({
+        id: that._SingleUser.id,
+        name: that._SingleUser.name,
+        userid: that._SingleUser.userid,
+        pwd: that._SingleUser.pwd,
+        confirmPass: that._SingleUser.pwd,
+        email: that._SingleUser.email,
+        mobile: that._SingleUser.mobile,
+        sysRoleID: that._SingleUser.sysRoleID,
+        Remarks: that._SingleUser.remarks
+      })
+      console.log('form', this.AddUserForm);
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
+    
+    this.modalRef = this.modalService.show(template);
+  }
+
   deleteEmployee(id: any) {
     swal
       .fire({
@@ -189,34 +254,79 @@ export class UsersComponent implements OnInit {
         }
       });
   }
-  editEmployee(template: TemplateRef<any>, value: any) {
-    const apiUrl =
-      this._global.baseAPIUrl +
-      "Admin/GetDetails?ID=" +
-      value +
-      "&user_Token=123123";
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-      var that = this;
-      that._SingleUser = data;
-      console.log('data', data);
-      this.AddUserForm.patchValue({
-        id: that._SingleUser.id,
-        name: that._SingleUser.name,
-        userid: that._SingleUser.userid,
-        pwd: that._SingleUser.pwd,
-        confirmPass: that._SingleUser.pwd,
-        email: that._SingleUser.email,
-        mobile: that._SingleUser.mobile,
-        sysRoleID: that._SingleUser.sysRoleID,
-        Remarks: that._SingleUser.remarks
-      })
-      console.log('form', this.AddUserForm);
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-    
-    this.modalRef = this.modalService.show(template);
-  }
+
   addUser(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
+    this.AddUserForm.patchValue({
+      name: '',
+      userid: '',
+      pwd: '',
+      confirmPass: '',
+      email: '',
+      mobile: '',
+      sysRoleID:0,
+      Remarks: ''
+    })
   }
+
+  validateFields()
+  {
+    if (this.AddUserForm.get('name').value =="" )
+    {
+             this.showmessage("Please Enter name");
+              return false;
+    }
+    if (this.AddUserForm.get('userid').value =="" )
+    {
+             this.showmessage("Please Enter userid");
+              return false;
+    }
+
+    if (this.AddUserForm.get('email').value =="" )
+    {
+             this.showmessage("Please Enter Email");
+              return false;
+    }
+    if (this.AddUserForm.get('pwd').value =="" )
+    {
+             this.showmessage("Please Enter pwd");
+              return false;
+    }
+    if (this.AddUserForm.get('confirmPass').value =="" )
+    {
+             this.showmessage("Please Enter confirmPass");
+              return false;
+    }
+    if (this.AddUserForm.get('sysRoleID').value <=0 )
+    {
+             this.showmessage("Please select role confirmPass");
+              return false;
+    }   
+
+    return true;
+
+
+  }
+
+  showmessage(data:any)
+  {
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Validation ! </span> <span data-notify="message"> '+ data +' </span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+      }
+    );
+
+
+  }
+
 }
+

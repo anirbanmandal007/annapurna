@@ -31,6 +31,7 @@ export class DepartmentComponent implements OnInit {
   Reset = false;     
   sMsg: string = '';    
  _DeptID: any=0;
+ _RootList:any;
 
   constructor(
     private modalService: BsModalService,
@@ -42,10 +43,25 @@ export class DepartmentComponent implements OnInit {
   ngOnInit() {
     this.AddDepartmentForm = this.formBuilder.group({
       DepartmentName: ['', Validators.required],
-      User_Token: ["123123"],
+      RootID: [0, Validators.required],
+      User_Token: localStorage.getItem('User_Token') ,
+      CreatedBy: localStorage.getItem('UserID') ,
       id:[0]
     });
     this.geDepartmentList();
+    this.getRootList();
+  }
+
+  getRootList() {
+    
+    const apiUrl=this._global.baseAPIUrl+'RootMaster/GetRootList?user_Token='+ localStorage.getItem('User_Token') 
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+      this._RootList = data;
+   //  this._FilteredList = data
+
+     //console.log(this._FilteredList );
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
   }
 
   entriesChange($event) {
@@ -75,7 +91,7 @@ export class DepartmentComponent implements OnInit {
     this.activeRow = event.row;
   }
   geDepartmentList() {
-    const apiUrl=this._global.baseAPIUrl+'Department/GetList?user_Token='+this.AddDepartmentForm.get('User_Token').value
+    const apiUrl=this._global.baseAPIUrl+'Department/GetList?user_Token='+ localStorage.getItem('User_Token') 
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._DepartmentList = data;
       this._FilteredList = data
@@ -85,7 +101,8 @@ export class DepartmentComponent implements OnInit {
 
   OnReset() {
     this.Reset = true;
-    this.AddDepartmentForm.reset({User_Token: "123123"});
+    this.AddDepartmentForm.reset({User_Token: localStorage.getItem('User_Token')});
+    this.modalRef.hide();  
   }
 
   onSubmit() {
@@ -99,7 +116,7 @@ export class DepartmentComponent implements OnInit {
     this._onlineExamService.postData(this.AddDepartmentForm.value,apiUrl).subscribe((data: {}) => {     
      console.log(data);
      this.toastr.show(
-      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success!</span> <span data-notify="message">Department Saved</span></div>',
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success!</span> <span data-notify="message">Cabinet Saved</span></div>',
       "",
       {
         timeOut: 3000,
@@ -141,7 +158,7 @@ export class DepartmentComponent implements OnInit {
           .subscribe( data => {
               swal.fire({
                 title: "Deleted!",
-                text: "Department has been deleted.",
+                text: "Cabinet has been deleted.",
                 type: "success",
                 buttonsStyling: false,
                 confirmButtonClass: "btn btn-primary",
@@ -158,8 +175,9 @@ export class DepartmentComponent implements OnInit {
       this.AddDepartmentForm.patchValue({
         id: that._SingleDepartment.DID,
         DepartmentName: that._SingleDepartment.DepartmentName,
+        RootID: that._SingleDepartment.RootID,
       })
-      console.log('form', this.AddDepartmentForm);
+    //  console.log('form', this.AddDepartmentForm);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     this.modalRef = this.modalService.show(template);
   }

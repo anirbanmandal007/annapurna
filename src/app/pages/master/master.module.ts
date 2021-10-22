@@ -8,16 +8,27 @@ import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { NgxPrintModule } from "ngx-print";
 import { ModalModule } from 'ngx-bootstrap/modal';
-
 import { DepartmentComponent } from "./department/department.component";
 import { BranchMappingComponent } from "./branch-mapping/branch-mapping.component";
-
-import { RouterModule } from "@angular/router";
+import { RouterModule } from "@angular/router";''
 import { DepartmentRoutes } from "./master.routing";
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BranchComponent } from "./branch/branch.component";
+import { DocumentTypeComponent } from "./document-type/document-type.component";
+import { TemplateComponent } from "./template/template.component";
+import { DocTypeMappingComponent } from "./doctype-mapping/doctype-mapping.component";
+import { ViewCustomFormComponent } from "./view-customform/view-customform.component";
+import { AddFieldComponent } from "./addfield/addfield.component";
+import { TemplateMappingComponent } from "./template-mapping/template-mapping.component";
+import { TemplateconfigComponent } from "./templateconfig/templateconfig.component"; //   ./templateconfig/templateconfig.component";
+import { RegionMappingComponent } from "./region-mapping/region-mapping.component";
+import { EntityComponent } from "./entity/entity.component";
+import { EntityMappingComponent } from "./entity-mapping/entity-mapping.component";
+import { RootfolderComponent } from "./rootfolder/rootfolder.component";
+
 
 @NgModule({
-  declarations: [DepartmentComponent, BranchMappingComponent],
+  declarations: [DepartmentComponent, BranchMappingComponent,BranchComponent,EntityComponent,EntityMappingComponent,TemplateComponent,DocumentTypeComponent,DocTypeMappingComponent,ViewCustomFormComponent,AddFieldComponent,TemplateMappingComponent,TemplateconfigComponent,RegionMappingComponent,RootfolderComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(DepartmentRoutes),

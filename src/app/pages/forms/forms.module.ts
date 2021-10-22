@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { TagInputModule } from "ngx-chips";
-import { BsDropdownModule } from "ngx-bootstrap";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
 import { FormsComponentsComponent } from "./components/components.component";

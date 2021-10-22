@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
+import { LoadingService } from './Services/loading.service';
+import {delay} from 'rxjs/operators';
 
 @Component({
   selector: "app-root",
@@ -8,7 +10,12 @@ import { Router, Event, NavigationStart, NavigationEnd, NavigationError } from '
 })
 export class AppComponent {
 
-  constructor(private router: Router) {
+  title = 'angular-boilerplate';
+  loading: boolean = false;
+
+
+  constructor(private router: Router,
+    private _loading: LoadingService) {
 
      this.router.events.subscribe((event: Event) => {
          if (event instanceof NavigationStart) {
@@ -28,4 +35,20 @@ export class AppComponent {
          }
      });
    }
+
+   ngOnInit() {
+    this.listenToLoading();
+   }
+
+   /**
+   * Listen to the loadingSub property in the LoadingService class. This drives the
+   * display of the loading spinner.
+   */
+  listenToLoading(): void {
+    this._loading.loadingSub
+      .pipe(delay(0)) // This prevents a ExpressionChangedAfterItHasBeenCheckedError for subsequent requests
+      .subscribe((loading) => {
+        this.loading = loading;
+      });
+  }
 }

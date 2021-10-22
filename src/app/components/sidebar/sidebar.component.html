@@ -5,31 +5,33 @@
   (mouseout)="onMouseLeaveSidenav()"
 >
 <perfect-scrollbar>
-  <div class="scrollbar-inner">
-    <div class="sidenav-header d-flex align-items-center">
-      <a class="navbar-brand" [routerLink]="['/dashboards/dashboard']">
-        <img
-          src="assets/img/brand/red.png"
-          class="navbar-brand-img"
-          alt="..."
-        />
-      </a>
-      <div class="ml-auto">
-        <!-- Sidenav toggler -->
-        <div
-          class="sidenav-toggler d-none d-xl-block"
-          data-action="sidenav-unpin"
-          data-target="#sidenav-main"
-          (click)="minimizeSidebar()"
-        >
-          <div class="sidenav-toggler-inner">
-            <i class="sidenav-toggler-line"></i>
-            <i class="sidenav-toggler-line"></i>
-            <i class="sidenav-toggler-line"></i>
-          </div>
+  <div class="sidenav-header d-flex align-items-center">
+    <!-- <a class="navbar-brand" [routerLink]="['/dashboards/dashboard']">
+      <img
+        src="assets/img/brand/logo.png"
+        class="navbar-brand-img"
+        alt=""
+      />
+      
+    </a> -->
+    <div class="ml-auto">
+      <!-- Sidenav toggler -->
+      <div
+        class="sidenav-toggler d-none d-xl-block"
+        data-action="sidenav-unpin"
+        data-target="#sidenav-main"
+        (click)="minimizeSidebar()"
+      >
+        <div class="sidenav-toggler-inner">
+          <i class="sidenav-toggler-line"></i>
+          <i class="sidenav-toggler-line"></i>
+          <i class="sidenav-toggler-line"></i>
         </div>
       </div>
     </div>
+  </div>
+  <div class="scrollbar-inner">
+  
     <div class="navbar-inner">
       <div class="collapse navbar-collapse" id="sidenav-collapse-main">
         <!-- Collapse header -->
@@ -79,6 +81,7 @@
                     class="nav-link"
                     *ngIf="childitems.type === 'link'"
                   >
+                    <span [ngClass]="childitems.path ? childitems.path: ''"></span>
                     {{ childitems.title }}
                   </a>
                   <!--If it have a submenu-->
@@ -117,52 +120,8 @@
           </li>
         </ul>
         <!-- Divider -->
-        <hr class="my-3" />
-        <!-- Heading -->
-        <h6 class="navbar-heading p-0 text-muted">Documentation</h6>
-        <!-- Navigation -->
-        <ul class="navbar-nav mb-md-3">
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="https://demos.creative-tim.com/argon-dashboard-pro-angular/#/documentation/overview?ref=adpa-sidebar-area"
-              target="_blank"
-            >
-              <i class="ni ni-spaceship"></i>
-              <span class="nav-link-text">Getting started</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="https://demos.creative-tim.com/argon-dashboard-pro-angular/#/documentation/colors?ref=adpa-sidebar-area"
-              target="_blank"
-            >
-              <i class="ni ni-palette"></i>
-              <span class="nav-link-text">Foundation</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="https://demos.creative-tim.com/argon-dashboard-pro-angular/#/documentation/alerts?ref=adpa-sidebar-area"
-              target="_blank"
-            >
-              <i class="ni ni-ui-04"></i>
-              <span class="nav-link-text">Components</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="https://demos.creative-tim.com/argon-dashboard-pro-angular/#/documentation/charts?ref=adpa-sidebar-area"
-              target="_blank"
-            >
-              <i class="ni ni-chart-pie-35"></i>
-              <span class="nav-link-text">Plugins</span>
-            </a>
-          </li>
-        </ul>
+         
+        
       </div>
     </div>
   </div>
