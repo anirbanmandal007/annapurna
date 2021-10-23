@@ -120,7 +120,7 @@ export class BranchMappingComponent implements OnInit {
 
   getBranchListByDeptID(DeptID: any) {
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl = this._global.baseAPIUrl + "BranchMaster/GetBranchByDeptIDANDUserwise?UserID=" +localStorage.getItem('UserID')+"&DeptID="+DeptID+ "&user_Token="+localStorage.getItem('User_Token');
+    const apiUrl = this._global.baseAPIUrl + "BranchMapping/GetBranchListByRegionAndRootWiseAndCreatedBy?CreatedBy=" +localStorage.getItem('UserID')+"&DeptID="+DeptID+ "&user_Token="+localStorage.getItem('User_Token')+ "&userid="+localStorage.getItem('UserID');
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this._BranchList = data;
       this.checkbox_list = [];
@@ -147,7 +147,7 @@ export class BranchMappingComponent implements OnInit {
       this.BranchMappingForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
       this._UserL = data;
-      this.BranchMappingForm.controls["UserID"].setValue(0);
+      this.AddBranchMappingForm.controls["UserID"].setValue(0);
       this.BranchMappingForm.controls["UserIDS"].setValue(0);
       
       // this.BranchMappingForm.controls['UserIDM'].setValue(0);
@@ -161,8 +161,8 @@ export class BranchMappingComponent implements OnInit {
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._RootList = data;
    //  this._FilteredList = data
-   this.BranchMappingForm.controls['DeptID'].setValue(0);
-   this.BranchMappingForm.controls['BranchID'].setValue(0);
+   this.AddBranchMappingForm.controls['DeptID'].setValue(0);
+   //this.BranchMappingForm.controls['BranchID'].setValue(0);
    
      //console.log(this._FilteredList );
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
@@ -196,8 +196,8 @@ getDepartmnet(RootID: any) {
   this._DepartmentList = data;
  // this._DepartmentLists=data;
 //    console.log("data : -", data);
-  this.BranchMappingForm.controls['DeptID'].setValue(0);
-  this.BranchMappingForm.controls['BranchID'].setValue(0);
+  this.AddBranchMappingForm.controls['DeptID'].setValue(0);
+  //this.AddBranchMappingForm.controls['BranchID'].setValue(0);
  // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
   
 
@@ -207,7 +207,7 @@ getDepartmnet(RootID: any) {
   }
   
   getBranch(UserID: number) {
-    const apiUrl =this._global.baseAPIUrl +"BranchMapping/GetDetails?ID=" +UserID+"&DeptID=" +this.AddBranchMappingForm.get("DeptID").value+"&user_Token=" +this.BranchMappingForm.get("User_Token").value;
+    const apiUrl =this._global.baseAPIUrl +"BranchMapping/GetFolderByCreatedBy?UserID=" +UserID+"&DeptID=" +this.AddBranchMappingForm.get("DeptID").value+"&user_Token=" +localStorage.getItem('User_Token')+"&CreatedBy=" +localStorage.getItem('UserID');
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
       this.checkbox_list = [];

@@ -934,8 +934,7 @@ GetFilterData(tempID:any) {
         });
 
       }); 
-      this.modalRef.hide();
- 
+      this.modalRef.hide(); 
      
   }
   SendBulkEmail(template: TemplateRef<any>)

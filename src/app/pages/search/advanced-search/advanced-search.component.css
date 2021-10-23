@@ -48,14 +48,14 @@
     border-radius: 0;
 }
 .AdvancedSearchMainContainer .card .card-body {
-    padding: 15px;
+    padding: 24px 10px;
 }
 .AdvancedSearchMainContainer .card .card-body .row {
     margin: 0;
 }
 .AdvancedSearchMainContainer .card .form-control{
     float: right;
-    width: 65%;
+    /* width: 65%; */
     height: 35px;
     padding: 0px 15px;
 }
@@ -68,9 +68,9 @@
     height: 35px;
    
 }
-.AdvancedSearchMainContainer .card .serchInput input{
+/* .AdvancedSearchMainContainer .card .serchInput input{
     width: 213px;
-}
+} */
 .card-header h3 {
     font-size: 20px;
     font-weight: 700;
@@ -89,37 +89,97 @@
     float: right;
 }
 
+
 .table {
+     font-weight: 700;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: none;
+    text-align: left;
+    padding: 8px;
+  }
+
+  .sec1 {
+    margin: 0;
+    position: absolute;
+    right: 0;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  .btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+
+.card-header h3 {
+    font-size: 20px;
     font-weight: 700;
-   font-family: arial, sans-serif;
-   border-collapse: collapse;
-   width: 100%;
- }
- 
- td, th {
-   border: 1px solid #dddddd;
-   text-align: left;
-   padding: 8px;
- }
+}
+.btndiv .btn{
+    padding:  0 15px;
+}
 
- .sec1 {
-   margin: 0;
-   position: absolute;
-   top: 97%;
-   left: 80%;
-   -ms-transform: translate(-50%, -50%);
-   transform: translate(-50%, -50%);
- }
+.resetsave{
+    float: right;
+    width: 65%;
+    height: 35px;
+}
 
- ::ng-deep #ContentSearchPage .ui-table-wrapper th, ::ng-deep #ContentSearchPage .ui-table-wrapper td {
+.resetsave  .resetsavebts{
+    float: right;
+}
+
+/* .no-doc {
+    background: #f78d8d;
+    color: #fff;
+} */
+
+.metadata-table th {
+    padding: 2px;
+}
+
+.metadata-table tbody tr:hover {
+    background: #f78d8d;
+    color: #fff;
+}
+
+
+.card-header {
+     padding: 0.25rem 0.5rem; 
+    /* margin-bottom: 0; */
+    /* background-color: #fff; */
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.05); */
+}
+
+::ng-deep #ContentSearchPage .ui-table-wrapper th, ::ng-deep #ContentSearchPage .ui-table-wrapper td {
     font-size: 12px;
 }
 
 ::ng-deep #contentSearchDocView td {
     font-size: 11px;
-    padding: 2px;
-    word-break: break-word;
-    white-space: pre-wrap;
+    /* padding: 2px; */
+    /* word-break: break-word;
+    white-space: pre-wrap; */
+    border:none;
 }
 
 ::ng-deep #contentSearchDocView .zoom {
@@ -144,8 +204,9 @@
   ::ng-deep #fileStorageDocView td {
     font-size: 11px;
     padding: 2px;
-    word-break: break-word;
-    white-space: pre-wrap;
+    border: none;
+    /* word-break: break-word;
+    white-space: pre-wrap; */
   }
   
   ::ng-deep #fileStorageDocView .card {
@@ -156,3 +217,60 @@
     height: 725px !important;
   }
   
+.global-search {
+    width: 800px;
+    border: none;
+    padding: 8px;
+}
+.b_cl{
+    background: #006ba1;
+    color: white;
+}
+.cl{
+    background: #006ba1;
+    color: #fff;
+    border: none;
+}
+/* .bg-mat-menu.ng-tns-c627-1 {
+    background: #88b0c3;
+} */
+.mat-menu-item:hover:not([disabled]), .mat-menu-item.cdk-program-focused:not([disabled]), .mat-menu-item.cdk-keyboard-focused:not([disabled]), .mat-menu-item-highlighted:not([disabled]) {
+    background: #88b0c3!important;
+}
+.btn-aln{
+    text-align: right;
+}
+button.btn.btn-cl {
+    background: #76dfb2;
+    color: #fff;
+}
+.pd-al{
+    padding: 9px 33px !important;
+}
+.ic_s{
+    font-size: 19px !important;
+}
+
+
+.main {
+    width: 50%;
+    margin: 50px auto;
+}
+
+/* Bootstrap 4 text input with search icon */
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
