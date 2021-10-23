@@ -121,9 +121,9 @@ export class BranchComponent implements OnInit {
   
       }
 
-    geBranchListByUserID(userid: number) {
+    geBranchListByUserID(DeptIDID: number) {
       //     alert(this.BranchMappingForm.value.UserID);
-      this.geBranchList(userid);
+      this.geBranchList(DeptIDID);
     }
 
   onSelect({ selected }) {
@@ -134,15 +134,17 @@ export class BranchComponent implements OnInit {
     this.activeRow = event.row;
   }
 
-  geBranchList(userid: any) {
+  geBranchList(DeptIDID: any) {
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl =this._global.baseAPIUrl+"BranchMapping/GetBranchDetailsRegionWise?ID="+userid+"&user_Token="+this.AddBranchForm.get("User_Token").value;
+    const apiUrl =this._global.baseAPIUrl+"BranchMapping/GetDetailsByCreatedBy?DeptIDID="+DeptIDID+"&user_Token="+localStorage.getItem('User_Token')+"&userid="+localStorage.getItem('UserID');
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this._BranchList = data;
       this._FilteredList = data;
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
+
+
   // geBranchList() {
     
   //   const apiUrl=this._global.baseAPIUrl+'BranchMaster/GetBranchList?user_Token='+ localStorage.getItem('User_Token') 
@@ -223,7 +225,7 @@ export class BranchComponent implements OnInit {
                 buttonsStyling: false,
                 confirmButtonClass: "btn btn-primary",
               });
-              this.geBranchList(localStorage.getItem('UserID') );
+              this.geBranchList(0);
             });
         }
       });
