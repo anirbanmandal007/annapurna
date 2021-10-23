@@ -73,6 +73,7 @@ export class ContentSearchComponent implements OnInit {
   first = 0;
   rows = 10;
   _RootList:any;
+  today = new Date();
 
   _FileDetails:string [][] = [];
   
