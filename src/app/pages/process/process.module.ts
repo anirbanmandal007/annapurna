@@ -17,6 +17,7 @@ import { DataEntryComponent } from './data-entry/data-entry.component';
 import { FileTaggingComponent } from './file-tagging/file-tagging.component';
 import { EditIndexingComponent } from './EditIndexing/EditIndexing.component';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { NgxDocViewerModule } from "ngx-doc-viewer";
 //import { DataviewComponent } from './dataview/dataview.component';
 
 @NgModule({
@@ -34,7 +35,8 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     NgxPrintModule,
-    NgxExtendedPdfViewerModule
+    NgxExtendedPdfViewerModule,
+    NgxDocViewerModule
   ]
 })
 export class ProcessModule {}
