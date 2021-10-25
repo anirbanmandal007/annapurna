@@ -120,6 +120,7 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
   _TempD:any;
   first = 0;
   rows = 10;
+  fileExt:any;
   
   tableHeader: any = [
     // { field: 'fileNo', header: this.TempField, index: 1 },
@@ -841,6 +842,7 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
         this.FilePath = res;
          /// saveAs(res, row.ACC + '.pdf');
          this._TempFilePath = res;
+         this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
 
       }
     });
@@ -866,10 +868,11 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
     //     field: 'metadata-' + parseInt(index+1), header: el.DisplayName, index: parseInt(7+index)
     //   })
     // })
-
+console.log(data);
     
     data.forEach((el, index) => {
       if (el.FileNo) {
+
         formattedData.push({
           "fileNo": el.FileNo,
           "USERID": el.USERID,
@@ -880,6 +883,7 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
           "BranchName": el.BranchName,
           "DepartmentName": el.DepartmentName,  
           "SubfolderName": el.SubfolderName,   
+          "FilePath": el.FilePath,   
           
           
           
@@ -1203,14 +1207,15 @@ viewFullFile(row:any)
 
   DownloadFileFromDB(Row: any) {
 
-    //console.log("Row**",Row);
+    console.log("Row**",Row);
+    const fileExt = Row.FilePath.substring(Row.FilePath.lastIndexOf('.'), Row.FilePath.length);
     const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadFileFromDB?ID=' + localStorage.getItem('UserID') + '&FileNo= ' + Row.fileNo + ' &user_Token=' + localStorage.getItem('User_Token');
     this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
       if (res) {
 
         //      var __FilePath = _TempFilePath ;    
         // console.log("Final FP-- res ", res);
-        saveAs(res, Row.fileNo + '.pdf');
+        saveAs(res,Row.fileNo + fileExt);
 
       }
     });

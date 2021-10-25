@@ -44,6 +44,7 @@ export class DataEntryComponent implements OnInit {
   _TempID: any =0;
   _FileNo:any="";
   _MDList:any;
+  fileExt:any;
  
   _PageNo:number=1;
   FilePath:any="../assets/1.pdf";
@@ -547,7 +548,7 @@ export class DataEntryComponent implements OnInit {
          // console.log("res",res);
             this.FilePath = res;
              /// saveAs(res, row.ACC + '.pdf');
-    
+             this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
           }
         });
       }
