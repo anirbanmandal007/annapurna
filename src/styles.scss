@@ -138,8 +138,11 @@ body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a {
   color: #000 !important;
 }
 
-body .ui-table .ui-table-tbody > tr > td, .ui-table .ui-table-thead>tr>th {
+body .ui-table .ui-table-tbody > tr > td {
   padding: .25em .5em !important;
+}
+body .ui-table .ui-table-thead>tr>th {
+  padding: 1em .5em !important;
 }
 body .ui-table .ui-table-tbody > tr:hover {
   background-color: #FFD86F;
@@ -173,21 +176,24 @@ body .ui-table .ui-table-tbody > tr:hover {
   background: #FFD86F;
 }
 
-.ui-table .ui-table-thead > tr > th {
-  background-color: #C7E3EF !important;
-}
+// .ui-table .ui-table-thead > tr > th {
+//   // background-color: #C7E3EF !important;
+// }
 .ui-table input[type='text'] {
-  background-color: #C7E3EF;
+  background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 1px
+;
 }
 
 .ui-table .ui-table-tbody > tr:nth-child(even) {
-  background-color: #e5eff3 !important;
+  background-color: #fff !important;
 }
-.ui-paginator {
-  background-color: #C7E3EF !important;
-}
+// .ui-paginator {
+//   // background-color: #C7E3EF !important;
+// }
 .ui-table .ui-table-tbody > tr:hover {
-  background-color: #ffe4de !important;
+  background-color: #eee !important;
 }
 
 .mat-menu-content {

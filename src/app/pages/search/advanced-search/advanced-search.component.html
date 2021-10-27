@@ -53,7 +53,7 @@
                  </select>
              </div> -->
   
-             <div class="col">               
+             <div class="col-lg-2">               
               <select name="RootID" id="RootID" class="form-control form-control-sm" formControlName="RootID" (change)="getDepartmnet($event.target.value)" >
                 <option value=0>Select Root</option>   
                 <option *ngFor="let Root of _RootList" [value]="Root.RootID"  >  
@@ -62,7 +62,7 @@
               </select>
             </div>  
            
-             <div class="col">               
+             <div class="col-lg-2">               
               <select name="DeptID" id="DeptID" class="form-control form-control-sm" formControlName="DeptID" (change)="geBranchListByUserID($event.target.value)" >
                 <option value=0>Select Cabinet</option>   
                 <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
@@ -71,7 +71,7 @@
               </select>
             </div>  
   
-            <div class="col">    
+            <div class="col-lg-2">    
               <!-- <label class="form-control-label" for="TemplateID">Customer :</label>   -->
               <select name="BranchID" id="BranchID" class="form-control" formControlName="BranchID" (change)="getEntityForUser(0)" >
                 <option value='0'>Select Folder</option>   
@@ -81,7 +81,7 @@
               </select>
             </div>  
   
-            <div class="col">    
+            <div class="col-lg-2">    
               <!-- <label class="form-control-label" for="TemplateID">Entity :</label>   -->
               <select name="SubfolderID" id="SubfolderID" class="form-control" formControlName="SubfolderID" >
                 <option value=0>Select Sub Folder</option>   
@@ -93,9 +93,9 @@
             
              
             <div class="col-md-3 float-right text-right">                
-              <button type="button" class="btn btn-success" (click)="onAddFilterRow()">Add</button>
-              <button type="button" class="btn btn-success" (click)="onFilterSubmited()">Search</button>
-              <button type="button" class="btn btn-success" (click)="OnLoad()">Refresh
+              <button type="button" class="btn btn-primary" (click)="onAddFilterRow()">Add</button>
+              <button type="button" class="btn btn-primary" (click)="onFilterSubmited()">Search</button>
+              <button type="button" class="btn btn-primary" (click)="OnLoad()">Refresh
                 <i class="fa fa-refresh" aria-hidden="true"></i>
 
               </button>
@@ -118,7 +118,7 @@
                 <ng-container *ngFor="let filter of filters.controls,let i=index" [formGroupName]="i">
                   <div class="row"></div>
                   
-                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 margin-bottomcls">   
+                  <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 margin-bottomcls">   
                     <label class="form-control-label" for="TemplateID">Condition :</label>            
                     <select name="Condition" class="form-control" formControlName="Condition" >
                           <option value="0">Select Condition</option>   
@@ -126,7 +126,7 @@
                           <option value="OR">OR</option>   
                     </select>
                   </div>
-                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">    
+                  <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">    
                     <label class="form-control-label" for="TemplateID">Search By :</label>           
                     <select name="SearchByID" id="SearchByID" class="form-control" formControlName="SearchByID"
                     (change)="onSearchBySelected(i)">                      
@@ -137,7 +137,7 @@
                     </select>
                     
                   </div>
-                  <div *ngIf="filter.get('FieldType').value !== '3'" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 margin-bottomcls">   
+                  <div *ngIf="filter.get('FieldType').value !== '3'" class="col-lg-2 col-md-2 col-sm-3 col-xs-3 margin-bottomcls">   
                     <label class="form-control-label" for="TemplateID">Operation :</label>            
                     <select name="Operation" class="form-control" formControlName="Operation" >
                           <option value="0">Select Operation</option>   
@@ -147,7 +147,7 @@
                     </select>
                   </div>
 
-                  <div *ngIf="filter.get('FieldType').value === '3'" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 margin-bottomcls">   
+                  <div *ngIf="filter.get('FieldType').value === '3'" class="col-lg-2 col-md-2 col-sm-3 col-xs-3 margin-bottomcls">   
                     <label class="form-control-label" for="TemplateID">Select Operation :</label>            
                     <select (change)="onDateOperationChange(i)" name="Operation" class="form-control" formControlName="Operation" >
                           <option value="0">Select Operation</option>
@@ -156,7 +156,7 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                  <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <!-- {{filter.get('FieldType').value}} -->
                     <!-- <label class="form-control-label" for="FileNo">FileNo :</label> -->
                     <ng-container *ngIf="filter.get('FieldType').value == 3">
@@ -164,7 +164,7 @@
                         <label style="width: 25%;" class="form-control-label" for="DATEFROM">
                           Date
                         </label>
-                        <input style="float: none;width: 215px; display: inline-block;"
+                        <input
                           type="text"
                           formControlName="FileNo"
                           placeholder="PickDate"
@@ -181,7 +181,7 @@
                         <label style="width: 25%;" class="form-control-label" for="DATERANGE">
                           Date range :
                         </label>
-                        <input style="float: none;width: 215px; display: inline-block;" 
+                        <input 
                           type="text"
                           formControlName="DateRangePicker"
                           placeholder="Daterangepicker"
@@ -194,7 +194,7 @@
                         <!-- <label class=" form-control-label" for="FileNo">
                           
                         </label> -->
-                        <input style="float: left;width: 215px;"
+                        <input
                           type="text"
                           class="form-control"
                           name="FileNo"
@@ -204,10 +204,31 @@
                           bedby="search-addon"
                         />
                     </ng-container>
-                    <button type="button" class="btn btn-danger" (click)="onRemoveRow(i)" style="float: right;text-align: right;    padding: 5px 15px;">
+
+                    <ng-container *ngIf="filter.get('FieldType').value == 5">
+                      <label class=" form-control-label">
+                        
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="FileNo"
+                        placeholder="Enter values to search"
+                        formControlName="FileNo"
+                        aria-descri
+                        bedby="search-addon"
+                      />
+                  </ng-container>
+                  
+                    
+                  </div>
+
+                  <div class="col-md-3">
+                    <button type="button" class="btn btn-danger" (click)="onRemoveRow(i)" style="margin-top:20px;float: right;text-align: right;    padding: 5px 15px;">
                       <i class="fa fa-times"></i>
                     </button>
                   </div>
+                  <div class="col-md-1"></div>
               </ng-container>
             </ng-container>
             </div>

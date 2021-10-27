@@ -12,6 +12,7 @@ import { HttpEventType, HttpClient } from '@angular/common/http';
 import swal from "sweetalert2";
 import { saveAs } from 'file-saver';
 import { CommonService } from "src/app/Services/common.service";
+import { AlternativeComponent } from "../../dashboards/alternative/alternative.component";
 
 declare var $: any;
 
@@ -198,13 +199,17 @@ this.getRootList();
     onSearchBySelected(i){
       // console.log('SearchByID in form',this.SearchForm.get('SearchByID'));
       let selectedVal = this.filters.at(i).value.SearchByID
+
+    //  alert(this.filters.at(i).value.SearchByID);
       // console.log('selectedVal',selectedVal);
       let selectedDataType = this._SearchByList.find(s=>s.SID == selectedVal)
       //this.SearchForm.get('FieldType').setValue(selectedDataType.FieldType)
       // console.log('Filter Array',this.filters.at(i), selectedDataType);
-      
+    
       this.filters.at(i).patchValue({"FieldType": selectedDataType.FieldType})
       // console.log("FieldType",selectedDataType.FieldType, this.filters.at(i));
+
+       
     }
 
 
@@ -377,6 +382,8 @@ this.getRootList();
       // } 
 
       getSearchParameterList(TID:any) {
+
+        //alert(TID);
     
         const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/getSearchParameterList?ID=' + TID + '&user_Token='+ localStorage.getItem('User_Token')
     
@@ -385,8 +392,14 @@ this.getRootList();
           this._SearchByList = data;
           
         this.ContentSearchForm.controls['SearchByID'].setValue(0);
-          //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+        
+       // alert('Hi');
+        console.log(data);
+
+        //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
         });
+
+
       }
 
       getDoctypeListByTempID(TID:any) {
@@ -403,11 +416,13 @@ this.getRootList();
       }
 
 
-      geTemplateNameListByTempID(TID: number) {
-              
+     
+      geTemplateNameListByTempID(TID: number) {      
+        
         this.getSearchParameterList(TID);
       //  this.getDoctypeListByTempID(TID);
-        this.getSearchResult(TID); 
+        this.getSearchResult(TID);
+      
       }
 
       GetFilterSearch(tid:any)

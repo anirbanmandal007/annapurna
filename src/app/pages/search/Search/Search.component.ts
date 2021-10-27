@@ -162,6 +162,7 @@ export class SearchComponent implements OnInit {
       })
       this.filters.push(fg)
     }
+    
     onRemoveRow(indx) {
       this.filters.removeAt(indx)
     }

@@ -30,6 +30,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
+
+import {MatButtonModule} from '@angular/material/button';
 import { NgxDocViewerModule } from "ngx-doc-viewer";
 // import {MatDatepickerInput} from '@angular/material/datepicker';
 // import { MatFormField, MatLabel } from "@angular/material/form-field";
@@ -64,7 +66,8 @@ import { NgxDocViewerModule } from "ngx-doc-viewer";
     NgxExtendedPdfViewerModule,
     MatMenuModule,
     MatIconModule,
-    NgxDocViewerModule
+    NgxDocViewerModule,
+    MatButtonModule
     // MatDatepickerInput
   ]
 })
