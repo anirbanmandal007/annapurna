@@ -74,6 +74,7 @@ export class AdvancedSearchComponent implements OnInit {
   first = 0;
   rows = 10;
   _RootList:any;
+  fileExt:any;
 
   _FileDetails:string [][] = [];
 
@@ -511,6 +512,7 @@ this.getRootList();
       //  { field: 'docType', header: 'Doc Type', index: 5 },
         { field: 'pageCount', header: 'PAGE COUNT', index: 6 },
         { field: 'entryDate', header: 'CREATE DATE', index: 3 },
+        
       ];
       headerList.forEach((el, index) => {
         tableHeader.push({
@@ -537,7 +539,8 @@ this.getRootList();
           // 'RelPath': el.RelPath,
           // 'FilePath': el.FilePath,
           'ACC': el.ACC,
-        //  'DocID': el.DocID,
+          'filePath': el.FilePath
+          //  'DocID': el.DocID,
           // 'profileImg': el.PhotoPath
         });
         headerList.forEach((el1, i) => {
@@ -576,14 +579,15 @@ this.getRootList();
 
     DownloadFileAll(_FileNo: any,_File:any) {
 
-        
+      const fileExt = _File.filePath.substring(_File.filePath.lastIndexOf('.'), _File.filePath.length);
       const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadFileFromDB?ID=' + localStorage.getItem('UserID') + '&FileNo= ' + _FileNo + ' &user_Token=' + localStorage.getItem('User_Token');
       this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
         if (res) {
   
           //      var __FilePath = _TempFilePath ;    
-           console.log("Final FP-- res ", _File);
-          saveAs(res,_FileNo +".pdf");
+          // console.log("Final FP-- res ", _File);
+         // saveAs(res,_FileNo +".pdf");
+         saveAs(res,_FileNo + fileExt);
   
         }
       });
@@ -921,6 +925,22 @@ this.getRootList();
 
 
 
+    // GetFullFile(FileNo:any) {
+
+    //   const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/GetFullFile?ID='+localStorage.getItem('UserID')+'&&_fileName='+ FileNo +'&user_Token='+localStorage.getItem('User_Token');
+    //   this._onlineExamService.getDataById(apiUrl).subscribe(res => {
+    //     if (res) {
+  
+    //   //  console.log("9090res",res);
+    //       this.FilePath = res;
+    //        /// saveAs(res, row.ACC + '.pdf');
+    //        this._TempFilePath = res;
+
+  
+    //     }
+    //   });
+    // }
+
     GetFullFile(FileNo:any) {
 
       const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/GetFullFile?ID='+localStorage.getItem('UserID')+'&&_fileName='+ FileNo +'&user_Token='+localStorage.getItem('User_Token');
@@ -931,8 +951,7 @@ this.getRootList();
           this.FilePath = res;
            /// saveAs(res, row.ACC + '.pdf');
            this._TempFilePath = res;
-
-  
+           this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
         }
       });
     }

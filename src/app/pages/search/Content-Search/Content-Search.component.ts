@@ -187,8 +187,7 @@ this.getRootList();
     DownloadFileAll(_FileNo: any,_File:any) {
 
 
-      console.log(_File);
-      console.log(_FileNo);
+    
 
       const fileExt = _File.filePath.substring(_File.filePath.lastIndexOf('.'), _File.filePath.length);
       const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadFileFromDB?ID=' + localStorage.getItem('UserID') + '&FileNo= ' + _FileNo + ' &user_Token=' + localStorage.getItem('User_Token');
@@ -196,7 +195,7 @@ this.getRootList();
         if (res) {
   
           //      var __FilePath = _TempFilePath ;    
-           console.log("Final FP-- res ", _File);
+         //  console.log("Final FP-- res ", _File);
           saveAs(res,_FileNo + fileExt);
   
         }
