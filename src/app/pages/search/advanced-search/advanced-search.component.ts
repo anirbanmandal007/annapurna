@@ -74,7 +74,8 @@ export class AdvancedSearchComponent implements OnInit {
   first = 0;
   rows = 10;
   _RootList:any;
-
+  today = new Date();
+  fileExt;
   _FileDetails:string [][] = [];
 
   
@@ -136,6 +137,7 @@ export class AdvancedSearchComponent implements OnInit {
       });
       this.getTemplate();
       this._PageNo = 1;
+
 
     //  this.GetEntityList();
       //this.getSearchResult(0);
@@ -932,7 +934,7 @@ this.getRootList();
            /// saveAs(res, row.ACC + '.pdf');
            this._TempFilePath = res;
 
-  
+           this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
         }
       });
     }
