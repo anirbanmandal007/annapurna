@@ -53,6 +53,7 @@ export class EditIndexingComponent implements OnInit {
   _FilteredList :any; 
   _IndexPendingList:any;
   bsValue = new Date();
+  fileExt;
   constructor(
     private modalService: BsModalService,
     public toastr: ToastrService,
@@ -248,7 +249,7 @@ export class EditIndexingComponent implements OnInit {
          // console.log("res",res);
             this.FilePath = res;
              /// saveAs(res, row.ACC + '.pdf');
-    
+             this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
           }
         });
       }

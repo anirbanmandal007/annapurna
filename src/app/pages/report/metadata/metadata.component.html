@@ -58,7 +58,7 @@
       
                 <div class="col">    
                   <!-- <label class="form-control-label" for="TemplateID">Customer :</label>   -->
-                  <select name="BranchID" id="BranchID" class="form-control form-control-sm" formControlName="BranchID" (change)="getEntityForUser(0)" >
+                  <select name="BranchID" id="BranchID" class="form-control form-control-sm" formControlName="BranchID">
                     <option value='0'>Select Folder</option>   
                     <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
                     {{_Bracnch.BranchName}}  

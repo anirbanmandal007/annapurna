@@ -60,6 +60,10 @@ export class DashboardComponent implements OnInit {
   _ActivityLog:any;
   activitylogChartData:any;
   chartActivityLog:any;
+  _RootList:any;
+  BranchList:any;
+  _DepartmentList:any;
+  EntityList:any;
 
   constructor(
      private formBuilder: FormBuilder,
@@ -73,15 +77,19 @@ export class DashboardComponent implements OnInit {
      this.DashboardForm = this.formBuilder.group({
        BranchName: ['', Validators.required],
       User_Token:localStorage.getItem('User_Token'),
-
+      BranchID:['0'],
+      DeptID:['0'],
+      SubfolderID:[0], 
+      RootID:[0],
       id:[0]
      });
    //  this.geBranchList();
 
    this.BindUserLog();
    this.StatusList();
-   this.GetUploadList();
-  this.BindFileUpload();
+   this.getRootList();
+  //  this.GetUploadList();
+  // this.BindFileUpload();
 
 
 
@@ -225,7 +233,7 @@ export class DashboardComponent implements OnInit {
 
     // Cursor
     this.chartActivity.cursor = new am4charts.XYCursor();
-    this.upDateActivityGraph();
+  //  this.upDateActivityGraph();
 
   }
 
@@ -241,8 +249,102 @@ export class DashboardComponent implements OnInit {
      this.GetUploadList();
      this.chartFirst.validateData();
     }
+
+    
   }
 
+
+
+  getRootList() {
+    
+    const apiUrl=this._global.baseAPIUrl+"RootMaster/GetRootByUserID?UserID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token'); 
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+      this._RootList = data;
+   //  this._FilteredList = data
+   this.DashboardForm.controls['DeptID'].setValue(0);
+   this.DashboardForm.controls['BranchID'].setValue(0);
+   this.DashboardForm.controls['SubfolderID'].setValue(0);  
+     //console.log(this._FilteredList );
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
+  }
+
+  geBranchListByUserID(userid: number) {
+    //     alert(this.BranchMappingForm.value.UserID);
+    this.geBranchList(userid);
+  }
+
+  geBranchList(userid: any) {
+    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+    const apiUrl = this._global.baseAPIUrl + "BranchMaster/GetBranchByDeptIDANDUserwise?UserID=" +localStorage.getItem('UserID')+"&DeptID="+userid+ "&user_Token="+localStorage.getItem('User_Token');
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+      this.BranchList = data;
+    //  this._FilteredList = data;
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
+  }
+
+  getDepartmnet(RootID: any) {
+
+    const apiUrl = this._global.baseAPIUrl + "Department/GetDepartmentByUserID?UserID="+localStorage.getItem('UserID')+"&RoleID="+RootID+"&user_Token="+localStorage.getItem('User_Token');
+
+ //   const apiUrl=this._global.baseAPIUrl+'Department/GetDepartmentByUserID?user_Token='+ localStorage.getItem('User_Token');
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
+    this._DepartmentList = data;
+   // this._DepartmentLists=data;
+//    console.log("data : -", data);
+    this.DashboardForm.controls['DeptID'].setValue(0);
+    this.DashboardForm.controls['BranchID'].setValue(0);
+   // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
+    
+
+    //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
+
+    }
+
+    getEntityForUser(BranchID: number) {
+      this.getEntity(BranchID);
+    }
+
+
+    getEntity(BranchID: number) {
+
+      alert(BranchID);
+      const apiUrl =this._global.baseAPIUrl +"SubFolderMapping/GetSubFolderByBranch?UserID="+localStorage.getItem('UserID')+"&CreatedBy="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token')+"&BranchID="+ BranchID;
+  
+   //   const apiUrl =this._global.baseAPIUrl +"SubFolderMapping/GetDetails?ID="+userid+"&user_Token="+this.EntityMappingForm.get("User_Token").value;;
+      //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+      this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
+        this.EntityList = res;
+        this.DashboardForm.controls['SubfolderID'].setValue(0);
+        //  this.checkbox_list = [];
+        //this.checkbox_list = res;
+        //this.checklistArray.clear()
+        // this.checkbox_list.forEach(item => {
+        //   let fg = this.formBuilder.group({
+        //     id: [item.id],
+        //     SubfolderName: [item.SubfolderName],
+        //     ischecked: [item.ischecked]
+        //     })
+        //     this.checklistArray.push(fg)
+        // });
+      //  console.log('Branch Mapping -> ',res);
+        
+        // this.itemRows = Array.from(Array(Math.ceil(this.checkbox_list.length/2)).keys())
+  
+        //this.productsArray = res;
+        //  this.checkbox_list= res;
+        //this.checklist =res;
+      });
+    }
+
+    OnSearch()
+    {
+
+
+      
+    }
 
 
     // generate some random data, quite different range
@@ -279,36 +381,36 @@ export class DashboardComponent implements OnInit {
 
     
 
-  public upDateActivityGraph() {
+  // public upDateActivityGraph() {
   
-    this.updateActivityChartInterval = setInterval(() => {
-     // console.log("updating");
-      this.GetActivityList(); 
-      this.chartActivity.validateData();
-      this.GetUploadList();
-      //Uncomment below line if you want to see good data
-      //this.generateChartData(30);
-      this.chartFirst.validateData();
-      this.GetFileUploadList();
-      this.chartFirstFU.validateData();
-      this.GetActivityLog();
-      this.chartActivityLog.validateData();
-    }, 600000)
-  }
+  //   this.updateActivityChartInterval = setInterval(() => {
+  //    // console.log("updating");
+  //     this.GetActivityList(); 
+  //     //this.chartActivity.validateData();
+  //     this.GetUploadList();
+  //     //Uncomment below line if you want to see good data
+  //     //this.generateChartData(30);
+  //     //this.chartFirst.validateData();
+  //     this.GetFileUploadList();
+  //   //  this.chartFirstFU.validateData();
+  //     this.GetActivityLog();
+  //     //this.chartActivityLog.validateData();
+  //   }, 600000)
+  // }
 
 
-  ngOnDestroy() {
-    clearInterval(this.updateActivityChartInterval);
-    this.zone.runOutsideAngular(() => {
-      if (this.chartFirst) {
-        this.chartFirst.dispose();
-        this.chartFirstFU.dispose();
-        this.chartActivityLog.dispose();
-        this.chartActivity.dispose();
-      }
-    });
+  // ngOnDestroy() {
+  //   clearInterval(this.updateActivityChartInterval);
+  //   this.zone.runOutsideAngular(() => {
+  //     if (this.chartFirst) {
+  //       this.chartFirst.dispose();
+  //       this.chartFirstFU.dispose();
+  //       this.chartActivityLog.dispose();
+  //       this.chartActivity.dispose();
+  //     }
+  //   });
 
-  }
+  // }
 
   StatusList() {
 

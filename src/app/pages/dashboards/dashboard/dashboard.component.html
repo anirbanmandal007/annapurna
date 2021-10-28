@@ -179,16 +179,72 @@
   </div>
 </div>
 
-<div class=" container-fluid mt--6">
+<div class=" container-fluid mt--7">
   <div class=" row">
     <div class=" col-xl-6">
       <div class=" card bg-default">
         <div class=" card-header bg-black">
           <div class=" row align-items-center">
-            <div class=" col">
-            
+            <div>
 
-              <h5 class=" h3 text-white mb-0">Data Upload Analysis</h5>
+              <div class="position-relative row form-group">  
+
+                <!-- <div class="col-lg-3 col-md- col-sm-3 col-xs-4  margin-bottomcls">      
+              <label class="form-control-label" for="TemplateID">Doc Type :</label>         
+              <select name="DocID" id="DocID" class="form-control" formControlName="DocID" >
+                     <option value=0>Select Doc Type</option>   
+                     <option *ngFor="let _Doc of _DocTypeList" [value]="_Doc.DocTypeID"  >  
+                     {{_Doc.DocName}}  
+                     </option>   
+               </select>
+           </div> -->
+
+           <div class="col">               
+            <select name="RootID" id="RootID" class="form-control form-control-sm" formControlName="RootID" (change)="getDepartmnet($event.target.value)" >
+              <option value=0>Select Root</option>   
+              <option *ngFor="let Root of _RootList" [value]="Root.RootID"  >  
+              {{Root.RootfolderName}}  
+              </option>
+            </select>
+          </div>  
+         
+           <div class="col">               
+            <select name="DeptID" id="DeptID" class="form-control form-control-sm" formControlName="DeptID" (change)="geBranchListByUserID($event.target.value)" >
+              <option value=0>Select Cabinet</option>   
+              <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
+              {{_Department.DepartmentName}}  
+              </option>
+            </select>
+          </div>  
+
+          <div class="col">    
+            <!-- <label class="form-control-label" for="TemplateID">Customer :</label>   -->
+            <select name="BranchID" id="BranchID" class="form-control form-control-sm" formControlName="BranchID" (change)="getEntityForUser($event.target.value)" >
+              <option value='0'>Select Folder</option>   
+              <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
+              {{_Bracnch.BranchName}}  
+              </option>
+            </select>
+          </div>  
+
+          <div class="col">    
+            <!-- <label class="form-control-label" for="TemplateID">Entity :</label>   -->
+            <select name="SubfolderID" id="SubfolderID" class="form-control form-control-sm" formControlName="SubfolderID" >
+              <option value=0>Select Sub Folder</option>   
+              <option *ngFor="let _Entity of EntityList" [value]="_Entity.id"  >  
+              {{_Entity.SubfolderName}}  
+              </option>
+            </select>
+          </div>  
+
+          <div class="col">    
+            <button type="button" class="btn btn-primary" (click)="OnSearch()" style="float: right;text-align: right; padding: 5px 15px;">
+              Search
+              <!-- <i class="fa fa-refresh"></i> -->
+            </button>
+          </div>  
+          </div>
+
             </div>
 
             <!-- <div class="col">
@@ -216,9 +272,36 @@
         </div>
 
         <div class="card-body bg-white">
-          <div class=" chart">
+          <!-- <div class=" chart">
             <div style="height:100%;width: 100%;" id="chart-sales-dark" class="chart-canvas"></div>
+          </div> -->
+
+          <div class=" col">
+            <h5 class=" card-title text-uppercase text-muted mb-0">
+              Total Files :
+              <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+                <div class=" icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                  <i class="fa fa-download"> </i>
+              </div>
+
+            </h5>
+            <h5 class=" card-title text-uppercase text-muted mb-0">
+              Total Metadata : 
+              <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+              <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="fa fa-download"> </i>
+              </div>
+            </h5>
+            <h5 class=" card-title text-uppercase text-muted mb-0">
+              Total Image Count : 
+              <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+              <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="fa fa-download"> </i>
+              </div>
+            </h5>
+           
           </div>
+
         </div>
       </div>
     </div>
@@ -231,6 +314,8 @@
             <div class=" col">
              
               <h5 class=" h3 text-white mb-0">File Upload Analysis</h5>
+
+
             </div>
 
             <!-- <div class="col">
@@ -303,6 +388,8 @@
       </div>
     </div>
   </div>
+
+  
   </div>
 
 </div>

@@ -124,6 +124,8 @@ export class FileUploadComponent implements OnInit {
       this.FileUPloadForm.controls['SubfolderID'].setValue(0);    
 
       this.FileUPloadForm.controls['DeptID'].setValue(0);
+      this.FileUPloadForm.controls['RootID'].setValue(0);
+      
       // this.FileUPloadForm.controls['BranchID'].setValue(0);
       // this.FileUPloadForm.controls['SubfolderID'].setValue(0);  
 
