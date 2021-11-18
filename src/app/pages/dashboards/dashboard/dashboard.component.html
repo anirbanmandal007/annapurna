@@ -183,7 +183,7 @@
   <div class=" row">
     <div class=" col-xl-6">
       <div class=" card bg-default">
-        <div class=" card-header bg-black">
+        <div class=" card-header bg-silver">
           <div class=" row align-items-center">
             <div>
 
@@ -277,8 +277,42 @@
           </div> -->
 
           <div class=" col">
+            <h2 class=" card-title text-uppercase text-muted mb-0">
+              Statistics :
+            </h2>
             <h5 class=" card-title text-uppercase text-muted mb-0">
-              Total Files :
+              Root : 
+              <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+              <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="fa fa-download"> </i>
+              </div>
+            </h5>
+
+            <h5 class=" card-title text-uppercase text-muted mb-0">
+              Cabinet : 
+              <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+              <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="fa fa-download"> </i>
+              </div>
+            </h5>
+            <h5 class=" card-title text-uppercase text-muted mb-0">
+              Folder : 
+              <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+              <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="fa fa-download"> </i>
+              </div>
+            </h5>
+
+            <h5 class=" card-title text-uppercase text-muted mb-0">
+              SubFolder : 
+              <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+              <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="fa fa-download"> </i>
+              </div>
+            </h5>
+
+            <h5 class=" card-title text-uppercase text-muted mb-0">
+              Files :
               <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
                 <div class=" icon icon-shape bg-gradient-info text-white rounded-circle shadow">
                   <i class="fa fa-download"> </i>
@@ -286,14 +320,21 @@
 
             </h5>
             <h5 class=" card-title text-uppercase text-muted mb-0">
-              Total Metadata : 
+              Metadata : 
               <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
               <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
                 <i class="fa fa-download"> </i>
               </div>
             </h5>
             <h5 class=" card-title text-uppercase text-muted mb-0">
-              Total Image Count : 
+              Image Count : 
+              <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+              <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="fa fa-download"> </i>
+              </div>
+            </h5>
+            <h5 class=" card-title text-uppercase text-muted mb-0">
+              Space : 
               <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
               <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
                 <i class="fa fa-download"> </i>
@@ -343,14 +384,14 @@
 
         <div class="card-body bg-white">
           <div class=" chart">
-            <div style="height:100%;width: 100%;" id="chart-fileupload" class="chart-canvas"></div>
+            <div style="height:100%;width: 100%;" id="chartdivline" class="chart-canvas"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class=" row">
+  <!-- <div class=" row">
     <div class=" col-xl-6">
       <div class=" card">
         <div class=" card-header bg-black">
@@ -390,7 +431,7 @@
   </div>
 
   
-  </div>
+  </div> -->
 
 </div>
 

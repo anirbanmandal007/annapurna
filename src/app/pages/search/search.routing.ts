@@ -5,6 +5,10 @@ import { ContentSearchComponent } from './Content-Search/Content-Search.componen
 import { BulkDownlaodComponent } from './BulkDownlaod/BulkDownlaod.component';
 import { SearchComponent } from './Search/Search.component';
 import { DeleteFilesComponent } from './DeleteFiles/DeleteFiles.component';
+import { BasicSearchComponent } from './Basic-Search/Basic-Search.component';
+
+import { OCRSearchComponent } from './ocr-Search/ocr-Search.component';
+
 
 //DataUploadComponent
  
@@ -35,6 +39,14 @@ export const searchRoutes: Routes = [
       {
         path: "DeleteFiles",
        component: DeleteFilesComponent
+      } ,
+      {
+        path: "BasicSearch",
+       component: BasicSearchComponent
+      } ,
+      {
+        path: "OCRSearch",
+       component: OCRSearchComponent
       } ,
             
     ]

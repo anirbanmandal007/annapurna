@@ -462,6 +462,21 @@ export class SidebarComponent implements OnInit {
         route = { path: "file-storage", title: "File Storage", type: "link" }
         break;
       }
+      case "BasicSearch":{
+        route = { path: "BasicSearch", title: "Basic Search", type: "link" }
+        break;
+      }
+
+      case "OCRSearch":{
+        route = { path: "OCRSearch", title: "OCR Search", type: "link" }
+        break;
+      }
+
+
+      
+
+
+      
       // case "ASearch":{
       //   route = { path: "ASearch", title: "Search", type: "link" }
       //   break;
