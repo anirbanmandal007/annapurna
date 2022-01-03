@@ -203,3 +203,13 @@ body .ui-table .ui-table-tbody > tr:hover {
 .mat-menu-trigger[aria-expanded="true"] {
   background-color: #FFD86F;
 }
+
+.date-only,
+.numeric-only,
+.letter-only,
+.text-required,
+.alpha-numeric-only
+ {
+  background:red;
+  color: #fff;
+ }

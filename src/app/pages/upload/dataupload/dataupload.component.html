@@ -108,7 +108,7 @@
               </div>
             </div>
           </div>
-          <p *ngIf="hasDataError()" style="padding-left: 8px; color: red; font-weight: bold;">You have one or more errors in uploaded data. Please re-upload with correct data</p>
+          <p *ngIf="isValidationError" style="padding-left: 8px; color: red; font-weight: bold;">You have one or more errors in uploaded data. Please re-upload with correct data</p>
           <ngx-datatable
             class="material"
             [columnMode]="'force'"

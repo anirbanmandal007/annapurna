@@ -45,6 +45,7 @@ _TempID: any = 0;
 
 myFiles:string [] = [];
 _FileDetails:string [][] = [];
+isValidationError: any;
 
 @Output() public onUploadFinished = new EventEmitter();
   constructor(
@@ -588,7 +589,10 @@ console.log(headers);
     // return {
     //   'date-field': this._ColNameList.filter((el, index) => el.DisplayName === column.name)[0].FieldType === '3'
     // }
-
+    console.log(row, column);
+    if(row[2]==="2fsf_") {
+      debugger;
+    }
     const field = this._ColNameList.filter((el, index) => el.DisplayName === column.name)[0];
     const fieldIndex = this._ColNameList.findIndex(el => el.DisplayName === column.name);
     let cssClass = '';
@@ -613,11 +617,17 @@ console.log(headers);
           cssClass = ' error date-only';
         }
         break;
+
+      case ('5') :
+        if(!(/^\w+$/.test(row[fieldIndex]))) { // Alpha-Numeric validation check
+          cssClass = ' error alpha-numeric-only';
+        }
+        break;
         
     }
     return cssClass;
   }
-
+  
   getTooltipDate(tooltipRef) {
     let tooltipData = '';
     if(tooltipRef.parentElement.parentElement.classList.contains('text-required')) {
@@ -628,6 +638,11 @@ console.log(headers);
       tooltipData = 'Only numeric fields are allowed';
     } else if(tooltipRef.parentElement.parentElement.classList.contains('date-only')) {
       tooltipData = 'Date required in dd-mm-yyyy format';
+    } else if(tooltipRef.parentElement.parentElement.classList.contains('alpha-numeric-only')) {
+      tooltipData = 'Only letters and digits are allowed';
+    }
+    if(tooltipData !== '') {
+      this.isValidationError = true;
     }
     return tooltipData;
   }
