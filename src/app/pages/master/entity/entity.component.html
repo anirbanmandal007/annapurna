@@ -91,34 +91,21 @@
             <ngx-datatable-column name="SrNo">
               <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex+1}}</ng-template>
             </ngx-datatable-column>
-
-            <ngx-datatable-column name="Rootfolder">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.RootfolderName}}</ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="Cabinet">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.DepartmentName}}</ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="FOLDER">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.BranchName}}</ng-template>
-            </ngx-datatable-column>
-
+           
             <ngx-datatable-column name="SUBFOLDER">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.SubfolderName}}</ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column name="FolderOwner">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.name}}</ng-template>
+            <ngx-datatable-column name="FOLDER">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.BranchName}}</ng-template>
             </ngx-datatable-column>
 
-
-            
             
             <ngx-datatable-column name="Action" sortable="false" prop="id">
               <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                <!-- <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-warning btn-icon-only rounded-circle" (click)="editEntity(BranchFormPopup,row)">
+                <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-warning btn-icon-only rounded-circle" (click)="editEntity(BranchFormPopup,row)">
                   <span class="btn-inner--icon"><i class="fa fa-edit"></i></span>
-                </button> -->
+                </button>
                 <button type="button" style="padding:0 0 5px 1px" class="btn btn-icon btn-danger btn-icon-only rounded-circle" (click)="deleteEntity(value)">
                   <span class="btn-inner--icon"><i class="fa fa-times"></i></span>
                 </button>
@@ -143,39 +130,22 @@
           <form class="needs-validation" novalidate="" [formGroup]="AddEntityForm" (ngSubmit)="onSubmit()">
             <div class="form-row">
 
-              <div class="col-sm-6">               
-                <select name="RootID" id="RootID" class="form-control form-control-sm" formControlName="RootID" (change)="getDepartmnet($event.target.value)" >
-                  <option value=0>Select Root</option>   
-                  <option *ngFor="let Root of _RootList" [value]="Root.RootID"  >  
-                  {{Root.RootfolderName}}  
-                  </option>
-                </select>
-              </div>  
-
-              <div class="col-sm-6">               
-                <select name="DeptID" id="DeptID" class="form-control form-control-sm " formControlName="DeptID" (change)="geBranchListByUserID($event.target.value)" >
-                  <option value=0>Select Cabinet</option>   
-                  <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
-                  {{_Department.DepartmentName}}  
-                  </option>
-                </select>
-              </div>  
-
-              <div class="col-sm-6  pt-3">               
-                <select name="BranchID" id="BranchID" class="form-control form-control-sm " formControlName="BranchID" >
-                  <option value='0'>Select Folder</option>   
-                  <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.id"  >  
+              <div class="col-md-12 mb-3">          
+                <select name="BranchID" id="BranchID" class="form-control" formControlName="BranchID" >
+                  <option value=0>Select Folder</option>   
+                  <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
                   {{_Bracnch.BranchName}}  
                   </option>
                 </select>
-              </div> 
+              </div>  
 
-              <div class="col-sm-6  pt-3">                  
-                <input class="form-control form-control-sm"  formControlName="SubfolderName" placeholder="Name" type="text"/>
+              <div class="col-md-12 mb-3">
+                <label class="form-control-label" for="Customer">
+                  Name
+                </label>
+                <input class="form-control" id="SubfolderName" formControlName="SubfolderName" placeholder="Name" type="text"/>
                 <div class="valid-feedback">Looks good!</div>
               </div>
-
-
             </div>
             <button class=" btn btn-primary" type="submit">
               Submit

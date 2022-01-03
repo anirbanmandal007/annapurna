@@ -27,8 +27,8 @@ import { LoginNewComponent } from './pages/login-new/login-new.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { HttpRequestInterceptor } from './Services/http-request-interceptor';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
-import { SelectDropDownModule } from 'ngx-select-dropdown'
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @NgModule({
   imports: [
@@ -45,7 +45,8 @@ import { SelectDropDownModule } from 'ngx-select-dropdown'
     TagInputModule,
     PresentationModule,
     MatProgressSpinnerModule,
-    SelectDropDownModule
+    NgMultiSelectDropDownModule.forRoot(),
+    NgxCaptchaModule
   ],
   declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent,LoginNewComponent, ForgetPasswordComponent],
   providers: [AuthGuardService, Listboxclass, Globalconstants, { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true }],

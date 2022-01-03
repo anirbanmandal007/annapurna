@@ -44,7 +44,6 @@ export class DataEntryComponent implements OnInit {
   _TempID: any =0;
   _FileNo:any="";
   _MDList:any;
-  fileExt:any;
  
   _PageNo:number=1;
   FilePath:any="../assets/1.pdf";
@@ -132,7 +131,7 @@ export class DataEntryComponent implements OnInit {
       this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._IndexPendingList = data;
       this._FilteredList = data
-     //console.log("IndexListPending",data);
+     console.log("IndexListPending",data);
         //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
       });
     }
@@ -369,9 +368,9 @@ export class DataEntryComponent implements OnInit {
     onSubmit() {
     this.submitted = true;
 
-    // if(!this.validateFields()) {
-    //   return;
-    // }
+    if(!this.validateFields()) {
+      return;
+    }
 
     // if (this.DataUploadForm.invalid) {
 
@@ -548,7 +547,7 @@ export class DataEntryComponent implements OnInit {
          // console.log("res",res);
             this.FilePath = res;
              /// saveAs(res, row.ACC + '.pdf');
-             this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
+    
           }
         });
       }

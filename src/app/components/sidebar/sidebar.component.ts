@@ -405,21 +405,14 @@ export class SidebarComponent implements OnInit {
         route = { path: "TemplateConfiguration", title: "Template Configuration", type: "link" }
         break;
       }
-      case "SubFolder":{
-        route = { path: "SubFolder", title: "Sub Folder", type: "link" }
+      case "entity":{
+        route = { path: "entity", title: "Sub Folder", type: "link" }
         break;
       }
-      case "Subfoldermapping":{
-        route = { path: "Subfoldermapping", title: "Sub Folder Mapping", type: "link" }
+      case "entity-mapping":{
+        route = { path: "entity-mapping", title: "Sub Folder Mapping", type: "link" }
         break;
       }  
-      case "rootfolder":{
-        route = { path: "rootfolder", title: "Root Folder", type: "link" }
-        break;
-      }  
-
-      
-
       case "Process":{
         route = {
           path: "/process",
@@ -466,17 +459,15 @@ export class SidebarComponent implements OnInit {
         route = { path: "BasicSearch", title: "Basic Search", type: "link" }
         break;
       }
-
-      case "OCRSearch":{
-        route = { path: "OCRSearch", title: "OCR Search", type: "link" }
+      case "BasicSearch":{
+        route = { path: "BasicSearch", title: "Basic Search", type: "link" }
         break;
       }
-
-
-      
-
-
-      
+      case "globalsearch":{
+        route = { path: "globalsearch", title: "Global Search", type: "link" }
+        break;
+      }
+ 
       // case "ASearch":{
       //   route = { path: "ASearch", title: "Search", type: "link" }
       //   break;

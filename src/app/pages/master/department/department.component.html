@@ -90,13 +90,7 @@
           >
             <ngx-datatable-column name="SrNo">
               <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex+1}}</ng-template>
-            
             </ngx-datatable-column>
-
-            <ngx-datatable-column name="Rootfolder">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.RootfolderName}}</ng-template>
-            </ngx-datatable-column>
-
             <ngx-datatable-column name="Cabinet">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.DepartmentName}}</ng-template>
             </ngx-datatable-column>
@@ -127,27 +121,10 @@
           <form class="needs-validation" novalidate="" [formGroup]="AddDepartmentForm" (ngSubmit)="onSubmit()">
             <div class="form-row">
               <div class="col-md-12 mb-3">
-                
-                <select
-                  name="RootID"
-                  id="RootID"
-                  class="form-control"
-                  formControlName="RootID"                  
-                >
-                  <option value=0>Select Root Folder</option>
-                  <option
-                    *ngFor="let _Root of _RootList"
-                    [value]="_Root.id"
-                  >
-                    {{ _Root.RootfolderName }}
-                  </option>
-                </select>
-              </div>
-
-
-              <div class="col-md-12 mb-3">
-              
-                <input class="form-control"   formControlName="DepartmentName" placeholder="Name" type="text"/>
+                <label class="form-control-label" for="DepartmentName">
+                  Name
+                </label>
+                <input class="form-control" id="DepartmentName" formControlName="DepartmentName" placeholder="Name" type="text"/>
                 <div class="valid-feedback">Looks good!</div>
               </div>
             </div>

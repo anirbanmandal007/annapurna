@@ -259,3 +259,7 @@ color:#CC0000;
   padding: 80px 0;
 }
 }
+
+button[disabled] {
+  opacity: 0.3;
+}

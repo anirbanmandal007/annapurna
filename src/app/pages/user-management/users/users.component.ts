@@ -4,7 +4,6 @@ import { Component, OnInit, TemplateRef } from "@angular/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { FormGroup,FormControl, FormBuilder, Validators } from "@angular/forms";
 import swal from "sweetalert2";
-import { ToastrService } from "ngx-toastr";
 export enum SelectionType {
   single = "single",
   multi = "multi",
@@ -40,8 +39,7 @@ export class UsersComponent implements OnInit {
     private modalService: BsModalService,
     private formBuilder: FormBuilder,
     private _onlineExamService: OnlineExamServiceService,
-    private _global: Globalconstants,
-    public toastr: ToastrService
+    private _global: Globalconstants
   ) {}
   ngOnInit() {
     this.AddUserForm = this.formBuilder.group({
@@ -53,7 +51,7 @@ export class UsersComponent implements OnInit {
       //Cpwd: ['', Validators.required],
       email: ["", [Validators.required, Validators.pattern(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
     ]],
-      mobile: [""],
+      mobile: ["", Validators.required],
       sysRoleID: ["", Validators.required],
       Remarks: [""],
       User_Token: localStorage.getItem('User_Token'),
@@ -143,10 +141,6 @@ export class UsersComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true; 
-  if(!this.validateFields()) {
-      return;
-    }
-
     if(this.AddUserForm.value.User_Token == null) {
       this.AddUserForm.value.User_Token = localStorage.getItem('User_Token');
     }
@@ -264,69 +258,9 @@ export class UsersComponent implements OnInit {
       confirmPass: '',
       email: '',
       mobile: '',
-      sysRoleID:0,
+      sysRoleID: '',
       Remarks: ''
     })
   }
-
-  validateFields()
-  {
-    if (this.AddUserForm.get('name').value =="" )
-    {
-             this.showmessage("Please Enter name");
-              return false;
-    }
-    if (this.AddUserForm.get('userid').value =="" )
-    {
-             this.showmessage("Please Enter userid");
-              return false;
-    }
-
-    if (this.AddUserForm.get('email').value =="" )
-    {
-             this.showmessage("Please Enter Email");
-              return false;
-    }
-    if (this.AddUserForm.get('pwd').value =="" )
-    {
-             this.showmessage("Please Enter pwd");
-              return false;
-    }
-    if (this.AddUserForm.get('confirmPass').value =="" )
-    {
-             this.showmessage("Please Enter confirmPass");
-              return false;
-    }
-    if (this.AddUserForm.get('sysRoleID').value <=0 )
-    {
-             this.showmessage("Please select role confirmPass");
-              return false;
-    }   
-
-    return true;
-
-
-  }
-
-  showmessage(data:any)
-  {
-    this.toastr.show(
-      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Validation ! </span> <span data-notify="message"> '+ data +' </span></div>',
-      "",
-      {
-        timeOut: 3000,
-        closeButton: true,
-        enableHtml: true,
-        tapToDismiss: false,
-        titleClass: "alert-title",
-        positionClass: "toast-top-center",
-        toastClass:
-          "ngx-toastr alert alert-dismissible alert-danger alert-notify"
-      }
-    );
-
-
-  }
-
 }
 

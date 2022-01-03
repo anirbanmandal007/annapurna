@@ -110,23 +110,20 @@
             <ngx-datatable-column name="UserName">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.UserName}}</ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Rootfolder">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.RootfolderName}}</ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Cabinet">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.DepartmentName}}</ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="FOLDER">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.BranchName}}</ng-template>
-            </ngx-datatable-column>
             <ngx-datatable-column name="Sub Folder">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.SubfolderName}}</ng-template>
             </ngx-datatable-column>
+
+            <ngx-datatable-column name="Folder">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.BranchName}}</ng-template>
+            </ngx-datatable-column>
+
+
             <ngx-datatable-column name="Action" sortable="false" prop="id">
               <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                <!-- <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-warning btn-icon-only rounded-circle" (click)="editEntityMapping(EntityMappingFormPopup,row.UserID)">
+                <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-warning btn-icon-only rounded-circle" (click)="editEntityMapping(EntityMappingFormPopup,row.UserID)">
                   <span class="btn-inner--icon"><i class="fa fa-edit"></i></span>
-                </button> -->
+                </button>
                 <button type="button" style="padding:0 0 5px 1px" class="btn btn-icon btn-danger btn-icon-only rounded-circle" (click)="deleteEntity(value)">
                   <span class="btn-inner--icon"><i class="fa fa-times"></i></span>
                 </button>
@@ -148,36 +145,12 @@
         <div class="card-body">
           <form class="needs-validation" novalidate="" [formGroup]="AddEntityMappingForm" (ngSubmit)="onSubmit()">
             <div class="form-row">
-
-              <div class="col-sm-6">               
-                <select name="RootID" id="RootID" class="form-control form-control-sm" formControlName="RootID" (change)="getDepartmnet($event.target.value)" >
-                  <option value=0>Select Root</option>   
-                  <option *ngFor="let Root of _RootList" [value]="Root.RootID"  >  
-                  {{Root.RootfolderName}}  
-                  </option>
-                </select>
-              </div>
-              <div class="col-sm-6">               
-                <select name="DeptID" id="DeptID" class="form-control form-control-sm" formControlName="DeptID" (change)="geBranchListByUserID($event.target.value)" >
-                  <option value=0>Select Cabinet</option>   
-                  <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
-                  {{_Department.DepartmentName}}  
-                  </option>
-                </select>
-              </div>  
-
-              <div class="col-sm-6 pt-3">               
-                <select name="BranchID" id="BranchID" class="form-control form-control-sm" formControlName="BranchID" (change)="getEntity(0)">
-                  <option value=0>Select Folder</option>   
-                  <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.id"  >  
-                  {{_Bracnch.BranchName}}  
-                  </option>
-                </select>
-              </div> 
-
-              <div class="col-sm-6 pt-3">              
+              <div class="col-md-12 mb-3">
+                <label class="form-control-label" for="UserID">
+                  User
+                </label>
                 <select class="form-control form-control-sm" formControlName="UserID" data-toggle="select" id="UserID"
-                (change)="getEntityByUserID($event.target.value)">
+                (change)="getEntityForUser($event.target.value)">
                   <option value=0> Select User</option>
                   <option *ngFor="let _User of _UserL" [value]="_User.id"  >
                     {{_User.userid}}

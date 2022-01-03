@@ -41,8 +41,6 @@ export class MetadataComponent implements OnInit {
   _HeaderList:any;
   TemplateList:any;
   BranchList:any;
-  _DepartmentList:any;
-  _RootList:any;
 
   bsValue = new Date();
   bsRangeValue: Date[];
@@ -62,67 +60,14 @@ export class MetadataComponent implements OnInit {
   ngOnInit() {
     this.MetaDataForm = this.formBuilder.group({
      
-      TemplateID: [0, Validators.required],  
+      TemplateID: ['', Validators.required], 
+
+      BranchID: ['', Validators.required],
       User_Token: localStorage.getItem('User_Token') , 
-      BranchID:['0'],
-      DeptID:['0'],
-      SubfolderID:[0], 
-      RootID:[0],
-      userID: localStorage.getItem('UserID') ,
-  
     });
     this.getTemplate();
-    this.getRootList();
+    this.geBranchList();
   }
-
-  getRootList() {
-    
-    const apiUrl=this._global.baseAPIUrl+"RootMaster/GetRootByUserID?UserID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token'); 
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-      this._RootList = data;
-   //  this._FilteredList = data
-   this.MetaDataForm.controls['DeptID'].setValue(0);
-   this.MetaDataForm.controls['BranchID'].setValue(0);
-   this.MetaDataForm.controls['SubfolderID'].setValue(0);  
-     //console.log(this._FilteredList );
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-  }
-
-
-  geBranchListByUserID(userid: number) {
-    //     alert(this.BranchMappingForm.value.UserID);
-    this.geBranchList(userid);
-  }
-
-  geBranchList(userid: any) {
-    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl = this._global.baseAPIUrl + "BranchMaster/GetBranchByDeptIDANDUserwise?UserID=" +localStorage.getItem('UserID')+"&DeptID="+userid+ "&user_Token="+localStorage.getItem('User_Token');
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-      this.BranchList = data;
-    //  this._FilteredList = data;
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-  }
-
-  getDepartmnet(RootID: any) {
-
-    const apiUrl = this._global.baseAPIUrl + "Department/GetDepartmentByUserID?UserID="+localStorage.getItem('UserID')+"&RoleID="+RootID+"&user_Token="+localStorage.getItem('User_Token');
-
- //   const apiUrl=this._global.baseAPIUrl+'Department/GetDepartmentByUserID?user_Token='+ localStorage.getItem('User_Token');
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-    this._DepartmentList = data;
-   // this._DepartmentLists=data;
-//    console.log("data : -", data);
-    this.MetaDataForm.controls['DeptID'].setValue(0);
-    this.MetaDataForm.controls['BranchID'].setValue(0);
-   // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
-    
-
-    //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-
-    }
 
   entriesChange($event) {
     this.entries = $event.target.value;
@@ -176,6 +121,25 @@ export class MetadataComponent implements OnInit {
     this.MetaDataForm.reset({User_Token: localStorage.getItem('User_Token')});
   }
 
+  geBranchList() {
+    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "BranchMapping/GetBranchDetailsUserWise?ID=" +
+      localStorage.getItem('UserID') +
+      "&user_Token=" +
+      this.MetaDataForm.get("User_Token").value;
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+      this.BranchList = data;
+      this.MetaDataForm.controls['TemplateID'].setValue(0);
+      this.MetaDataForm.controls['BranchID'].setValue(0);
+
+      
+    //  this._FilteredList = data;
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
+  }
+
   getTemplate() {  
 
     const apiUrl = this._global.baseAPIUrl + 'TemplateMapping/GetTemplateMappingListByUserID?UserID=' + localStorage.getItem('UserID') + '&user_Token='+localStorage.getItem('User_Token')   
@@ -190,12 +154,26 @@ export class MetadataComponent implements OnInit {
 });
 }
  
+  // getMetdataList() {  
+
+  //   const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataReport';          
+  //   this._onlineExamService.postData(this.MetaDataForm.value,apiUrl)
+  //   // .pipe(first())
+
+  //   .subscribe( data => {
+     
+  //     //console.log("MD",data);
+  //     this._StatusList = data;     
+  //     this._FilteredList = data;     
+  //     this.GetHeaderNames();
+  //   });
+  // }
+
   getMetdataList() {  
 
-    const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataReport';          
+    const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataReportByCustomer';          
     this._onlineExamService.postData(this.MetaDataForm.value,apiUrl)
     // .pipe(first())
-
     .subscribe( data => {
      
       //console.log("MD",data);
@@ -244,8 +222,9 @@ GetHeaderNames()
     // headerArray.push(headers[j]);  
   }
   this._HeaderList +=','+"PageCount"
-  this._HeaderList +=','+"Folder"
-  this._HeaderList +=','+"SubFolder"
+
+  this._HeaderList +=','+"SubfolderName"
+
   this._HeaderList += '\n'
   this._StatusList.forEach(stat => {
     for (let j = 0; j < this._ColNameList.length; j++) {  
@@ -254,7 +233,6 @@ GetHeaderNames()
       // headerArray.push(headers[j]);  
     }
     this._HeaderList +=',' +stat.PageCount; 
-    this._HeaderList +=',' +stat.BranchName; 
     this._HeaderList +=',' +stat.SubfolderName; 
     this._HeaderList += '\n'
   });
@@ -283,7 +261,7 @@ downloadFile() {
         dwldLink.setAttribute("target", "_blank"); 
     } 
     dwldLink.setAttribute("href", url); 
-    dwldLink.setAttribute("download", 'data' + ".csv"); 
+    dwldLink.setAttribute("download", 'MetaData' + ".csv"); 
     dwldLink.style.visibility = "hidden"; 
     document.body.appendChild(dwldLink); 
     dwldLink.click(); 

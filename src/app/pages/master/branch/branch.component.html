@@ -43,7 +43,7 @@
         </div>
         <div class="dataTables_wrapper py-4">
           <div class="row">
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-6">
               <div class="dataTables_length" id="datatable_length">
                 <label>
                   Show
@@ -62,25 +62,7 @@
                 </label>
               </div>
             </div>
-
-            
-            <div class="col-sm-5 col-md-3">
-             
-              <select  name="DeptIDS"                
-                class="form-control"  (change)="geBranchListByUserID($event.target.value)"
-              >
-                <option value=0>Select Cabinet</option>
-                <option
-                  *ngFor="let _Department of _DepartmentList"
-                  [value]="_Department.id"
-                >
-                  {{ _Department.DepartmentName }}
-                </option>
-              </select>
-            </div>
-            
-
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-6">
               <div id="datatable_filter" class="dataTables_filter">
                 <label>
                   <input
@@ -109,17 +91,11 @@
             <ngx-datatable-column name="SrNo">
               <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex+1}}</ng-template>
             </ngx-datatable-column>
-
-            <ngx-datatable-column name="Rootfolder">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.RootfolderName}}</ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="Cabinet">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.DepartmentName}}</ng-template>
-            </ngx-datatable-column>
-
             <ngx-datatable-column name="Folder">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.BranchName}}</ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Cabinet">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.DepartmentName}}</ng-template>
             </ngx-datatable-column>
             
             <ngx-datatable-column name="Action" sortable="false" prop="id">
@@ -152,30 +128,18 @@
             <div class="form-row">
 
               <div class="col-md-12 mb-3">
-                
-                <select name="RootID" class="form-control"  formControlName="RootID" (change)="getDepartmnetByRoleID($event.target.value)" >
-                  <option value=0>Select Root Folder</option>
-                  <option
-                    *ngFor="let _Root of _RootList"
-                    [value]="_Root.id"
-                  >
-                    {{ _Root.RootfolderName }}
+                <select name="DepartmentID" id="DepartmentID" class="form-control" formControlName="DepartmentID" >
+                  <option value=0>Select Cabinet</option>   
+                  <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
+                  {{_Department.DepartmentName}}  
                   </option>
                 </select>
               </div>
 
-
-              <div class="col-sm-12">               
-                <select name="DeptID"  class="form-control" formControlName="DeptID" >
-                  <option value=0>Select Cabinet</option>   
-                  <option *ngFor="let _Department of _Dept" [value]="_Department.id"  >  
-                  {{_Department.DepartmentName}}  
-                  </option>
-                </select>
-              </div>  
-
-              <div class="col-md-12 mb-3 pt-3">
-              
+              <div class="col-md-12 mb-3">
+                <label class="form-control-label" for="Folder">
+                  Name
+                </label>
                 <input class="form-control" id="BranchName" formControlName="BranchName" placeholder="Name" type="text"/>
                 <div class="valid-feedback">Looks good!</div>
               </div>

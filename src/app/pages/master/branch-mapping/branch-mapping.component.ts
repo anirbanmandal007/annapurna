@@ -37,13 +37,11 @@ export class BranchMappingComponent implements OnInit {
   Reset = false;
   sMsg: string = "";
   _userid: any = 0;
-  _DepartmentList:any;
 
   masterSelected: boolean;
   checklist: any;
   checkedList: any;
   __checkedList: string = "";
-  _RootList:any;
 
   userEditID: number;
   master_checked: boolean = false;
@@ -82,17 +80,14 @@ export class BranchMappingComponent implements OnInit {
       id: [0],
       UserID: ["", Validators.required],
       checkedList: [""],
-      RootID:[0],
+          
       checklist: this.formBuilder.array([]),
       selectAll: [false],
-      DeptID: [0],
     });
 
     // this.geBranchListchecked();
     this.geUserList();
     this.geBranchList(0);
-
-    this.getRootList();
   
     //this.getBranch(0);
   }
@@ -109,33 +104,13 @@ export class BranchMappingComponent implements OnInit {
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     const apiUrl =
       this._global.baseAPIUrl +
-      "BranchMapping/GetBranchDetailsUserWise?ID="+userid +"&user_Token=" +this.BranchMappingForm.get("User_Token").value;
+      "BranchMapping/GetBranchDetailsUserWise?ID=" +
+      userid +
+      "&user_Token=" +
+      this.BranchMappingForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this._BranchList = data;
       this._FilteredList = data;
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-  }
-
-
-  getBranchListByDeptID(DeptID: any) {
-    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl = this._global.baseAPIUrl + "BranchMapping/GetBranchListByRegionAndRootWiseAndCreatedBy?CreatedBy=" +localStorage.getItem('UserID')+"&DeptID="+DeptID+ "&user_Token="+localStorage.getItem('User_Token')+ "&userid="+localStorage.getItem('UserID');
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-      this._BranchList = data;
-      this.checkbox_list = [];
-      this.checkbox_list = data;
-      this.checklistArray.clear()
-      this.checkbox_list.forEach(item => {
-        let fg = this.formBuilder.group({
-          id: [item.id],
-          BranchName: [item.BranchName],
-          ischecked: [item.ischecked]
-          })
-          this.checklistArray.push(fg)
-      });
-
-    //  this._FilteredList = data;
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
@@ -147,67 +122,21 @@ export class BranchMappingComponent implements OnInit {
       this.BranchMappingForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
       this._UserL = data;
-      this.AddBranchMappingForm.controls["UserID"].setValue(0);
+      this.BranchMappingForm.controls["UserID"].setValue(0);
       this.BranchMappingForm.controls["UserIDS"].setValue(0);
       
       // this.BranchMappingForm.controls['UserIDM'].setValue(0);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
-
-  getRootList() {
-    
-    const apiUrl=this._global.baseAPIUrl+"RootMaster/GetRootByUserID?UserID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token'); 
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-      this._RootList = data;
-   //  this._FilteredList = data
-   this.AddBranchMappingForm.controls['DeptID'].setValue(0);
-   //this.BranchMappingForm.controls['BranchID'].setValue(0);
-   
-     //console.log(this._FilteredList );
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-  }
-//   getDepartmnet() {
-
-//     const apiUrl=this._global.baseAPIUrl+'Department/GetList?user_Token='+ localStorage.getItem('User_Token');
-//     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-//     this._DepartmentList = data;
-//    // this._DepartmentLists=data;
-// //    console.log("data : -", data);
-//     this.BranchMappingForm.controls['DeptID'].setValue(0);
-//     this.BranchMappingForm.controls['BranchID'].setValue(0);
-//     this.BranchMappingForm.controls['UserID'].setValue(0);
-//    // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
-    
-
-//     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-//     });
-
-//     }
-
-
-getDepartmnet(RootID: any) {
-
-  const apiUrl = this._global.baseAPIUrl + "Department/GetDepartmentByUserID?UserID="+localStorage.getItem('UserID')+"&RoleID="+RootID+"&user_Token="+localStorage.getItem('User_Token');
-
-//   const apiUrl=this._global.baseAPIUrl+'Department/GetDepartmentByUserID?user_Token='+ localStorage.getItem('User_Token');
-  this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-  this._DepartmentList = data;
- // this._DepartmentLists=data;
-//    console.log("data : -", data);
-  this.AddBranchMappingForm.controls['DeptID'].setValue(0);
-  //this.AddBranchMappingForm.controls['BranchID'].setValue(0);
- // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
   
-
-  //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-  });
-
-  }
-  
-  getBranch(UserID: number) {
-    const apiUrl =this._global.baseAPIUrl +"BranchMapping/GetFolderByCreatedBy?UserID=" +UserID+"&DeptID=" +this.AddBranchMappingForm.get("DeptID").value+"&user_Token=" +localStorage.getItem('User_Token')+"&CreatedBy=" +localStorage.getItem('UserID');
+  getBranch(userid: number) {
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "BranchMapping/GetDetails?ID=" +
+      userid +
+      "&user_Token=" +
+      this.BranchMappingForm.get("User_Token").value;;
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
       this.checkbox_list = [];
@@ -221,8 +150,6 @@ getDepartmnet(RootID: any) {
           })
           this.checklistArray.push(fg)
       });
-
-
     //  console.log('Branch Mapping -> ',res);
       
       // this.itemRows = Array.from(Array(Math.ceil(this.checkbox_list.length/2)).keys())
@@ -328,7 +255,7 @@ getDepartmnet(RootID: any) {
 //console.log("UserID", this.AddBranchMappingForm.get('UserID').value);
     this.AddBranchMappingForm.patchValue({
       checkedList: this.__checkedList,
-      CreatedBy: this.AddBranchMappingForm.get('UserID').value,
+      CreatedBy: 1,
       UserID: this.AddBranchMappingForm.get('UserID').value,
     });
     var objectToSend = {

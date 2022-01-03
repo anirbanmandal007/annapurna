@@ -29,12 +29,11 @@ export class BranchComponent implements OnInit {
   Reset = false;     
   sMsg: string = '';    
  _BranchList :any;
+ _DepartmentList:any;
   BranchForm: FormGroup;
   _FilteredList :any; 
  _BranchID: any =0;
- _DepartmentList:any;
- _RootList:any;
- _Dept:any;
+
   constructor(
     private modalService: BsModalService,
     public toastr: ToastrService,
@@ -45,27 +44,13 @@ export class BranchComponent implements OnInit {
   ngOnInit() {
     this.AddBranchForm = this.formBuilder.group({
       BranchName: ['', Validators.required],
-      DeptID: [0, Validators.required],
-      RootID: [0, Validators.required],
+      DepartmentID: [1, Validators.required],
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
       id:[0]
     });
-    this.geBranchList(0); 
-    this.getRootList();
-    this.getDepartmnet();
-  }
-
-  getRootList() {
-    
-    const apiUrl=this._global.baseAPIUrl+'RootMaster/GetRootList?user_Token='+ localStorage.getItem('User_Token') 
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-      this._RootList = data;
-   //  this._FilteredList = data
-
-     //console.log(this._FilteredList );
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
+    this.geBranchList();
+    this.getDepartmentList();
   }
 
   entriesChange($event) {
@@ -87,45 +72,6 @@ export class BranchComponent implements OnInit {
       return false;
     });
   }
-
-  getDepartmnet() {
-
-    const apiUrl=this._global.baseAPIUrl+'Department/GetList?user_Token='+ localStorage.getItem('User_Token');
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-    this._DepartmentList = data;
-   // this._DepartmentLists=data;
-    //console.log("data : -", data);
-    //this.AddBranchForm.controls['DeptID'].setValue(0);
-    //this.AddBranchForm.controls['DeptIDS'].setValue(0);
-    
-
-    //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-
-    }
-
-    getDepartmnetByRoleID(RoleID: number) {
-
-      const apiUrl= this._global.baseAPIUrl + "RootMaster/GetFileStatus?RoleID=" + RoleID +"&user_Token=" + localStorage.getItem('User_Token');
-     // const apiUrl=this._global.baseAPIUrl+'RootMaster/GetFileStatus?user_Token='+ localStorage.getItem('User_Token')+'RoleID='+ RoleID;
-      this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-      this._Dept = data;
-     // this._DepartmentLists=data;
-   //  console.log("data : -", data);
-   //   this.AddBranchForm.controls['DeptID'].setValue(0);
-     // this.AddBranchForm.controls['DeptIDS'].setValue(0);
-      
-  
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-      });
-  
-      }
-
-    geBranchListByUserID(DeptIDID: number) {
-      //     alert(this.BranchMappingForm.value.UserID);
-      this.geBranchList(DeptIDID);
-    }
-
   onSelect({ selected }) {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
@@ -133,36 +79,31 @@ export class BranchComponent implements OnInit {
   onActivate(event) {
     this.activeRow = event.row;
   }
-
-  geBranchList(DeptIDID: any) {
-    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl =this._global.baseAPIUrl+"BranchMapping/GetDetailsByCreatedBy?DeptIDID="+DeptIDID+"&user_Token="+localStorage.getItem('User_Token')+"&userid="+localStorage.getItem('UserID');
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+  geBranchList() {
+    
+    const apiUrl=this._global.baseAPIUrl+'BranchMaster/GetBranchList?user_Token='+ localStorage.getItem('User_Token') 
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._BranchList = data;
-      this._FilteredList = data;
+      this._FilteredList = data
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
-
-
-  // geBranchList() {
-    
-  //   const apiUrl=this._global.baseAPIUrl+'BranchMaster/GetBranchList?user_Token='+ localStorage.getItem('User_Token') 
-  //   this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-  //     this._BranchList = data;
-  //     this._FilteredList = data
-  //     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-  //   });
-  // }
 
   OnReset() {
   //  this.Reset = true;
     //this.AddBranchForm.reset();
     this.modalRef.hide();  
-    this.AddBranchForm.controls['BranchName'].setValue('');
-    this.AddBranchForm.controls['RootID'].setValue(0);
-    this.AddBranchForm.controls['DeptID'].setValue(0);
 
+  }
+
+
+  getDepartmentList() {
+    const apiUrl=this._global.baseAPIUrl+'Department/GetList?user_Token='+ localStorage.getItem('User_Token') 
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+      this._DepartmentList = data;
+    //  this._FilteredList = data
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
   }
 
   onSubmit() {
@@ -189,7 +130,7 @@ export class BranchComponent implements OnInit {
           "ngx-toastr alert alert-dismissible alert-success alert-notify"
       }
     );
-     this.geBranchList(0);
+     this.geBranchList();
      this.OnReset()
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
@@ -225,7 +166,7 @@ export class BranchComponent implements OnInit {
                 buttonsStyling: false,
                 confirmButtonClass: "btn btn-primary",
               });
-              this.geBranchList(0);
+              this.geBranchList();
             });
         }
       });
@@ -234,29 +175,18 @@ export class BranchComponent implements OnInit {
   editBranch(template: TemplateRef<any>, row: any) {
       var that = this;
       that._SingleDepartment = row;
-    //  console.log('data', row);
+      console.log('data', row);
       this.AddBranchForm.patchValue({
         id: that._SingleDepartment.id,
         BranchName: that._SingleDepartment.BranchName,
-        User_Token:localStorage.getItem('User_Token'),
-        RootID: that._SingleDepartment.RootID,
-        DeptID: that._SingleDepartment.DeptID,
-        //RootID: that._SingleDepartment.RootID,
+        DepartmentID: that._SingleDepartment.DepartmentID,
+         
       })
-
-      this.getDepartmnetByRoleID(that._SingleDepartment.RootID);
-      this.AddBranchForm.controls['DeptID'].setValue(that._SingleDepartment.DeptID);      
-      
+     // console.log('form', this.AddBranchForm);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     this.modalRef = this.modalService.show(template);
   }
   addBranch(template: TemplateRef<any>) {
-
-    this.AddBranchForm.controls['BranchName'].setValue('');
-    this.AddBranchForm.controls['RootID'].setValue(0);
-    this.AddBranchForm.controls['DeptID'].setValue(0);
-
-
     this.modalRef = this.modalService.show(template);
   }
 }

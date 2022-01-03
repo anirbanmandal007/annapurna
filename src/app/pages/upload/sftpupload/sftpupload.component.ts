@@ -75,7 +75,6 @@ this.geBranchList(0);
     //console.log("data : -", data);
 
     this.sftpuploadForm.controls['DeptID'].setValue(0);
-    this.sftpuploadForm.controls['BranchID'].setValue(0);
    
     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
@@ -176,10 +175,16 @@ this.geBranchList(0);
  
   geBranchList(userid: any) {
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl = this._global.baseAPIUrl + "BranchMaster/GetBranchByDeptIDANDUserwise?UserID=" +localStorage.getItem('UserID')+"&DeptID="+userid+ "&user_Token="+localStorage.getItem('User_Token');
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "BranchMapping/GetBranchDetailsRegionWise?ID=" +
+      userid +
+      "&user_Token=" +
+      this.sftpuploadForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this.BranchList = data;
-    //  this._FilteredList = data;
+      // this._FilteredList = data;
+       this.sftpuploadForm.controls['BranchID'].setValue(0);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }

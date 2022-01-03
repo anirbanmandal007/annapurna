@@ -31,7 +31,6 @@ export class DepartmentComponent implements OnInit {
   Reset = false;     
   sMsg: string = '';    
  _DeptID: any=0;
- _RootList:any;
 
   constructor(
     private modalService: BsModalService,
@@ -43,25 +42,11 @@ export class DepartmentComponent implements OnInit {
   ngOnInit() {
     this.AddDepartmentForm = this.formBuilder.group({
       DepartmentName: ['', Validators.required],
-      RootID: [0, Validators.required],
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
       id:[0]
     });
     this.geDepartmentList();
-    this.getRootList();
-  }
-
-  getRootList() {
-    
-    const apiUrl=this._global.baseAPIUrl+'RootMaster/GetRootList?user_Token='+ localStorage.getItem('User_Token') 
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-      this._RootList = data;
-   //  this._FilteredList = data
-
-     //console.log(this._FilteredList );
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
   }
 
   entriesChange($event) {
@@ -175,9 +160,8 @@ export class DepartmentComponent implements OnInit {
       this.AddDepartmentForm.patchValue({
         id: that._SingleDepartment.DID,
         DepartmentName: that._SingleDepartment.DepartmentName,
-        RootID: that._SingleDepartment.RootID,
       })
-    //  console.log('form', this.AddDepartmentForm);
+      console.log('form', this.AddDepartmentForm);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     this.modalRef = this.modalService.show(template);
   }

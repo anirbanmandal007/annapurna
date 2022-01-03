@@ -24,11 +24,9 @@ import { TemplateconfigComponent } from "./templateconfig/templateconfig.compone
 import { RegionMappingComponent } from "./region-mapping/region-mapping.component";
 import { EntityComponent } from "./entity/entity.component";
 import { EntityMappingComponent } from "./entity-mapping/entity-mapping.component";
-import { RootfolderComponent } from "./rootfolder/rootfolder.component";
-
 
 @NgModule({
-  declarations: [DepartmentComponent, BranchMappingComponent,BranchComponent,EntityComponent,EntityMappingComponent,TemplateComponent,DocumentTypeComponent,DocTypeMappingComponent,ViewCustomFormComponent,AddFieldComponent,TemplateMappingComponent,TemplateconfigComponent,RegionMappingComponent,RootfolderComponent],
+  declarations: [DepartmentComponent, BranchMappingComponent,BranchComponent,EntityComponent,EntityMappingComponent,TemplateComponent,DocumentTypeComponent,DocTypeMappingComponent,ViewCustomFormComponent,AddFieldComponent,TemplateMappingComponent,TemplateconfigComponent,RegionMappingComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(DepartmentRoutes),

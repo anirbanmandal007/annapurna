@@ -120,7 +120,6 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
   _TempD:any;
   first = 0;
   rows = 10;
-  fileExt:any;
   
   tableHeader: any = [
     // { field: 'fileNo', header: this.TempField, index: 1 },
@@ -555,95 +554,80 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
   prepareTreeStructure(folderStructureData: any) {
 
     let deptName = [];
-    let rootFolder = [];
+    let branchDocCount = 0
+    let accountDocCount = 0
+    var data1: any;
 
     folderStructureData.forEach((row, indx) => {
-      let inRootFolder = rootFolder.some(b => b.rootFolderName == row.RootfolderName);
-      if(!inRootFolder) {
-        let root = {rootFolderName: row.RootfolderName, dept: [{deptName: row.DepartmentName, branches: [{branchName: row.BranchName, subFolder: [{subFolderName: row.SubfolderName}]}]}]};
-        rootFolder.push(root);
-      } else {
-        let inDeptNameInRootFolder = rootFolder.find(b => b.rootFolderName == row.RootfolderName).dept.find(b => b.deptName === row.DepartmentName)
-        if(!inDeptNameInRootFolder) {
-          rootFolder.filter(b => b.rootFolderName == row.RootfolderName)[0].dept.push({deptName: row.DepartmentName, branches: [{branchName: row.BranchName, subFolder: [{subFolderName: row.SubfolderName}]}]});
+      let inDeptName = deptName.some(b => b.DepartmentName == row.DepartmentName)
+      if (!inDeptName) {
+        // let files = []
+        // let DocTypes = [{ DocType: row.DocType, documentCount: row.DocCount, Files: files, isExpanded: false }]
+        // let Accounts = [{ AccNo: row.AccNo, documentCount: 1, DocTypes: DocTypes, isExpanded: indx == 0 ? true : false }]
+        let branches = [{BranchName: row.BranchName, Entity: [{entity: row.SubfolderName}]}]
+        deptName.push({ DepartmentName: row.DepartmentName, branches: branches, documentCount: 1, isExpanded: indx == 0 ? true : false })
+      } 
+      else {
+        let dept = deptName.find(b => b.DepartmentName == row.DepartmentName)
+        let inAccountsArray = dept.branches.some(b => b.BranchName == row.BranchName)
+        if (!inAccountsArray) {
+          // let files = []
+          // let DocTypes = [{ DocType: row.DocType, documentCount: row.DocCount, Files: files, isExpanded: false }]
+          // let Account = { AccNo: row.AccNo, documentCount: 1, DocTypes: DocTypes, isExpanded: false }
+          // dept.branches
+          dept.branches.push({BranchName: row.BranchName, Entity: [{entity: row.SubfolderName}]})
+          dept.documentCount += 1;
+          if(dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.filter(el => el.entity == row.SubfolderName).length === 0)
+          dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.push({entity: row.SubfolderName})
         } else {
-          let isBranchesInDeptName = rootFolder.find(b => b.rootFolderName == row.RootfolderName).dept.filter(b => b.deptName === row.DepartmentName)[0].branches.find(b => b.branchName == row.BranchName);
-          if(!isBranchesInDeptName) {
-            rootFolder.find(b => b.rootFolderName == row.RootfolderName).dept.filter(b => b.deptName === row.DepartmentName)[0].branches.push({branchName: row.BranchName, subFolder: [{subFolderName: row.SubfolderName}]});
-          } else {
-            let isSubfolderInBranch = rootFolder.find(b => b.rootFolderName == row.RootfolderName).dept.filter(b => b.deptName === row.DepartmentName)[0].branches.filter(b => b.branchName == row.BranchName)[0].subFolder.find( b => b.subFolderName == row.SubfolderName);
-            if(!isSubfolderInBranch) {
-              rootFolder.find(b => b.rootFolderName == row.RootfolderName).dept.filter(b => b.deptName === row.DepartmentName)[0].branches.filter(b => b.branchName == row.BranchName)[0].subFolder.push({subFolderName: row.SubfolderName});
-            }
-          }
+          if(dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.filter(el => el.entity == row.SubfolderName).length === 0)
+          dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.push({entity: row.SubfolderName})
+         // let account = branch.Accounts.find(b => b.AccNo == row.AccNo)
+         // let inDocTypesArray = account.DocTypes.some(b => b.DocType == row.DocType)
+          // if (!inDocTypesArray) {
+          //   let files = []
+          //   let DocTypes = { DocType: row.DocType, documentCount: row.DocCount, Files: files, isExpanded: false }
+          //   account.DocTypes.push(DocTypes)
+          //   account.documentCount += 1
+          // } else {
+
+          // }
         }
       }
-    });
-
-    // folderStructureData.forEach((row, indx) => {
-    //   let inDeptName = deptName.some(b => b.DepartmentName == row.DepartmentName)
-    //   if (!inDeptName) {
-    //     let branches = [{BranchName: row.BranchName, Entity: [{entity: row.SubfolderName}]}]
-    //     deptName.push({ DepartmentName: row.DepartmentName, branches: branches, documentCount: 1, isExpanded: indx == 0 ? true : false })
-    //   } 
-    //   else {
-    //     let dept = deptName.find(b => b.DepartmentName == row.DepartmentName)
-    //     let inAccountsArray = dept.branches.some(b => b.BranchName == row.BranchName)
-    //     if (!inAccountsArray) {
-    //       dept.branches.push({BranchName: row.BranchName, Entity: [{entity: row.SubfolderName}]})
-    //       dept.documentCount += 1;
-    //       if(dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.filter(el => el.entity == row.SubfolderName).length === 0)
-    //       dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.push({entity: row.SubfolderName})
-    //     } else {
-    //       if(dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.filter(el => el.entity == row.SubfolderName).length === 0)
-    //       dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.push({entity: row.SubfolderName})
-    //     }
-    //   }
       
-    // });
+    });
 
 
   let data = [];
-  const parsedData = rootFolder;
+  const parsedData = deptName;
   parsedData.forEach(el => {
     let elData = {
-      "label": el.rootFolderName + ' (' + el.dept.length + ')',
-      "data": el.rootFolderName,
+      "label": el.DepartmentName + ' (' + el.documentCount + ')',
+      "data": el.DepartmentName,
       "expandedIcon": "fa fa-folder-open",
       "collapsedIcon": "fa fa-folder",
       "children": []
     }
 
-    el.dept.forEach(dept => {
+    el.branches.forEach(branchEl => {
       let branchElData = {
         //"label": accEl.AccNo + '(' + accEl.documentCount + ')',
-        "label": dept.deptName + ' (' + dept.branches.length + ')',
-        "data": dept.deptName,
+        "label": branchEl.BranchName + ' (' + branchEl.Entity.length + ')',
+        "data": branchEl.BranchName,
         "expandedIcon": "fa fa-folder-open",
         "collapsedIcon": "fa fa-folder",
         "children": []
       };
 
-      dept.branches.forEach(element => {
+      branchEl.Entity.forEach(element => {
         let entityData = {
           //"label": accEl.AccNo + '(' + accEl.documentCount + ')',
-          "label": element.branchName+ '(' + element.subFolder.length + ')',
-          "data": element.branchName,
+          "label": element.entity,
+          "data": element.entity,
           "expandedIcon": "fa fa-folder-open",
           "collapsedIcon": "fa fa-folder",
           "children": []
         };
-
-        element.subFolder.forEach(el => {
-          const subFolderData = {
-            "label": el.subFolderName,
-            "data": el.subFolderName,
-            "expandedIcon": "fa fa-folder-open",
-            "collapsedIcon": "fa fa-folder",
-            "children": []
-          }
-          entityData.children.push(subFolderData);
-        });
         branchElData.children.push(entityData);
       });
       // accEl.DocTypes.forEach(docEl => {
@@ -660,107 +644,8 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
     data.push(elData);
   })
   //  console.log("Tree data",data);
-
   this.treeFiles = data;
 }
-
-
-
-//   prepareTreeStructure(folderStructureData: any) {
-
-//     let deptName = [];
-//     let branchDocCount = 0
-//     let accountDocCount = 0
-//     var data1: any;
-
-//     folderStructureData.forEach((row, indx) => {
-//       let inDeptName = deptName.some(b => b.DepartmentName == row.DepartmentName)
-//       if (!inDeptName) {
-//         // let files = []
-//         // let DocTypes = [{ DocType: row.DocType, documentCount: row.DocCount, Files: files, isExpanded: false }]
-//         // let Accounts = [{ AccNo: row.AccNo, documentCount: 1, DocTypes: DocTypes, isExpanded: indx == 0 ? true : false }]
-//         let branches = [{BranchName: row.BranchName, Entity: [{entity: row.SubfolderName}]}]
-//         deptName.push({ DepartmentName: row.DepartmentName, branches: branches, documentCount: 1, isExpanded: indx == 0 ? true : false })
-//       } 
-//       else {
-//         let dept = deptName.find(b => b.DepartmentName == row.DepartmentName)
-//         let inAccountsArray = dept.branches.some(b => b.BranchName == row.BranchName)
-//         if (!inAccountsArray) {
-//           // let files = []
-//           // let DocTypes = [{ DocType: row.DocType, documentCount: row.DocCount, Files: files, isExpanded: false }]
-//           // let Account = { AccNo: row.AccNo, documentCount: 1, DocTypes: DocTypes, isExpanded: false }
-//           // dept.branches
-//           dept.branches.push({BranchName: row.BranchName, Entity: [{entity: row.SubfolderName}]})
-//           dept.documentCount += 1;
-//           if(dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.filter(el => el.entity == row.SubfolderName).length === 0)
-//           dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.push({entity: row.SubfolderName})
-//         } else {
-//           if(dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.filter(el => el.entity == row.SubfolderName).length === 0)
-//           dept.branches.filter(el => el.BranchName === row.BranchName)[0].Entity.push({entity: row.SubfolderName})
-//          // let account = branch.Accounts.find(b => b.AccNo == row.AccNo)
-//          // let inDocTypesArray = account.DocTypes.some(b => b.DocType == row.DocType)
-//           // if (!inDocTypesArray) {
-//           //   let files = []
-//           //   let DocTypes = { DocType: row.DocType, documentCount: row.DocCount, Files: files, isExpanded: false }
-//           //   account.DocTypes.push(DocTypes)
-//           //   account.documentCount += 1
-//           // } else {
-
-//           // }
-//         }
-//       }
-      
-//     });
-
-
-//   let data = [];
-//   const parsedData = deptName;
-//   parsedData.forEach(el => {
-//     let elData = {
-//       "label": el.DepartmentName + ' (' + el.documentCount + ')',
-//       "data": el.DepartmentName,
-//       "expandedIcon": "fa fa-folder-open",
-//       "collapsedIcon": "fa fa-folder",
-//       "children": []
-//     }
-
-//     el.branches.forEach(branchEl => {
-//       let branchElData = {
-//         //"label": accEl.AccNo + '(' + accEl.documentCount + ')',
-//         "label": branchEl.BranchName + ' (' + branchEl.Entity.length + ')',
-//         "data": branchEl.BranchName,
-//         "expandedIcon": "fa fa-folder-open",
-//         "collapsedIcon": "fa fa-folder",
-//         "children": []
-//       };
-
-//       branchEl.Entity.forEach(element => {
-//         let entityData = {
-//           //"label": accEl.AccNo + '(' + accEl.documentCount + ')',
-//           "label": element.entity,
-//           "data": element.entity,
-//           "expandedIcon": "fa fa-folder-open",
-//           "collapsedIcon": "fa fa-folder",
-//           "children": []
-//         };
-//         branchElData.children.push(entityData);
-//       });
-//       // accEl.DocTypes.forEach(docEl => {
-//       //   accElData['children'].push({
-//       //   //  "label": docEl.DocType + '(' + docEl.documentCount + ')',
-//       //     "label": docEl.DepartmentName ,                     //
-
-//       //     "data": docEl.DepartmentName,
-//       //     "icon": "pi pi-file"
-//       //   })
-//       // })
-//       elData.children.push(branchElData);
-//     })
-//     data.push(elData);
-//   })
-//   //  console.log("Tree data",data);
-//   this.treeFiles = data;
-// }
 
 
   nodeSelect(e) {
@@ -842,7 +727,6 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
         this.FilePath = res;
          /// saveAs(res, row.ACC + '.pdf');
          this._TempFilePath = res;
-         this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
 
       }
     });
@@ -868,11 +752,12 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
     //     field: 'metadata-' + parseInt(index+1), header: el.DisplayName, index: parseInt(7+index)
     //   })
     // })
-console.log(data);
+
+    console.log(data);
     
     data.forEach((el, index) => {
-      if (el.FileNo) {
 
+      if (el.FileNo) {
         formattedData.push({
           "fileNo": el.FileNo,
           "USERID": el.USERID,
@@ -883,8 +768,8 @@ console.log(data);
           "BranchName": el.BranchName,
           "DepartmentName": el.DepartmentName,  
           "SubfolderName": el.SubfolderName,   
-          "FilePath": el.FilePath,   
-          
+          "FilePath": el.FilePath, 
+        
           
           
           
@@ -992,6 +877,11 @@ console.log(data);
 
   }
 
+  refresh()
+  {
+
+    this.getTemplate();
+  }
 
   // DownloadBulkFiles()
   // {
@@ -1212,9 +1102,6 @@ viewFullFile(row:any)
     const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadFileFromDB?ID=' + localStorage.getItem('UserID') + '&FileNo= ' + Row.fileNo + ' &user_Token=' + localStorage.getItem('User_Token');
     this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
       if (res) {
-
-        //      var __FilePath = _TempFilePath ;    
-        // console.log("Final FP-- res ", res);
         saveAs(res,Row.fileNo + fileExt);
 
       }
@@ -2046,68 +1933,16 @@ this.modalRef.hide();
 
 }
 
-  // DownloadMetadata() {
-  //   let _CSVData = "";
-  //   for (let j = 0; j < this.selectedRows.length; j++) {          
-  //     _CSVData += this.selectedRows[j] + ',';
-  //   }
-
-  //   const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataReportByFileNo?FileNo=' + _CSVData + '&user_Token=' + localStorage.getItem('User_Token')+'&UserID='+localStorage.getItem('UserID')
-  //   //const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataReportByFileNo?FileNo=' + _CSVData + '&user_Token=' + localStorage.getItem('User_Token')
-    
-  //   this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-  //     this._MDList = data;
-  //     this.GetHeaderNames();
-  //     let csvData = this._HeaderList; 
-  //     // alert(this._HeaderList);
-  //     // console.log("Data",csvData) 
-  //     let blob = new Blob(['\ufeff' + csvData], { 
-  //         type: 'text/csv;charset=utf-8;'
-  //     }); 
-  //     let dwldLink = document.createElement("a"); 
-  //     let url = URL.createObjectURL(blob);
-      
-  //     let isSafariBrowser =-1;
-  //     // let isSafariBrowser = navigator.userAgent.indexOf( 'Safari') != -1 & amp; & amp; 
-  //     // navigator.userAgent.indexOf('Chrome') == -1; 
-      
-  //     //if Safari open in new window to save file with random filename. 
-  //     if (isSafariBrowser) {  
-  //         dwldLink.setAttribute("target", "_blank"); 
-  //     } 
-  //     dwldLink.setAttribute("href", url); 
-  //     dwldLink.setAttribute("download", 'Metadata' + ".csv"); 
-  //     dwldLink.style.visibility = "hidden"; 
-  //     document.body.appendChild(dwldLink); 
-  //     dwldLink.click(); 
-  //     document.body.removeChild(dwldLink);
-  //   });
-
-  // }
-
-
-
   DownloadMetadata() {
-   
-      let _CSVData = "";
+    let _CSVData = "";
     for (let j = 0; j < this.selectedRows.length; j++) {          
       _CSVData += this.selectedRows[j] + ',';
     }
 
-
-    this.FileStorageForm.patchValue({
-      ACC: _CSVData,
-      User_Token: localStorage.getItem('User_Token'),
-      userID: localStorage.getItem('UserID')
-    });
-
-    const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataFileNo';
-       
-   // this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
-
-   // const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataReportByFileNo?FileNo=' + _CSVData + '&user_Token=' + localStorage.getItem('User_Token')+'&UserID='+localStorage.getItem('UserID')
+    const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataReportByFileNo?FileNo=' + _CSVData + '&user_Token=' + localStorage.getItem('User_Token')+'&UserID='+localStorage.getItem('UserID')
     //const apiUrl = this._global.baseAPIUrl + 'Status/GetMetaDataReportByFileNo?FileNo=' + _CSVData + '&user_Token=' + localStorage.getItem('User_Token')
-    this._onlineExamService.postData(this.FileStorageForm.value,apiUrl).subscribe((data: {}) => {
+    
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
       this._MDList = data;
       this.GetHeaderNames();
       let csvData = this._HeaderList; 

@@ -21,6 +21,15 @@ export class LoginNewComponent implements OnInit {
   submitted = false;
   _LogData:any;
 
+  public captchaIsLoaded = false;
+  public captchaSuccess = false;
+  public captchaIsExpired = false;
+  public captchaResponse?: string;
+
+  public theme: 'light' | 'dark' = 'light';
+  public size: 'compact' | 'normal' = 'normal';
+  public lang = 'en';
+  public type: 'image' | 'audio';
   
   constructor(
         
@@ -39,7 +48,8 @@ export class LoginNewComponent implements OnInit {
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.compose([Validators.required])],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      recaptcha: ['', Validators.required]
     });
 
     localStorage.clear();
@@ -100,6 +110,10 @@ export class LoginNewComponent implements OnInit {
     }
 
   });
+  }
+
+  handleSuccess(data) {
+    console.log(data);
   }
 
   get f(){

@@ -42,8 +42,6 @@ export class FileUploadComponent implements OnInit {
   _TemplateList:any; 
   myFiles:string [] = [];
   _FileDetails:string [][] = [];
-  _DepartmentList:any;
-  _RootList:any;
   
   @Output() public onUploadFinished = new EventEmitter();
     
@@ -61,10 +59,9 @@ export class FileUploadComponent implements OnInit {
     ngOnInit() {
       this.FileUPloadForm = this.formBuilder.group({         
         
-          
+        DeptID:[1],        
         DocID:[1],
-        BranchID:[0, Validators.required],
-        DeptID:[0, Validators.required],
+        BranchID:['0', Validators.required],
         SubfolderID:[0, Validators.required],        
         TemplateID:[0, Validators.required],
         // TemplateID:[1],
@@ -72,18 +69,16 @@ export class FileUploadComponent implements OnInit {
         User_Token: localStorage.getItem('User_Token') ,
         CreatedBy: localStorage.getItem('UserID') ,
         id:[0],
-        CSVData:"",
-        RootID:[0],
+        CSVData:""
       });
   
      
   
-     // this.geBranchList();  
+      this.geBranchList();  
     //  this.getDeparmenList();
       this.geTTempList();
-      //this.GetEntityList();
+      this.GetEntityList();
     //  this.geDoctypeList();
-    this.getRootList();
      
     }
 
@@ -123,12 +118,6 @@ export class FileUploadComponent implements OnInit {
       this.FileUPloadForm.controls['TemplateID'].setValue(0);  
       this.FileUPloadForm.controls['SubfolderID'].setValue(0);    
 
-      this.FileUPloadForm.controls['DeptID'].setValue(0);
-      this.FileUPloadForm.controls['RootID'].setValue(0);
-      
-      // this.FileUPloadForm.controls['BranchID'].setValue(0);
-      // this.FileUPloadForm.controls['SubfolderID'].setValue(0);  
-
       this.FileUPloadForm.controls['User_Token'].setValue(localStorage.getItem('User_Token')); 
       this.FileUPloadForm.controls['UserID'].setValue(localStorage.getItem('UserID'));    
       this.FileUPloadForm.controls['CreatedBy'].setValue(localStorage.getItem('UserID'));    
@@ -145,33 +134,17 @@ export class FileUploadComponent implements OnInit {
       // }
 
 
-      // geBranchList() {
-      //   //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-      //   const apiUrl =
-      //     this._global.baseAPIUrl +
-      //     "BranchMapping/GetBranchDetailsUserWise?ID=" +
-      //     localStorage.getItem('UserID') +
-      //     "&user_Token=" +
-      //     this.FileUPloadForm.get("User_Token").value;
-      //   this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-      //     this.BranchList = data;
-      //     this._FilteredList = data;
-      //     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-      //   });
-      // }
-
-
-      geBranchListByUserID(userid: number) {
-        //     alert(this.BranchMappingForm.value.UserID);
-        this.geBranchList(userid);
-      }
-    
-      geBranchList(userid: any) {
+      geBranchList() {
         //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-        const apiUrl = this._global.baseAPIUrl + "BranchMaster/GetBranchByDeptIDANDUserwise?UserID=" +localStorage.getItem('UserID')+"&DeptID="+userid+ "&user_Token="+localStorage.getItem('User_Token');
+        const apiUrl =
+          this._global.baseAPIUrl +
+          "BranchMapping/GetBranchDetailsUserWise?ID=" +
+          localStorage.getItem('UserID') +
+          "&user_Token=" +
+          this.FileUPloadForm.get("User_Token").value;
         this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
           this.BranchList = data;
-        //  this._FilteredList = data;
+          this._FilteredList = data;
           //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
         });
       }
@@ -192,60 +165,11 @@ export class FileUploadComponent implements OnInit {
       // }
 
 
-    //   getDepartmnet() {
-
-    //     const apiUrl=this._global.baseAPIUrl+'Department/GetList?user_Token='+ localStorage.getItem('User_Token');
-    //     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-    //     this._DepartmentList = data;
-    //    // this._DepartmentLists=data;
-    // //    console.log("data : -", data);
-       
-        
-    
-    //     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    //     });
-    
-    //     }
-
-        getEntityForUser(userid: number) {
-          this.getEntity(userid);
-        }
-
-
-        getEntity(userid: number) {
-          const apiUrl =this._global.baseAPIUrl +"SubFolderMapping/GetSubFolderByBranch?UserID="+localStorage.getItem('UserID')+"&CreatedBy="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token')+"&BranchID="+this.FileUPloadForm.get("BranchID").value;
-      
-       //   const apiUrl =this._global.baseAPIUrl +"SubFolderMapping/GetDetails?ID="+userid+"&user_Token="+this.EntityMappingForm.get("User_Token").value;;
-          //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-          this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
-            this.EntityList = res;
-
-            //  this.checkbox_list = [];
-            //this.checkbox_list = res;
-            //this.checklistArray.clear()
-            // this.checkbox_list.forEach(item => {
-            //   let fg = this.formBuilder.group({
-            //     id: [item.id],
-            //     SubfolderName: [item.SubfolderName],
-            //     ischecked: [item.ischecked]
-            //     })
-            //     this.checklistArray.push(fg)
-            // });
-          //  console.log('Branch Mapping -> ',res);
-            
-            // this.itemRows = Array.from(Array(Math.ceil(this.checkbox_list.length/2)).keys())
-      
-            //this.productsArray = res;
-            //  this.checkbox_list= res;
-            //this.checklist =res;
-          });
-        }
-
       GetEntityList() {
         //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
         const apiUrl =
           this._global.baseAPIUrl +
-          "SubFolderMapping/GetSubFolderByBranch?ID=" +
+          "SubFolderMapping/GetSubFolderDetailsUserWise?ID=" +
           localStorage.getItem('UserID')  +
           "&user_Token=" +
           this.FileUPloadForm.get("User_Token").value;
@@ -254,28 +178,6 @@ export class FileUploadComponent implements OnInit {
           this.FileUPloadForm.controls['SubfolderID'].setValue(0);
           //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
         });
-      }
-
-      
-    getDepartmnet(RootID: any) {
-
-      const apiUrl = this._global.baseAPIUrl + "Department/GetDepartmentByUserID?UserID="+localStorage.getItem('UserID')+"&RoleID="+RootID+"&user_Token="+localStorage.getItem('User_Token');
- 
-   //   const apiUrl=this._global.baseAPIUrl+'Department/GetDepartmentByUserID?user_Token='+ localStorage.getItem('User_Token');
-      this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-      this._DepartmentList = data;
-     // this._DepartmentLists=data;
-  //    console.log("data : -", data);
-      this.FileUPloadForm.controls['DeptID'].setValue(0);
-      this.FileUPloadForm.controls['BranchID'].setValue(0);
-       
-      this.FileUPloadForm.controls['SubfolderID'].setValue(0);  
-     // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
-     this.geBranchList(0);
-  
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-      });
-  
       }
   
   
@@ -382,8 +284,7 @@ export class FileUploadComponent implements OnInit {
         });      
   
         formData.append('BranchID',this.FileUPloadForm.controls['BranchID'].value);
-        formData.append('DeptID',this.FileUPloadForm.controls['DeptID'].value);
-        //DeptID
+        formData.append('DeptID',"1");
         formData.append('DocID',"0");
         formData.append('TemplateID',this.FileUPloadForm.controls['TemplateID'].value);
         formData.append('UserID',localStorage.getItem('UserID'));
@@ -465,7 +366,7 @@ export class FileUploadComponent implements OnInit {
            // frmData.append("FileSize", this.myFiles[i].);
           }
           frmData.append('BranchID',this.FileUPloadForm.controls['BranchID'].value);
-          frmData.append('DeptID',this.FileUPloadForm.controls['DeptID'].value);
+          frmData.append('DeptID',"1");
           frmData.append('DocID',"0");
           frmData.append('TemplateID',this.FileUPloadForm.controls['TemplateID'].value);
           frmData.append('UserID',localStorage.getItem('UserID'));  
@@ -574,18 +475,15 @@ export class FileUploadComponent implements OnInit {
             }
             return true;
       
-        } 
+        }  
         
-        getRootList() {
-    
-          const apiUrl=this._global.baseAPIUrl+"RootMaster/GetRootByUserID?UserID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token'); 
-          this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-            this._RootList = data;
-         //  this._FilteredList = data
-         this.FileUPloadForm.controls['DeptID'].setValue(0);
-         this.FileUPloadForm.controls['BranchID'].setValue(0);
-         this.FileUPloadForm.controls['SubfolderID'].setValue(0);  
-           //console.log(this._FilteredList );
+        
+        GetSubfolderByBranchID(BranchID:any) {
+          //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+          const apiUrl =this._global.baseAPIUrl +'SubfolderController/GetSubFolderByBranchID?UserID='+localStorage.getItem('UserID')+'&BrnachID='+BranchID+'&user_Token='+localStorage.getItem('User_Token');
+          this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+            this.EntityList = data;
+            this.FileUPloadForm.controls['SubfolderID'].setValue(0);
             //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
           });
         }

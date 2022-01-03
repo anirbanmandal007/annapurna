@@ -11,7 +11,7 @@
           >
             <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
               <li class=" breadcrumb-item">
-                <a href="javascript:void(0)"> <i class=" fas fa-home" routerLink="/search/quick-search"> </i> </a>
+                <a href="javascript:void(0)"> <i class=" fas fa-home" routerLink="/search/content-search"> </i> </a>
               </li>
 
               <li class=" breadcrumb-item">
@@ -53,7 +53,7 @@
               <label class="form-control-label float-left pr-2" for="TemplateName" style="padding-top: 11px;">
                 Cabinet
               </label>           
-              <select name="DeptID" id="DeptID" class="form-control form-control-sm" style="width: 75%;" formControlName="DeptID"  (change)="geBranchListByUserID($event.target.value)" >
+              <select name="DeptID" id="DeptID" class="form-control" style="width: 75%;" formControlName="DeptID"  (change)="geBranchListByUserID($event.target.value)" >
                 <option value='0'>Select Cabinet</option>   
                 <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
                 {{_Department.DepartmentName}}  
@@ -65,7 +65,7 @@
               <label class="form-control-label float-left pr-2" style="padding-top:11px;" for="T`emplateName">
                 Folder
               </label>                 
-              <select name="BranchID" id="BranchID" class="form-control form-control-sm" style="width: 75%;" formControlName="BranchID" >
+              <select name="BranchID" id="BranchID" class="form-control" style="width: 75%;" formControlName="BranchID" >
                 <option value='0'>Select Folder</option>   
                 <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
                 {{_Bracnch.BranchName}}  
@@ -76,10 +76,10 @@
             
             <div class="col-sm-1"></div>
             <div class="col-sm-4">
-              <button type="button" class="btn btn-primary" style="font-size: 15px" (click)="GetFileCount()">
+              <button type="button" class="btn btn-success" style="font-size: 15px" (click)="GetFileCount()">
                 Search <i class="fa-refresh"></i> 
               </button>
-              <button type="button" class="btn btn-primary" style="font-size: 15px" (click)="onSubmit()">
+              <button type="button" class="btn btn-success" style="font-size: 15px" (click)="onSubmit()">
                 Sync All Files <i class=" fas fa-file-upload"></i>
               </button>
              

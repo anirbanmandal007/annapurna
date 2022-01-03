@@ -13,12 +13,17 @@ import { searchRoutes } from "./search.routing";
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
+
 import { ContentSearchComponent } from './Content-Search/Content-Search.component';
 import { FileStorageComponent } from './file-storage/file-storage.component';
 import { BulkDownlaodComponent } from './BulkDownlaod/BulkDownlaod.component';
 import { DeleteFilesComponent } from './DeleteFiles/DeleteFiles.component';
 import { BasicSearchComponent } from './Basic-Search/Basic-Search.component';
+import { GlobalsearchComponent } from './globalsearch/globalsearch.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+
 import { SearchComponent } from './Search/Search.component';
+
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {DataTablesModule} from 'angular-datatables';
 import { TreeModule } from 'primeng/tree';
@@ -28,9 +33,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
-import { OCRSearchComponent } from './ocr-Search/ocr-Search.component';
-import {MatButtonModule} from '@angular/material/button';
-import { NgxDocViewerModule } from "ngx-doc-viewer";
+
+
 // import {MatDatepickerInput} from '@angular/material/datepicker';
 // import { MatFormField, MatLabel } from "@angular/material/form-field";
 //import { TooltipsModule } from 'primeng/tooltip';
@@ -40,7 +44,7 @@ import { NgxDocViewerModule } from "ngx-doc-viewer";
 //import { DepartmentComponent } from "./department/department.component";
 
 @NgModule({
-  declarations: [DeleteFilesComponent,BasicSearchComponent,OCRSearchComponent,AdvancedSearchComponent,FileStorageComponent,ContentSearchComponent,BulkDownlaodComponent,SearchComponent],
+  declarations: [DeleteFilesComponent,AdvancedSearchComponent,GlobalsearchComponent,BasicSearchComponent,FileStorageComponent,ContentSearchComponent,BulkDownlaodComponent,SearchComponent],
   imports: [
     CommonModule,
   
@@ -57,15 +61,14 @@ import { NgxDocViewerModule } from "ngx-doc-viewer";
     BsDatepickerModule.forRoot(),
     ModalModule.forRoot(),
     NgxPrintModule,
+    NgMultiSelectDropDownModule.forRoot(),
     TreeModule,
     TableModule,
     TabViewModule,
     CheckboxModule,
     NgxExtendedPdfViewerModule,
     MatMenuModule,
-    MatIconModule,
-    NgxDocViewerModule,
-    MatButtonModule
+    MatIconModule
     // MatDatepickerInput
   ]
 })

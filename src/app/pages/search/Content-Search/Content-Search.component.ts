@@ -72,9 +72,6 @@ export class ContentSearchComponent implements OnInit {
   _isDocView:any=true;
   first = 0;
   rows = 10;
-  _RootList:any;
-  today = new Date();
-  fileExt:any;
 
   _FileDetails:string [][] = [];
   
@@ -118,15 +115,17 @@ export class ContentSearchComponent implements OnInit {
       ValidDate:[''],
       IsAttachment:[''],
       BranchID:['0'],
-      DeptID:['0'],
-      SubfolderID:[0], 
-      RootID:[0],
+      SubfolderID:[0],
+      DepartmentID:[0, Validators.required], 
+
+      
   
       });
       this.getTemplate();
+      this.getDepartmentList();
       this._PageNo = 1;
 
-    //  this.GetEntityList();
+     // this.GetEntityList();
       //this.getSearchResult(0);
   //  this.getSearchParameterList(0);
       //this.getDoctypeListByTempID(1);
@@ -150,78 +149,9 @@ export class ContentSearchComponent implements OnInit {
 
 
 //this.geBranchList();
-//this.getDepartmnet();
 
-this.getRootList();
     }
 
-    getRootList() {
-    
-      const apiUrl=this._global.baseAPIUrl+"RootMaster/GetRootByUserID?UserID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token'); 
-      this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-        this._RootList = data;
-     //  this._FilteredList = data
-     this.ContentSearchForm.controls['DeptID'].setValue(0);
-     this.ContentSearchForm.controls['BranchID'].setValue(0);
-     this.ContentSearchForm.controls['SubfolderID'].setValue(0);  
-       //console.log(this._FilteredList );
-        //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-      });
-    }
-
-    geBranchListByUserID(userid: number) {
-      //     alert(this.BranchMappingForm.value.UserID);
-      this.geBranchList(userid);
-    }
-  
-    geBranchList(userid: any) {
-      //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-      const apiUrl = this._global.baseAPIUrl + "BranchMaster/GetBranchByDeptIDANDUserwise?UserID=" +localStorage.getItem('UserID')+"&DeptID="+userid+ "&user_Token="+localStorage.getItem('User_Token');
-      this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-        this.BranchList = data;
-      //  this._FilteredList = data;
-        //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-      });
-    }
-
-    DownloadFileAll(_FileNo: any,_File:any) {
-
-
-    
-
-      const fileExt = _File.filePath.substring(_File.filePath.lastIndexOf('.'), _File.filePath.length);
-      const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadFileFromDB?ID=' + localStorage.getItem('UserID') + '&FileNo= ' + _FileNo + ' &user_Token=' + localStorage.getItem('User_Token');
-      this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
-        if (res) {
-  
-          //      var __FilePath = _TempFilePath ;    
-         //  console.log("Final FP-- res ", _File);
-          saveAs(res,_FileNo + fileExt);
-  
-        }
-      });
-      
-    }
-
-    getDepartmnet(RootID: any) {
-
-      const apiUrl = this._global.baseAPIUrl + "Department/GetDepartmentByUserID?UserID="+localStorage.getItem('UserID')+"&RoleID="+RootID+"&user_Token="+localStorage.getItem('User_Token');
- 
-   //   const apiUrl=this._global.baseAPIUrl+'Department/GetDepartmentByUserID?user_Token='+ localStorage.getItem('User_Token');
-      this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-      this._DepartmentList = data;
-     // this._DepartmentLists=data;
-  //    console.log("data : -", data);
-      this.ContentSearchForm.controls['DeptID'].setValue(0);
-      this.ContentSearchForm.controls['BranchID'].setValue(0);
-     // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
-      
-  
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-      });
-  
-      }
-  
 
     // GetEntityList() {
     //   //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
@@ -240,56 +170,38 @@ this.getRootList();
     //   });
     // }
 
-    // GetEntityList() {
-    //   //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    //   const apiUrl =
-    //     this._global.baseAPIUrl +
-    //     "SubFolderMapping/GetSubFolderDetailsUserWise?ID=" +
-    //     localStorage.getItem('UserID')  +
-    //     "&user_Token=" +
-    //     this.ContentSearchForm.get("User_Token").value;
-    //   this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-    //     this.EntityList = data;
-    //     this.ContentSearchForm.controls['SubfolderID'].setValue(0);
-    //     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    //   });
-    // }
+    GetBranchByDepartment(DepartmentID:any)
+    {
+  //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+      const apiUrl =
+      this._global.baseAPIUrl +"BranchMapping/GetBranchByDeptUserWise?ID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token')+"&DeptID="+this.ContentSearchForm.get("DepartmentID").value;
+      this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+      this.BranchList = data;
+//  this._FilteredList = data;
+  //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+});
 
-
-    getEntityForUser(userid: number) {
-      this.getEntity(userid);
     }
 
-
-    getEntity(userid: number) {
-      const apiUrl =this._global.baseAPIUrl +"SubFolderMapping/GetSubFolderByBranch?UserID="+localStorage.getItem('UserID')+"&CreatedBy="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token')+"&BranchID="+this.ContentSearchForm.get("BranchID").value;
-  
-   //   const apiUrl =this._global.baseAPIUrl +"SubFolderMapping/GetDetails?ID="+userid+"&user_Token="+this.EntityMappingForm.get("User_Token").value;;
-      //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-      this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
-        this.EntityList = res;
-        this.ContentSearchForm.controls['SubfolderID'].setValue(0);
-        //  this.checkbox_list = [];
-        //this.checkbox_list = res;
-        //this.checklistArray.clear()
-        // this.checkbox_list.forEach(item => {
-        //   let fg = this.formBuilder.group({
-        //     id: [item.id],
-        //     SubfolderName: [item.SubfolderName],
-        //     ischecked: [item.ischecked]
-        //     })
-        //     this.checklistArray.push(fg)
-        // });
-      //  console.log('Branch Mapping -> ',res);
-        
-        // this.itemRows = Array.from(Array(Math.ceil(this.checkbox_list.length/2)).keys())
-  
-        //this.productsArray = res;
-        //  this.checkbox_list= res;
-        //this.checklist =res;
+    getDepartmentList() {
+      const apiUrl=this._global.baseAPIUrl+'DepartmentMapping/GetDepartmentByUser?ID='+ localStorage.getItem('UserID')+'&user_Token='+localStorage.getItem('User_Token') 
+      this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+        this._DepartmentList = data;
+        console.log("DepList",data);
+      //  this._FilteredList = data
+        //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
       });
     }
 
+    GetSubfolderByBranchID(BranchID:any) {
+      //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+      const apiUrl =this._global.baseAPIUrl +'SubfolderController/GetSubFolderByBranchID?UserID='+localStorage.getItem('UserID')+'&BrnachID='+BranchID+'&user_Token='+localStorage.getItem('User_Token');
+      this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+        this.EntityList = data;
+        this.ContentSearchForm.controls['SubfolderID'].setValue(0);
+        //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+      });
+    }
    
     entriesChange($event) {
       this.entries = $event.target.value;
@@ -365,20 +277,32 @@ this.getRootList();
       }
 
 
-      // geBranchList() {
-      //   //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-      //   const apiUrl =
-      //     this._global.baseAPIUrl +
-      //     "BranchMapping/GetBranchDetailsUserWise?ID=" +
-      //     localStorage.getItem('UserID') +
-      //     "&user_Token=" +
-      //     this.ContentSearchForm.get("User_Token").value;
-      //   this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-      //     this.BranchList = data;
-      //   //  this._FilteredList = data;
-      //     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-      //   });
-      // }
+      geBranchListByUserID(userid: number) {
+        //     alert(this.BranchMappingForm.value.UserID);
+       // this.geBranchList(userid);
+      }
+
+      geBranchList() {
+        //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+        const apiUrl =
+          this._global.baseAPIUrl +
+          "BranchMapping/GetBranchDetailsUserWise?ID=" +
+          localStorage.getItem('UserID') +
+          "&user_Token=" +
+          this.ContentSearchForm.get("User_Token").value;
+        this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+          this.BranchList = data;
+        //  this._FilteredList = data;
+          //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+        });
+      }
+
+
+     
+
+
+
+      
 
       getTemplate() {
 
@@ -434,19 +358,18 @@ this.getRootList();
       let tableHeader: any = [
         { field: 'srNo', header: "SR NO", index: 1 },
         // { field: 'accId', header: 'Acc ID', index: 2 },
-        // { field: 'DepartmentName', header: 'CABINET', index: 3 },
-        // { field: 'branch', header: 'FOLDER', index: 3 },
-        // { field: 'SubfolderName', header: 'SUBFOLDER', index: 3 },
+        { field: 'Cabinet', header: 'CABINET', index: 3 },
+        { field: 'branch', header: 'FOLDER', index: 3 },
+        { field: 'SubfolderName', header: 'SUBFOLDER', index: 3 },
           //  { field: 'TemplateName', header: 'TemplateName', index: 3 },
       //  { field: 'department', header: 'Department', index: 4 },
       //  { field: 'docType', header: 'Doc Type', index: 5 },
         { field: 'pageCount', header: 'PAGE COUNT', index: 6 },
         { field: 'entryDate', header: 'CREATE DATE', index: 3 },
-        // { field: 'filePath', header: 'File Path', index: 3 },
       ];
       headerList.forEach((el, index) => {
         tableHeader.push({
-          field: 'metadata-' + parseInt(index+1), header: el.DisplayName, index: parseInt(5+index)
+          field: 'metadata-' + parseInt(index+1), header: el.DisplayName, index: parseInt(7+index)
         })
       })
      // console.log("tableData",tableData);
@@ -454,9 +377,10 @@ this.getRootList();
         formattedData.push({
           'srNo': parseInt(index + 1),
           'accId': el.Ref1,
-          // 'DepartmentName': el.DepartmentName,
-          // 'branch': el.BranchName,
-          // 'SubfolderName': el.SubfolderName,
+          'Cabinet': el.DepartmentName,
+          'branch': el.BranchName,
+          
+          'SubfolderName': el.SubfolderName,
           // 'TemplateName': el.TemplateName,         
           "entryDate": el.EntryDate,
         //  'department': el.DepartmentName,
@@ -507,21 +431,20 @@ this.getRootList();
       }
     }
 
-    // DownloadFileAll(_FileNo: any,_File:any) {
+    DownloadFileAll(_FileNo: any,_File:any) {
 
-        
-    //   const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadFileFromDB?ID=' + localStorage.getItem('UserID') + '&FileNo= ' + _FileNo + ' &user_Token=' + localStorage.getItem('User_Token');
-    //   this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
-    //     if (res) {
+      const fileExt = _File.filePath.substring(_File.filePath.lastIndexOf('.'), _File.filePath.length);
+    
+      const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadFileFromDB?ID=' + localStorage.getItem('UserID') + '&FileNo= ' + _FileNo + ' &user_Token=' + localStorage.getItem('User_Token');
+      this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
+        if (res) {
   
-    //       //      var __FilePath = _TempFilePath ;    
-    //        console.log("Final FP-- res ", _File);
-    //       saveAs(res,_FileNo +".pdf");
+          saveAs(res,_FileNo + fileExt);
   
-    //     }
-    //   });
+        }
+      });
       
-    // }
+    }
 
     
 //       downloadFile(_fileName: any) {
@@ -800,13 +723,15 @@ this.getRootList();
       let  __FileNo =row.AccNo;
       let  __TempID = row.TemplateID;
 
+      console.log("__TempID",__TempID);
+
       const apiUrl=this._global.baseAPIUrl+'DataEntry/GetNextFile?id='+__TempID+'&FileNo='+__FileNo+'&user_Token='+ localStorage.getItem('User_Token');
   
       //const apiUrl=this._global.baseAPIUrl+'DataEntry/GetNextFile?id'+  + '' FileNo='+ __FileNo + '&user_Token=123123'
       this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
   
          this._IndexList = data;           
-         //console.log("Index",data);
+         console.log("Index",data);
       });
       // this.modalRef = this.modalService.show(template);
       }
@@ -842,15 +767,17 @@ this.getRootList();
 
     ViewDocument(template: TemplateRef<any>, row: any, indexTemplate: TemplateRef<any>) {
       this.MetaData(indexTemplate, row);
+      console.log(row);
     //  this.FilePath = row.RelPath;
       //this._TempFilePath =row.RelPath;
       this.modalRef = this.modalService.show(template);
       $(".modal-dialog").css('max-width', '1330px');
-      this.GetDocumentDetails(row);
+    //  this.GetDocumentDetails(row);
 
       this.GetFullFile(row.AccNo);
 
     }
+
 
 
     GetFullFile(FileNo:any) {
@@ -863,26 +790,11 @@ this.getRootList();
           this.FilePath = res;
            /// saveAs(res, row.ACC + '.pdf');
            this._TempFilePath = res;
-           this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
+
+  
         }
       });
     }
-
-    // GetFullFile(FileNo:any) {
-
-    //   const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/GetFullFile?ID='+localStorage.getItem('UserID')+'&&_fileName='+ FileNo +'&user_Token='+localStorage.getItem('User_Token');
-    //   this._onlineExamService.getDataById(apiUrl).subscribe(res => {
-    //     if (res) {
-  
-    //   //  console.log("9090res",res);
-    //       this.FilePath = res;
-    //        /// saveAs(res, row.ACC + '.pdf');
-    //        this._TempFilePath = res;
-
-  
-    //     }
-    //   });
-    // }
 
     profileImg: any;
     documentDetails: any;
@@ -897,6 +809,8 @@ this.getRootList();
         // this._IndexList = data;
         // this._FilteredList = data;
         this.documentDetails = data;
+
+        console.log("Doc Details",data);
       });
     }
 
@@ -1004,6 +918,8 @@ this.getRootList();
   this._HeaderList += ','+ 'PAGECOUNT' 
   this._HeaderList += '\n';
   let that = this;
+
+  console.log(this._MDList);
   this._MDList.forEach(stat => {
     // if ( that.selectedRows.indexOf(stat['Ref1']) > -1 ) {
       for (let j = 0; j < this._ColNameList.length; j++) {
@@ -1060,7 +976,7 @@ GetFilterData(tempID:any) {
        this._FileList = data;
        this._FilteredList = data;
        this.GetDisplayField(this.ContentSearchForm.get('TemplateID').value);
-
+       this.prepareTableData(this._FilteredList, this._ColNameList);
       // console.log("Loggg1111",data);
      });
    }
@@ -1145,7 +1061,7 @@ GetFilterData(tempID:any) {
           dwldLink.setAttribute("target", "_blank"); 
       } 
       dwldLink.setAttribute("href", url); 
-      dwldLink.setAttribute("download", 'Metadata' + ".csv"); 
+      dwldLink.setAttribute("download", 'data' + ".csv"); 
       dwldLink.style.visibility = "hidden"; 
       document.body.appendChild(dwldLink); 
       dwldLink.click(); 

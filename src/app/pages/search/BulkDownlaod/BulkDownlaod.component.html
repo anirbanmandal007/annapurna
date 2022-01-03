@@ -43,7 +43,7 @@
                 
              <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4">    
               <label class="form-control-label" for="TemplateID">Template :</label>           
-                <select name="TemplateID" id="TemplateID" class="form-control form-control-sm" formControlName="TemplateID" (change)="geTemplateNameListByTempID()">
+                <select name="TemplateID" id="TemplateID" class="form-control" formControlName="TemplateID" (change)="geTemplateNameListByTempID()">
                   <option value=0>Select Template</option>   
                   <option *ngFor="let _Temp of _TemplateList" [value]="_Temp.TemplateID"  >  
                   {{_Temp.TemplateName}}  

@@ -172,7 +172,6 @@
 
 ::ng-deep #ContentSearchPage .ui-table-wrapper th, ::ng-deep #ContentSearchPage .ui-table-wrapper td {
     font-size: 12px;
-    white-space: nowrap;
 }
 
 ::ng-deep #contentSearchDocView td {
@@ -274,8 +273,4 @@ button.btn.btn-cl {
     text-align: center;
     pointer-events: none;
     color: #aaa;
-}
-
-.ui-table .ui-table-tbody > tr:hover{
-    background-color: #eee !important;
 }

@@ -101,7 +101,12 @@ export class TemplateMappingComponent implements OnInit {
 
   getTempalteList(userid: any) {
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl =this._global.baseAPIUrl+"TemplateMapping/GetTemplateMappingListByCreatedBy?UserID="+userid +"&user_Token="+this.TemplateMappingForm.get("User_Token").value+"&CreatedBy="+localStorage.getItem('UserID');
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "TemplateMapping/GetTemplateMappingListByUserID?UserID=" +
+      userid +
+      "&user_Token=" +
+      this.TemplateMappingForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this._TemplateList = data;
       this._FilteredList = data;
@@ -125,10 +130,12 @@ export class TemplateMappingComponent implements OnInit {
   }
 
   getTemplate(userid: number) {
- 
-    const apiUrl =this._global.baseAPIUrl+"TemplateMapping/GetDetails?UserID="+userid +"&user_Token="+this.TemplateMappingForm.get("User_Token").value+"&CreatedBy="+localStorage.getItem('UserID');
- 
- //   const apiUrl =this._global.baseAPIUrl +"TemplateMapping/GetDetails?ID="+userid +"&user_Token="+this.TemplateMappingForm.get("User_Token").value;;
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "TemplateMapping/GetDetails?ID=" +
+      userid +
+      "&user_Token=" +
+      this.TemplateMappingForm.get("User_Token").value;;
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
       this.checkbox_list = [];
@@ -227,7 +234,7 @@ export class TemplateMappingComponent implements OnInit {
       return;
     }
     var _chkstatus = false;
-   // console.log('Checklist Array=> ', this.checklistArray.value);
+    console.log('Checklist Array=> ', this.checklistArray.value);
     for (let value of this.checklistArray.value) {
       if (value.ischecked) {
         this.__checkedList += value.id + "#";
@@ -237,14 +244,14 @@ export class TemplateMappingComponent implements OnInit {
    
     if (_chkstatus == false )
     {
-      //console.log("_chkstatus" , _chkstatus);    
+      console.log("_chkstatus" , _chkstatus);    
       alert("Please select at lease one Template");
       return;
     }
 
     this.AddTemplateMappingForm.patchValue({
       checkedList: this.__checkedList,
-      CreatedBy: localStorage.getItem('UserID'),
+      CreatedBy: 1,
     });
     var objectToSend = {
       id: 0,
@@ -253,8 +260,7 @@ export class TemplateMappingComponent implements OnInit {
       checkedList: this.AddTemplateMappingForm.get('checkedList').value,
       CreatedBy: this.AddTemplateMappingForm.get('CreatedBy').value
     }
-
-    //console.log('Submitting Form', objectToSend);
+    console.log('Submitting Form', objectToSend);
 
     const apiUrl = this._global.baseAPIUrl + "TemplateMapping/Create";
     this._onlineExamService

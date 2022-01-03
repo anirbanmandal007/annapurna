@@ -39,8 +39,9 @@ export class StatusComponent implements OnInit {
   _StatusList:any;
   _HeaderList:any;
   TemplateList:any;
+  BranchList:any;
  
-  _ColNameList = ["Customer", "Department", "FileNo", "PageCount", "IsIndexing","EntryDate" ,"IsTagged","TAT"];
+  _ColNameList = ["Customer", "Department", "FileNo", "PageCount", "IsIndexing","EntryDate"];
 
   tagItems = ["Bucharest", "Cluj", "Iasi", "Timisoara", "Piatra Neamt"];
 
@@ -62,12 +63,14 @@ export class StatusComponent implements OnInit {
   ngOnInit() {
     this.StatusReportForm = this.formBuilder.group({
       TemplateID: [, Validators.required],  
+      BranchID: [, Validators.required],  
       _Flag: [, Validators.required],        
       User_Token:  localStorage.getItem('User_Token') ,  
       CreatedBy: localStorage.getItem('UserID') ,      
     });
 
     this.getTemplate();
+    this.geBranchList();
     
   }
 
@@ -96,6 +99,25 @@ export class StatusComponent implements OnInit {
   }
   onActivate(event) {
     this.activeRow = event.row;
+  }
+
+  geBranchList() {
+    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "BranchMapping/GetBranchDetailsUserWise?ID=" +
+      localStorage.getItem('UserID') +
+      "&user_Token=" +
+      this.StatusReportForm.get("User_Token").value;
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+      this.BranchList = data;
+      this.StatusReportForm.controls['TemplateID'].setValue(0);
+      this.StatusReportForm.controls['BranchID'].setValue(0);
+
+      
+    //  this._FilteredList = data;
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
   }
 
   OnReset() {

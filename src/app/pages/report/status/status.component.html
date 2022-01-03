@@ -37,10 +37,20 @@
         <div class="card-header">
           <div class=" row">
 
+            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">   
+               
+              <select name="BranchID" id="BranchID" class="form-control" formControlName="BranchID" >
+                <option value='0'>Select Customer</option>   
+                <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
+                {{_Bracnch.BranchName}}  
+                </option>
+              </select>
+            </div>  
+
             <div class=" col-md-3">
               <div class=" form-group">
-                <label  for="TemplateID" class=" form-control-label">  Select Template </label>      
-                <select name="TemplateID" id="TemplateID" class="form-control form-control-sm" formControlName="TemplateID">
+                <!-- <label  for="TemplateID" class=" form-control-label">  Select Template </label>       -->
+                <select name="TemplateID" id="TemplateID" class="form-control" formControlName="TemplateID">
                   <option value=0>Select Template</option>   
                   <option *ngFor="let _Temp of TemplateList" [value]="_Temp.TemplateID"  >  
                   {{_Temp.TemplateName}}  
@@ -51,8 +61,8 @@
 
             <div class=" col-md-3">
               <div class=" form-group">
-                <label  for="_Flag" class=" form-control-label">  Select Indexing </label>      
-                <select name="_Flag" class="form-control form-control-sm" formControlName="_Flag">
+                <!-- <label  for="_Flag" class=" form-control-label">  Select Indexing </label>       -->
+                <select name="_Flag" class="form-control" formControlName="_Flag">
                   <option selected value=0>ALL</option>   
                   <option value="Y">YES</option>
                   <option value="N">NO</option>   
@@ -63,7 +73,7 @@
 
 
 
-            <div class=" col-md-3"  style="padding-top: 32px">  
+            <div class=" col-md-3">  
               <button class="btn btn-primary" [disabled]="!isValid()" (click)="onSearch()"> Search</button>
               <button class="btn btn-primary" [disabled]="!isValid()" (click)="onDownload()"> Download</button>       
           </div>    
@@ -106,6 +116,8 @@
           </div>
 
           <ngx-datatable
+          
+          *ngIf="_FilteredList"
             class="material"
             [columnMode]="'force'"
             [headerHeight]="50"

@@ -110,12 +110,6 @@
             <ngx-datatable-column name="UserName">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.UserName}}</ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Rootfolder">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.RootfolderName}}</ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="DepartmentName">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.DepartmentName}}</ng-template>
-            </ngx-datatable-column>
             <ngx-datatable-column name="Folder">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.BranchName}}</ng-template>
             </ngx-datatable-column>
@@ -145,28 +139,10 @@
         <div class="card-body">
           <form class="needs-validation" novalidate="" [formGroup]="AddBranchMappingForm" (ngSubmit)="onSubmit()">
             <div class="form-row">
-
-              <div class="col-sm-6">               
-                <select name="RootID" id="RootID" class="form-control form-control-sm" formControlName="RootID" (change)="getDepartmnet($event.target.value)" >
-                  <option value=0>Select Root</option>   
-                  <option *ngFor="let Root of _RootList" [value]="Root.RootID"  >  
-                  {{Root.RootfolderName}}  
-                  </option>
-                </select>
-              </div>
-              <div class="col-sm-6">               
-                <select name="DeptID" id="DeptID" class="form-control form-control-sm" formControlName="DeptID" (change)="getBranchListByDeptID($event.target.value)" >
-                  <option value=0>Select Cabinet</option>   
-                  <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
-                  {{_Department.DepartmentName}}  
-                  </option>
-                </select>
-              </div> 
-
-
-
-              <div class="col-md-12 mb-3 pt-3">
-             
+              <div class="col-md-12 mb-3">
+                <label class="form-control-label" for="UserID">
+                  User
+                </label>
                 <select class="form-control form-control-sm" formControlName="UserID" data-toggle="select" id="UserID"
                 (change)="getBranchForUser($event.target.value)">
                   <option value="0"> Select User</option>

@@ -593,32 +593,20 @@
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-12">
-                        <ng-container *ngIf="fileExt != '.pdf'">
-                          <ngx-doc-viewer
-                            [url]="FilePath"
-                            viewer="google"
-                            style="width:100%;height:90vh;"
-                          ></ngx-doc-viewer>
-                        </ng-container>
-                        <ng-container *ngIf="fileExt == '.pdf'">
-                          <ngx-extended-pdf-viewer  id="Viewer"
-                          [page] ="_PageNo"
-                          [useBrowserLocale]="true"
-                          [textLayer]="true"
-                          [showHandToolButton]="true"
-                          [height]="'90vh'"
-            
-                          *ngIf="FilePath" [src]="FilePath"
-                          > 
-            
-                          </ngx-extended-pdf-viewer>
-                        </ng-container>
+                        <ngx-extended-pdf-viewer  id="Viewer"
+                        [page] ="_PageNo"
+                        [useBrowserLocale]="true"
+                        [textLayer]="true"
+                        [showHandToolButton]="true"
+                        [height]="'90vh'"
+          
+                        *ngIf="FilePath" [src]="FilePath"
+                        > <!-- by default, most CSS framework set the height to 0 -->
+          
+                        </ngx-extended-pdf-viewer>
                       </div>
                     </div>
                   </div>
-
-
-
                 </div>
   
               </div>

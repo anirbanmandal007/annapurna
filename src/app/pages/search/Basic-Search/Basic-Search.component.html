@@ -91,13 +91,14 @@
             </select>
           </div>   -->
       
-          <div class="col">   
-          <ngx-select-dropdown (change)="selectionChanged($event)" 
+          <!-- <div class="col">    -->
+
+            <!-- <ngx-select-dropdown (change)="selectionChanged($event)" 
           [optionValueField]="TemplateID"
                 [optionTextField]="TemplateName"
           formControlName="selectData" [multiple]="true"  [config]="config" [options]="TemplateList"></ngx-select-dropdown>
 
-        </div> 
+        </div>  -->
           <!--       
               <div class="col">    
                
@@ -111,25 +112,7 @@
 
               <div class="col">                   
                  <div class="input-group input-group-merge serchInput">
-                  <input
-                      type="text"
-                      class="form-control"
-                      name="FileNo"                     
-                      placeholder="Enter values to search"
-                      formControlName="FileNo"
-                      
-                    />
-                  <!-- <div class="input-group-append btndiv" id="search-addon">
-                      <button
-                      class="btn btn-outline-primary"
-                      (click)="GetFilterSearch(1)"
-                      type="button"
-                    >
-                      <i class="fa fa-search"></i>
-                    </button>
-                    
-                  </div> -->
-                  
+                  <input  type="text"    class="form-control" name="FileNo" placeholder="Enter values to search"  formControlName="FileNo"  /> 
                 </div>
               </div>
 
@@ -166,11 +149,12 @@
           class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="DownloadBulkFiles()" >
           <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-download actionIcon"></i></span>
         </button>
-        <button type="button" tooltip="Download Metadata Dump " style="padding:1px 1px 1px 1px;float: left; position: relative;
+
+        <!-- <button type="button" tooltip="Download Metadata Dump " style="padding:1px 1px 1px 1px;float: left; position: relative;
           bottom: 15px;left: 8px;"
           class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="DownloadMetadata()" >
           <span class="btn-inner--icon"><i id="actionIcon" class="fas fa-file-download actionIcon"></i></span>
-        </button>
+        </button> -->
 
         <button *ngIf="_ShareLink == 'true'" type="button" tooltip="Share link" style="padding:1px 1px 1px 1px;float: left; position: relative;
         bottom: 15px;
@@ -373,63 +357,44 @@
                   <td *ngFor="let col of headerList">
                     {{car[col.field]}}
                   </td>
-                  <td class="mat-action-items">
-                    <!-- <button mat-icon-button [matMenuTriggerFor]="menu" class="b_cl" aria-label="Example icon-button with a menu">
-                      <mat-icon>more_vert</mat-icon>
-                    </button> -->
-                    <!-- <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
-                      <mat-icon>menu</mat-icon>
-                    </button>
-                    <button mat-mini-fab color="accent" aria-label="Example icon button with a plus one icon">
-                      <mat-icon>plus_one</mat-icon>
-                    </button>
-                     -->
-                     <button type="button" style="padding:0 0 5px 4px" (click)="ViewDocument(ImageViewFormPopup,car, MetaDataFormPopup)" *ngIf="_isDocView == 'true'" class="btn btn-icon btn-warning btn-icon-only rounded-circle">
-                      <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
-                    </button>
-                    <button type="button" style="padding:0 0 5px 4px" (click)="EditRowData(car)" *ngIf="_isEdit == 'true'" class="btn btn-icon btn-warning btn-icon-only rounded-circle" >
-                      <span class="btn-inner--icon"><i class="fa fa-edit"></i></span>
-                    </button>
 
-                    <button type="button" style="padding:0 0 5px 4px" (click)="DownloadFileAll(car.AccNo,car)" *ngIf="_isDownload == 'true'" class="btn btn-icon btn-warning btn-icon-only rounded-circle">
-                      <span class="btn-inner--icon"><i class="fa fa-download"></i></span>
+                  <td class="mat-action-items">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" class="b_cl" aria-label="Example icon-button with a menu">
+                      <mat-icon>more_vert</mat-icon>
                     </button>
-                    <button type="button" style="padding:0 0 5px 4px" (click)="DeleteFile(car)" *ngIf="_isDelete == 'true'" class="btn btn-icon btn-danger btn-icon-only rounded-circle">
-                      <span class="btn-inner--icon"><i class="fa fa-trash"></i></span>
-                    </button>
-                 
-                    <!-- <button mat-menu-item (click)="ViewDocument(ImageViewFormPopup,car, MetaDataFormPopup)" *ngIf="_isDocView == 'true'">
-                      <i class="material-icons">preview</i>
-                    </button>
-                    <button mat-menu-item (click)="EditRowData(car)" *ngIf="_isEdit == 'true'">
-                      <i class="material-icons">edit</i>
-                    </button>
-                    <button mat-menu-item (click)="DownloadFileAll(car.AccNo,car)" *ngIf="_isDownload == 'true'">
-                      <i class="material-icons">cloud_download</i>
-                    </button>
-                    <button mat-menu-item (click)="DeleteFile(car)" *ngIf="_isDelete == 'true'">
-                      <i class="material-icons">delete</i>
-                    </button> -->
-                    <!-- <mat-menu #menu="matMenu"> -->
-                      <!--  -->
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="ViewDocument(ImageViewFormPopup,car, MetaDataFormPopup)" *ngIf="_isDocView == 'true'">
+                        <i class="material-icons">preview</i>
+                        <span>Document View</span>
+                      </button>
                       <!-- <button mat-menu-item (click)="MetaData(MetaDataFormPopup,car)">
                         <i class="material-icons">remove_red_eye</i>
                         <span>View Index Data</span>
                       </button> -->
-                      
+                      <button mat-menu-item (click)="EditRowData(car)" *ngIf="_isEdit == 'true'">
+                        <i class="material-icons">edit</i>
+                        <span>Edit Index Data</span>
+                      </button>
                       <!-- <button mat-menu-item (click)="Setfavourite(car.ACC)">
                         <i class="material-icons">favorite</i>
                         <span>Set Favourite</span>
                       </button> -->
                     
-                      
+                      <button mat-menu-item (click)="DownloadFileAll(car.AccNo,car)" *ngIf="_isDownload == 'true'">
+                        <i class="material-icons">cloud_download</i>
+                        <span>Download  Files</span>
+                      </button>
                       <!-- <button mat-menu-item (click)="UploadDocModal(AdvancedFormPopup,car)">
                         <i class="material-icons">upload_file</i>
                         <span>Upload Document</span>
                       </button> -->
-                      
-                    <!-- </mat-menu> -->
+                      <button mat-menu-item (click)="DeleteFile(car)" *ngIf="_isDelete == 'true'">
+                        <i class="material-icons">delete</i>
+                        <span>Delete File</span>
+                      </button>
+                    </mat-menu>
                   </td>
+
               </tr>
           </ng-template>
       </p-table>

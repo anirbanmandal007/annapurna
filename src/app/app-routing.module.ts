@@ -9,6 +9,7 @@ import { PresentationComponent } from "./pages/presentation/presentation.compone
 import { LoginNewComponent } from './pages/login-new/login-new.component';
 import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
 import { ForgetPasswordComponent } from "./pages/forget-password/forget-password.component";
+import { AuthGuardService } from "./Services/auth-guard.service";
 
 
 const routes: Routes = [
@@ -32,6 +33,7 @@ const routes: Routes = [
   {
     path: "",
     component: AdminLayoutComponent,
+    canActivate: [AuthGuardService],
     children: [
       {
         path: "dashboards",
@@ -119,9 +121,8 @@ const routes: Routes = [
     CommonModule,
     BrowserModule,
     RouterModule.forRoot(routes, {
-    useHash: true,
-    relativeLinkResolution: 'legacy'
-})
+      useHash: true
+    })
   ],
   exports: [RouterModule]
 })

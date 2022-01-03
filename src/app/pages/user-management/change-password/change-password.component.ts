@@ -36,7 +36,7 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit(): void {
 
     this.changepasswordform = this.formBuilder.group({     
-      pwd: ["", Validators.required],
+      pwd: ["", [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/)]],
       confirmPass: ["", Validators.required],            
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID')

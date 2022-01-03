@@ -32,9 +32,7 @@ export class EntityComponent implements OnInit {
   EntityForm: FormGroup;
   _FilteredList :any; 
  _EntityID: any =0;
- _DepartmentList:any;
  BranchList:any;
- _RootList:any;
 
   constructor(
     private modalService: BsModalService,
@@ -46,80 +44,14 @@ export class EntityComponent implements OnInit {
   ngOnInit() {
     this.AddEntityForm = this.formBuilder.group({
       SubfolderName: ['', Validators.required],
-      DeptID: [0, Validators.required],
-      BranchID: [0, Validators.required],
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
-      id:[0],
-      RootID:[0],
+      BranchID:[0, Validators.required],
+      id:[0]
     });
     this.getEntityList();
-    //this.getDepartmnet();
-    this.getRootList();
+    this.geBranchList();
   }
-
-
-  // getRootList() {
-    
-  //   const apiUrl=this._global.baseAPIUrl+'RootMaster/GetRootList?user_Token='+ localStorage.getItem('User_Token') 
-  //   this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-  //     this._RootList = data;
-  //  //  this._FilteredList = data
-
-  //    console.log(data);
-  //     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-  //   });
-  // }
-
-
-  getRootList() {
-    
-    const apiUrl=this._global.baseAPIUrl+"RootMaster/GetRootByUserID?UserID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token'); 
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-      this._RootList = data;
-   //  this._FilteredList = data
-   this.AddEntityForm.controls['DeptID'].setValue(0);
-   this.AddEntityForm.controls['BranchID'].setValue(0);
-   
-     //console.log(this._FilteredList );
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-  }
-  // getDepartmnet() {
-
-  //   const apiUrl=this._global.baseAPIUrl+'Department/GetList?user_Token='+ localStorage.getItem('User_Token');
-  //   this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-  //   this._DepartmentList = data;
-  //  // this._DepartmentLists=data;
-  //   console.log("data : -", data);
-  //   this.AddEntityForm.controls['DeptID'].setValue(0);
-  //  // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
-    
-
-  //   //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-  //   });
-
-  //   }
-
-  getDepartmnet(RootID: any) {
-  
-
-    const apiUrl = this._global.baseAPIUrl + "Department/GetDepartmentByUserID?UserID="+localStorage.getItem('UserID')+"&RoleID="+RootID+"&user_Token="+localStorage.getItem('User_Token');
-
- //   const apiUrl=this._global.baseAPIUrl+'Department/GetDepartmentByUserID?user_Token='+ localStorage.getItem('User_Token');
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
-    this._DepartmentList = data;
-   // this._DepartmentLists=data;
-//    console.log("data : -", data);
-    this.AddEntityForm.controls['DeptID'].setValue(0);
-    this.AddEntityForm.controls['BranchID'].setValue(0);
-   // this.RegionMappingForm.controls['DeptIDS'].setValue(0);
-    
-
-    //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-
-    }
 
   entriesChange($event) {
     this.entries = $event.target.value;
@@ -142,16 +74,14 @@ export class EntityComponent implements OnInit {
   }
   onSelect({ selected }) {
     this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
+    this.selected.push(selected);
   }
   onActivate(event) {
     this.activeRow = event.row;
   }
   getEntityList() {
     
-    const apiUrl = this._global.baseAPIUrl + "SubfolderController/GetSubfolderListByUser?UserID=" + localStorage.getItem('UserID') +"&user_Token=" +localStorage.getItem('User_Token');
-   
-  //  const apiUrl=this._global.baseAPIUrl+'SubfolderController/GetSubfolderList?user_Token='+ localStorage.getItem('User_Token') 
+    const apiUrl=this._global.baseAPIUrl+'SubfolderController/GetSubfolderList?user_Token='+ localStorage.getItem('User_Token') 
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._EntityList = data;
       this._FilteredList = data
@@ -159,33 +89,11 @@ export class EntityComponent implements OnInit {
     });
   }
 
-  
-
-  
-
-  geBranchListByUserID(userid: number) {
-    //     alert(this.BranchMappingForm.value.UserID);
-    this.geBranchList(userid);
-  }
-
   OnReset() {
     this.Reset = true;
-    //this.AddEntityForm.reset();
+    // this.AddEntityForm.reset();
     this.modalRef.hide();  
-    this.AddEntityForm.controls['SubfolderName'].setValue('');
-    this.AddEntityForm.controls['DeptID'].setValue(0);
-    this.AddEntityForm.controls['BranchID'].setValue(0);
 
-  }
-
-  geBranchList(userid: any) {
-    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl = this._global.baseAPIUrl + "BranchMaster/GetBranchByDeptIDANDUserwise?UserID=" +localStorage.getItem('UserID')+"&DeptID="+userid+ "&user_Token="+localStorage.getItem('User_Token');
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-      this.BranchList = data;
-    //  this._FilteredList = data;
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
   }
 
   onSubmit() {
@@ -211,13 +119,9 @@ export class EntityComponent implements OnInit {
         toastClass:
           "ngx-toastr alert alert-dismissible alert-success alert-notify"
       }
-
-      
-      
     );
-    this.getEntityList();
-    this.OnReset()
-    
+     this.getEntityList();
+     this.OnReset()
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
 
@@ -265,21 +169,33 @@ export class EntityComponent implements OnInit {
       this.AddEntityForm.patchValue({
         id: that._SingleDepartment.id,
         SubfolderName: that._SingleDepartment.SubfolderName,
-        DeptID: that._SingleDepartment.DeptID,
-        BranchID: that._SingleDepartment.BranchID,
       })
-      this.AddEntityForm.controls['DeptID'].setValue(that._SingleDepartment.DeptID); 
-      this.geBranchListByUserID(that._SingleDepartment.DeptID);
-      this.AddEntityForm.controls['BranchID'].setValue(that._SingleDepartment.BranchID);      
-    
-    //  console.log('form', this.AddEntityForm);
+      console.log('form', this.AddEntityForm);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     this.modalRef = this.modalService.show(template);
   }
   addBranch(template: TemplateRef<any>) {
-    this.AddEntityForm.controls['SubfolderName'].setValue('');
-    this.AddEntityForm.controls['DeptID'].setValue(0);
     this.AddEntityForm.controls['BranchID'].setValue(0);
+    this.AddEntityForm.controls['SubfolderName'].setValue('');
     this.modalRef = this.modalService.show(template);
+  }
+
+  
+  geBranchList() {
+    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "BranchMapping/GetBranchDetailsUserWise?ID=" +
+      localStorage.getItem('UserID') +
+      "&user_Token=" +
+      this.AddEntityForm.get("User_Token").value;
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+      this.BranchList = data;
+
+      this.AddEntityForm.controls['BranchID'].setValue(0);
+
+     // this._FilteredList = data;
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
   }
 }

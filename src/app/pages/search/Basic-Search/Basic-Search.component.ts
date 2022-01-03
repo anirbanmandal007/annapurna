@@ -211,8 +211,6 @@ this.getTemplate();
       //   window.location.reload(); 
       // } 
 
-
-
       GetFilterSearch(tid:any)
       {
         this.GetFilterData(1);
@@ -289,7 +287,7 @@ this.getTemplate();
       //     field: 'metadata-' + parseInt(index+1), header: el.DisplayName, index: parseInt(5+index)
       //   })
       // })
-     // console.log("tableData",tableData);
+      console.log("tableData",tableData);
       tableData.forEach((el, index) => {
         formattedData.push({
           'srNo': parseInt(index + 1),
@@ -473,8 +471,8 @@ this.getTemplate();
 
       MetaData(template: TemplateRef<any>, row: any)
       {
-        //FileNo: localStorage.getItem('FileNo'),
-      //  TemplateID:localStorage.getItem('TemplateID')  
+        
+        console.log(row);
       let  __FileNo =row.AccNo;
       let  __TempID = row.TemplateID;
 
@@ -506,7 +504,6 @@ this.getTemplate();
       this.modalRef = this.modalService.show(template);
       $(".modal-dialog").css('max-width', '1330px');
       this.GetDocumentDetails(row);
-
       this.GetFullFile(row.AccNo);
 
     }

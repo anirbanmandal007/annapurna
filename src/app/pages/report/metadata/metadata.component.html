@@ -36,52 +36,39 @@
       <div class=" card">
         <div class="card-header">
           <div class=" row">
-            <div class=" col-md-8">
-              <div class="position-relative row form-group">  
-                <div class="col">               
-                  <select name="RootID" id="RootID" class="form-control form-control-sm" formControlName="RootID" (change)="getDepartmnet($event.target.value)" >
-                    <option value=0>Select Root</option>   
-                    <option *ngFor="let Root of _RootList" [value]="Root.RootID"  >  
-                    {{Root.RootfolderName}}  
-                    </option>
-                  </select>
-                </div>  
+            <div class="card-body">
+            <div class="position-relative row form-group">  
+
+              <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">   
                
-                 <div class="col">               
-                  <select name="DeptID" id="DeptID" class="form-control form-control-sm" formControlName="DeptID" (change)="geBranchListByUserID($event.target.value)" >
-                    <option value=0>Select Cabinet</option>   
-                    <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
-                    {{_Department.DepartmentName}}  
-                    </option>
-                  </select>
-                </div>  
-      
-                <div class="col">    
-                  <!-- <label class="form-control-label" for="TemplateID">Customer :</label>   -->
-                  <select name="BranchID" id="BranchID" class="form-control form-control-sm" formControlName="BranchID">
-                    <option value='0'>Select Folder</option>   
-                    <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
-                    {{_Bracnch.BranchName}}  
-                    </option>
-                  </select>
-                </div>  
-                <div class="col">    
-                <!-- <label  for="TemplateID" class=" form-control-label">  Select Template </label>       -->
-                <select name="TemplateID" id="TemplateID" class="form-control form-control-sm" formControlName="TemplateID" (change)="geTemplateNameListByTempID($event.target.value)">
+                <select name="BranchID" id="BranchID" class="form-control" formControlName="BranchID" >
+                  <option value='0'>Select Customer</option>   
+                  <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
+                  {{_Bracnch.BranchName}}  
+                  </option>
+                </select>
+              </div>  
+    
+
+              <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">    
+                  
+                <select name="TemplateID" id="TemplateID" class="form-control" formControlName="TemplateID" (change)="geTemplateNameListByTempID($event.target.value)">
                   <option value=0>Select Template</option>   
                   <option *ngFor="let _Temp of TemplateList" [value]="_Temp.TemplateID"  >  
                   {{_Temp.TemplateName}}  
                   </option>   
                   </select>
-                  </div>
               </div>
-            </div> 
 
-
-              <div class=" col-md-3" >  
+              <div class=" col-md-3"  >  
                 <button class="btn btn-primary" [disabled]="!isValid()" (click)="onSearch()"> Search</button>
                 <button class="btn btn-primary" [disabled]="!isValid()" (click)="onDownload()"> Download</button>       
               </div>   
+            </div> 
+
+
+              
+          </div>
           </div>
         </div>
         <div class="dataTables_wrapper py-4">
@@ -122,6 +109,7 @@
           </div>
 
           <ngx-datatable
+          *ngIf="_FilteredList"
             class="material"
             [columnMode]="'force'"
             [headerHeight]="50"

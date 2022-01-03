@@ -46,7 +46,7 @@ export class TemplateComponent implements OnInit {
       CreatedBy: localStorage.getItem('UserID') ,
       id:[0]
     });
-    this.GetTemplateListByCreateID();
+    this.geTempList();
   }
 
   entriesChange($event) {
@@ -88,18 +88,6 @@ export class TemplateComponent implements OnInit {
   });
   }
 
-  GetTemplateListByCreateID() {
-
-    const apiUrl = this._global.baseAPIUrl + "Template/GetTemplateListByCreateID?UserID=" + localStorage.getItem('UserID') +"&user_Token=" +localStorage.getItem('User_Token');
-  
-  //  const apiUrl=this._global.baseAPIUrl+'Template/GetTemplateListByCreateID?user_Token='+this.AddTemplateForm.get('User_Token').value
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-    this._TemplateList = data;
-    this._FilteredList = data
-    //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
-    }
-
   OnReset() {
     this.Reset = true;
     this.AddTemplateForm.reset({User_Token: localStorage.getItem('User_Token')});
@@ -132,7 +120,7 @@ export class TemplateComponent implements OnInit {
     );
      
      this.OnReset()
-     this.GetTemplateListByCreateID();
+     this.geTempList();
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
 
