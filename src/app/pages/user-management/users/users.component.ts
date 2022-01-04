@@ -46,7 +46,7 @@ export class UsersComponent implements OnInit {
       id: [""],
       name: new FormControl('', [Validators.required]),
       userid: ["", Validators.required],
-      pwd: ["", Validators.required],
+      pwd: ["", [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
       confirmPass: ["", Validators.required],
       //Cpwd: ['', Validators.required],
       email: ["", [Validators.required, Validators.pattern(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)

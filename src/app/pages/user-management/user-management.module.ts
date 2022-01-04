@@ -15,6 +15,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RoleComponent } from "./role/role.component";
 import { AddRoleComponent } from "./addrole/addrole.component";
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @NgModule({
   declarations: [UsersComponent,RoleComponent,AddRoleComponent, ChangePasswordComponent],
@@ -29,7 +30,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
     PaginationModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    NgxPrintModule
+    NgxPrintModule,
+    NgxCaptchaModule
   ]
 })
 export class UserManagementModule {}

@@ -167,9 +167,17 @@
                 </label>
                 <input name="pwd" id="loginPass" formControlName="pwd" required minlength="6" placeholder="Password" type="password" class="form-control">
                 <div  class="errorMsg-feedback" *ngIf="f.pwd.touched && f.pwd.hasError('required')">Password Required</div>
-                
                 <div  class="errorMsg-feedback"
-                *ngIf="f.pwd.touched && f.pwd.errors &&f.pwd.errors.minlength">Password should be 6 character</div>
+                    *ngIf="f.pwd.touched && f.pwd.errors">Password should meet the following criteria:
+                      <ul>
+                        <li>Contain at least 8 characters</li>
+                        <li>Contain at least 1 number</li>
+                        <li>Contain at least 1 lowercase character (a-z)</li>
+                        <li>Contain at least 1 uppercase character (A-Z)</li>
+                      </ul>
+                    </div>
+                <!-- <div  class="errorMsg-feedback"
+                *ngIf="f.pwd.touched && f.pwd.errors &&f.pwd.errors.minlength">Password should be 6 character</div> -->
               </div>
               <div class=" col-md-6 mb-3">
                 <label class=" form-control-label" for="confirmPass">

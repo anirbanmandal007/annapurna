@@ -24,6 +24,16 @@ export class ChangePasswordComponent implements OnInit {
   _SingleUser: any = [];
   _UserID: any;
 
+  public captchaIsLoaded = false;
+  public captchaSuccess = false;
+  public captchaIsExpired = false;
+  public captchaResponse?: string;
+
+  public theme: 'light' | 'dark' = 'light';
+  public size: 'compact' | 'normal' = 'normal';
+  public lang = 'en';
+  public type: 'image' | 'audio';
+
   constructor(
     private modalService: BsModalService,
     private formBuilder: FormBuilder,
@@ -36,8 +46,9 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit(): void {
 
     this.changepasswordform = this.formBuilder.group({     
-      pwd: ["", [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/)]],
-      confirmPass: ["", Validators.required],            
+      pwd: ["", [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
+      confirmPass: ["", Validators.required],
+      recaptcha: ["", Validators.required],           
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID')
 
@@ -123,6 +134,8 @@ export class ChangePasswordComponent implements OnInit {
       //this.studentForm.patchValue({File: formData});
     }
     
-
+    handleSuccess(data) {
+      console.log(data);
+    }
 
 }
