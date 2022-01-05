@@ -211,5 +211,10 @@ body .ui-table .ui-table-tbody > tr:hover {
 .alpha-numeric-only
  {
   background:red;
-  color: #fff;
+  color: #fff !important;
+
+  .tooltip-span {
+    display: inline-block !important;
+    margin-left: 8px;
+  }
  }
