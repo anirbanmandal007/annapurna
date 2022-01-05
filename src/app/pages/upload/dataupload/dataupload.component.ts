@@ -34,7 +34,7 @@ TemplateList:any;
 _IndexList:any;
 _Records :any; 
 DataUploadForm: FormGroup;
-
+isFileInvalid = true;
 public message: string;
 _HeaderList: any;
 _ColNameList = [];
@@ -214,8 +214,10 @@ isValidationError: any;
         let validFile = this.getDisplayNames(csvRecordsArray);
         if (validFile == false) {
         //  console.log('Not Valid File', csvRecordsArray);
+          this.isFileInvalid = true;
           this.fileReset();
         } else {
+          this.isFileInvalid = false;
           this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
        
 
@@ -494,7 +496,7 @@ console.log(headers);
      //this.showmessage(msg);
      this.ShowErrormessage(msg);
 
-      return false;
+      return false
     }
 
     for (let j = 0; j < headers.length; j++) {
@@ -527,8 +529,8 @@ console.log(headers);
   }
 
   downloadFile() {
-    const filename = 'CSVFileUpload';
     if (this.validation() == true)    {
+    const filename = this.TemplateList.find(el => el.TemplateID == this.DataUploadForm.controls.TemplateID.value).TemplateName;
     let csvData = this._HeaderList;    
     //console.log(csvData)
     let blob = new Blob(['\ufeff' + csvData], {
@@ -590,9 +592,6 @@ console.log(headers);
     //   'date-field': this._ColNameList.filter((el, index) => el.DisplayName === column.name)[0].FieldType === '3'
     // }
     console.log(row, column);
-    if(row[2]==="2fsf_") {
-      debugger;
-    }
     const field = this._ColNameList.filter((el, index) => el.DisplayName === column.name)[0];
     const fieldIndex = this._ColNameList.findIndex(el => el.DisplayName === column.name);
     let cssClass = '';
@@ -601,7 +600,7 @@ console.log(headers);
         if(field.IsMandatory && row[fieldIndex] === '') { // Required field check
           cssClass += ' error text-required';
         }
-        if(!(/^[a-z][a-z\s]*$/.test(row[fieldIndex]))) { // Letter validation check
+        if(!(/^[a-zA-Z\s]*$/.test(row[fieldIndex]))) { // Letter validation check
           cssClass += ' error letter-only';
         }
         break;
@@ -627,8 +626,12 @@ console.log(headers);
     }
     return cssClass;
   }
-  
-  getTooltipDate(tooltipRef) {
+
+  getTooltipDate(tooltipRef, rowIndex, colIndex) {
+    if(!tooltipRef) {
+      return;
+    }
+    
     let tooltipData = '';
     if(tooltipRef.parentElement.parentElement.classList.contains('text-required')) {
       tooltipData = 'This field is required';
@@ -648,7 +651,7 @@ console.log(headers);
   }
 
   hasDataError() {
-    if(document.querySelectorAll('.datatable-body-cell.error').length > 0) {
+    if(this.isFileInvalid || document.querySelectorAll('.datatable-body-cell.error').length > 0) {
       return true;
     }
     return false;
