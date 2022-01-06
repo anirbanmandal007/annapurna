@@ -618,7 +618,7 @@ console.log(headers);
         break;
 
       case ('5') :
-        if(!(/^\w+$/.test(row[fieldIndex]))) { // Alpha-Numeric validation check
+        if(!(/^[\w\-\s]+$/.test(row[fieldIndex]))) { // Alpha-Numeric validation check
           cssClass = ' error alpha-numeric-only';
         }
         break;
