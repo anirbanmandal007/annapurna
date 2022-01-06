@@ -3,7 +3,7 @@ import { StatusComponent } from "./status/status.component";
 import { LogsComponent } from "./logs/logs.component";
 import { MetadataComponent } from "./metadata/metadata.component";
 import { TagReportComponent } from "./TagReport/TagReport.component";
-
+import { SpaceComponent } from "./Space/Space.component";
  
 export const reportRoutes: Routes = [
   {
@@ -24,7 +24,11 @@ export const reportRoutes: Routes = [
       {
         path: "DocumentStatus",
         component: TagReportComponent
-      },    
+      },
+      {
+        path: "Space",
+        component: SpaceComponent
+      },       
       
     ]
 

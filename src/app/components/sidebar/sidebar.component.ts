@@ -499,6 +499,12 @@ export class SidebarComponent implements OnInit {
         route = { path: "meta-data", title: "MetaData", type: "link" }
         break;
       }
+      case "Space":{
+        route = { path: "Space", title: "Space Utilized", type: "link" }
+        break;
+      }
+
+      
       // case "Database Log":{
       //   route = { path: "logs", title: "Logs", type: "link" }
       //   break;

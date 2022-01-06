@@ -12,7 +12,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { RouterModule } from "@angular/router";
 import { reportRoutes } from "./report.routing";
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-
+import { SpaceComponent } from "./Space/Space.component";
 import { StatusComponent } from "./status/status.component";
 
 import { LogsComponent } from "./logs/logs.component";
@@ -23,7 +23,7 @@ import { TagReportComponent } from "./TagReport/TagReport.component";
 
 
 @NgModule({
-  declarations: [StatusComponent,LogsComponent,MetadataComponent,TagReportComponent],
+  declarations: [StatusComponent,LogsComponent,MetadataComponent,TagReportComponent,SpaceComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(reportRoutes),
