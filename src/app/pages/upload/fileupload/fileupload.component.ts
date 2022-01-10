@@ -312,14 +312,35 @@ export class FileUploadComponent implements OnInit {
             }
           });
       }
-  
+      
       uploadFiles(fileUpload) {
       //  console.log(this.FileUPloadForm);
         //console.log(this.FileUPloadForm.valid);
 
 //console.log("Branch",this.FileUPloadForm.controls['BranchID'].value);
 //console.log("TemplateID",this.FileUPloadForm.controls['TemplateID'].value);
-
+          
+          let allFilesSize = 0;
+          for (var i = 0; i < this.myFiles.length; i++) { 
+            allFilesSize += this.myFiles[i]['size'];
+          }
+          if((allFilesSize / (1024*1024)) > 500) {
+            this.toastr.show(
+              '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error!</span> <span data-notify="message">Maximum 500MB is allowed to upload</span></div>',
+              "",
+              {
+                timeOut: 3000,
+                closeButton: true,
+                enableHtml: true,
+                tapToDismiss: false,
+                titleClass: "alert-title",
+                positionClass: "toast-top-center",
+                toastClass:
+                  "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+              }
+            );
+            return;
+          }
           if (this.FileUPloadForm.controls['BranchID'].value <= 0)
           {
             this.showmessage("Select Customer");
