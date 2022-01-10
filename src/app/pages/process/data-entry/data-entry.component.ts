@@ -272,6 +272,7 @@ export class DataEntryComponent implements OnInit {
       let textFieldRequiredValidation = true;
       let NumericFieldValidation = true;
       let textFieldLetterValidation = true;
+      let alphaNumericValidation = true;
 
       this._ColNameList.forEach((el, index) => {
         if(el.FieldType === '3') { // Date Format check
@@ -350,8 +351,29 @@ export class DataEntryComponent implements OnInit {
               );
             }
         }
+
+        if(el.FieldType === '5') { // Alpha-numeric validation check
+          const fieldVal = this.DataEntryForm.get('_ColNameList').value[el.DisplayName];
+          if(fieldVal !== '' && !(/^[\w\-\s]+$/.test(fieldVal))) {
+            alphaNumericValidation = false;
+            this.toastr.show(
+              '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error!</span> <span data-notify="message"><b>' + el.DisplayName + '</b> : Only letters and digits are allowed</span></div>',
+              "",
+              {
+                timeOut: 5000,
+                closeButton: true,
+                enableHtml: true,
+                tapToDismiss: false,
+                titleClass: "alert-title",
+                positionClass: "toast-top-center",
+                toastClass: "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+              }
+            );
+          }
+        }
+
       });
-      if(isValidDateFormat && textFieldRequiredValidation && NumericFieldValidation && textFieldLetterValidation) {
+      if(isValidDateFormat && textFieldRequiredValidation && NumericFieldValidation && textFieldLetterValidation && alphaNumericValidation) {
         return true;
       } else {
         return false;
