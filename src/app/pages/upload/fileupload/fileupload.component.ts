@@ -258,11 +258,17 @@ export class FileUploadComponent implements OnInit {
   
       getFileDetails (e) {
         //console.log (e.target.files);
+        var maxsize=0;
         this.myFiles = [];
         for (var i = 0; i < e.files.length; i++) {
           this.myFiles.push(e.files[i]);
+       //   console.log(e.files[i].size);
+          //alert(e.files[i].FileSize);
+       //   maxsize = maxsize + e.files[i].length;
         }
         this._IndexList = e.files;
+//alert(this.myFiles.length);
+
       }
   
       public uploadFile = (files) => {

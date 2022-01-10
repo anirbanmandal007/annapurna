@@ -487,8 +487,8 @@ isValidationError: any;
   getDisplayNames(csvRecordsArr: any) {
     let headers = (<string>csvRecordsArr[0]).split(',');
     let headerArray = [];
-console.log(this._ColNameList);
-console.log(headers);
+//console.log(this._ColNameList);
+//console.log(headers);
 
     if (headers.length != this._ColNameList.length) {
      // alert('Invalid No. of Column Expected :- ' + this._ColNameList.length);
