@@ -287,6 +287,8 @@ export class SidebarComponent implements OnInit {
 
   getRoute(routeName: string): any {
     let route:any = {}
+//console.log(routeName);
+
     switch (routeName) {
       case "Dashboard":{
         route = {
@@ -393,11 +395,11 @@ export class SidebarComponent implements OnInit {
         route = { path: "view-custom-form", title: "View Custom Form", type: "link" }
         break;
       }
-      case "cabinet":{
+      case "Cabinet":{
         route = { path: "cabinet", title: "Cabinet", type: "link" }
         break;
       }
-      case "cabinet Mapping":{
+      case "Cabinet Mapping":{
         route = { path: "cabinet-mapping", title: "Cabinet Mapping", type: "link" }
         break;
       }
@@ -405,12 +407,12 @@ export class SidebarComponent implements OnInit {
         route = { path: "TemplateConfiguration", title: "Template Configuration", type: "link" }
         break;
       }
-      case "entity":{
-        route = { path: "entity", title: "Sub Folder", type: "link" }
+      case "Sub Folder":{
+        route = { path: "sub-folder", title: "Sub Folder", type: "link" }
         break;
       }
-      case "entity-mapping":{
-        route = { path: "entity-mapping", title: "Sub Folder Mapping", type: "link" }
+      case "Sub Folder Mapping":{
+        route = { path: "subfolder-mapping", title: "Sub Folder Mapping", type: "link" }
         break;
       }  
       case "Process":{
@@ -422,7 +424,7 @@ export class SidebarComponent implements OnInit {
           isCollapsed: true,
           children: [
       
-            { path: "data-entry", title: "Indexing", type: "link" }
+            { path: "indexing", title: "Indexing", type: "link" }
           ]
         }
         break;
@@ -456,14 +458,14 @@ export class SidebarComponent implements OnInit {
         break;
       }
       case "BasicSearch":{
-        route = { path: "BasicSearch", title: "Basic Search", type: "link" }
+        route = { path: "basic-search", title: "Basic Search", type: "link" }
         break;
       }
-      case "BasicSearch":{
-        route = { path: "BasicSearch", title: "Basic Search", type: "link" }
+      case "Basic search":{
+        route = { path: "basic-search", title: "Basic Search", type: "link" }
         break;
       }
-      case "globalsearch":{
+      case "Basic search":{
         route = { path: "globalsearch", title: "Global Search", type: "link" }
         break;
       }
@@ -472,12 +474,12 @@ export class SidebarComponent implements OnInit {
       //   route = { path: "ASearch", title: "Search", type: "link" }
       //   break;
       // }
-       case "BulkDownlaod":{
-        route = { path: "BulkDownlaod", title: "Bulk Downlaod", type: "link" }
+       case "Bulk Downlaod":{
+        route = { path: "bulk-downlaod", title: "Bulk Downlaod", type: "link" }
         break;
       }
-      case "DeleteFiles":{
-        route = { path: "DeleteFiles", title: "Delete Files", type: "link" }
+      case "Delete Files":{
+        route = { path: "delete-files", title: "Delete Files", type: "link" }
         break;
       }
       case "Report":{
@@ -500,7 +502,7 @@ export class SidebarComponent implements OnInit {
         break;
       }
       case "Space":{
-        route = { path: "Space", title: "Space Utilized", type: "link" }
+        route = { path: "space", title: "Space Utilized", type: "link" }
         break;
       }
 

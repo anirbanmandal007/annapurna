@@ -27,7 +27,7 @@ export const searchRoutes: Routes = [
        component: ContentSearchComponent
       },
       {
-        path: "BulkDownlaod",
+        path: "bulk-downlaod",
        component: BulkDownlaodComponent
       },
       {
@@ -35,11 +35,11 @@ export const searchRoutes: Routes = [
        component: SearchComponent
       },
       {
-        path: "DeleteFiles",
+        path: "delete-files",
        component: DeleteFilesComponent
       } ,
       {
-        path: "BasicSearch",
+        path: "basic-search",
        component: BasicSearchComponent
       } ,
       {

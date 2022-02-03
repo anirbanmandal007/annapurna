@@ -11,7 +11,7 @@ export const DepartmentRoutes: Routes = [
     path: "",
     children: [
       {
-        path: "data-entry",
+        path: "indexing",
         component: DataEntryComponent
       },
       {

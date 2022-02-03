@@ -63,11 +63,11 @@ export const DepartmentRoutes: Routes = [
         component: RegionMappingComponent
       },
       {
-        path: "entity",
+        path: "sub-folder",
         component: EntityComponent
       },   
       {
-        path: "entity-mapping",
+        path: "subfolder-mapping",
         component: EntityMappingComponent
       }
 

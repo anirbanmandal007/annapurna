@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit {
      });
    //  this.geBranchList();
 
-   this.BindUserLog();
+  //  this.BindUserLog();
    this.StatusList();
    this.GetUploadList();
   this.BindFileUpload();

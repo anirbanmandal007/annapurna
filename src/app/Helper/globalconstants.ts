@@ -19,7 +19,13 @@ export class Globalconstants {
 //string = 'https://e-storage.crownims.com/SODDMS/api/';////////
 //string = 'https://e-storage.crownims.com/EDMS/api/';//
 //string = 'http://192.168.0.152/EDMS/api/';
-string = 'https://annapurana.crownims.com//annapuranaDMS/api/';//
+//string = 'https://annapurana.crownims.com//annapuranaDMS/api/';//
+//string = 'http://172.25.1.170/Nayaradms/api/';
+
+//string = 'https://e-storage.crownims.com/Demotesting/api/';//
+string = 'https://e-storage.crownims.com/SATDMS/api/';//
+
+
 
 }
  

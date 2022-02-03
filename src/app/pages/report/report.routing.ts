@@ -26,7 +26,7 @@ export const reportRoutes: Routes = [
         component: TagReportComponent
       },
       {
-        path: "Space",
+        path: "space",
         component: SpaceComponent
       },       
       

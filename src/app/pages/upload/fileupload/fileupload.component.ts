@@ -260,6 +260,12 @@ export class FileUploadComponent implements OnInit {
         //console.log (e.target.files);
         var maxsize=0;
         this.myFiles = [];
+      if (e.files.length >=1000)
+      {
+            this.showmessage("You can not upload more than 1000 files.");
+            return ;
+      }
+      //  e.files.length
         for (var i = 0; i < e.files.length; i++) {
           this.myFiles.push(e.files[i]);
        //   console.log(e.files[i].size);
@@ -267,9 +273,41 @@ export class FileUploadComponent implements OnInit {
        //   maxsize = maxsize + e.files[i].length;
         }
         this._IndexList = e.files;
+
+        this.FileSizeValidation();
 //alert(this.myFiles.length);
 
       }
+
+      FileSizeValidation()
+      {
+
+        let allFilesSize = 0;
+        for (var i = 0; i < this.myFiles.length; i++) { 
+          allFilesSize += this.myFiles[i]['size'];
+        }
+        if((allFilesSize / (1024*1024)) > 500) {
+          this.toastr.show(
+            '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error!</span> <span data-notify="message">Maximum 500MB is allowed to upload</span></div>',
+            "",
+            {
+              timeOut: 3000,
+              closeButton: true,
+              enableHtml: true,
+              tapToDismiss: false,
+              titleClass: "alert-title",
+              positionClass: "toast-top-center",
+              toastClass:
+                "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+            }
+          );
+          return;
+        }
+
+
+      }
+
+      
   
       public uploadFile = (files) => {
         if (files.length === 0) {
@@ -326,6 +364,12 @@ export class FileUploadComponent implements OnInit {
 //console.log("Branch",this.FileUPloadForm.controls['BranchID'].value);
 //console.log("TemplateID",this.FileUPloadForm.controls['TemplateID'].value);
           
+
+if (this.myFiles.length >=1000)
+{
+      this.showmessage("You can not upload more than 1000 files.");
+      return ;
+}
           let allFilesSize = 0;
           for (var i = 0; i < this.myFiles.length; i++) { 
             allFilesSize += this.myFiles[i]['size'];
