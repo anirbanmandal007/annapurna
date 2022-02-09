@@ -180,8 +180,44 @@
 </div>
 
 <div class=" container-fluid mt--6">
+  <form [formGroup]="ContentSearchForm">
+  <div class="row mb-2">
+    <div class="col-md-3">    
+      <!-- <label class="form-control-label" for="TemplateID">Customer :</label>   -->
+      <select name="DepartmentID" id="DepartmentID" class="form-control" formControlName="DepartmentID" (change)="GetBranchByDepartment($event.target.value)"  >
+        <option value=0>Select Cabinet</option>   
+        <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
+        {{_Department.DepartmentName}}  
+        </option>
+      </select>
+    </div> 
+
+    <div class="col-md-3">    
+      <!-- <label class="form-control-label" for="TemplateID">Customer :</label>   -->
+      <select name="BranchID" id="BranchID" class="form-control" formControlName="BranchID" (change)="GetSubfolderByBranchID($event.target.value)"  >
+        <option value='0'>Select Folder</option>   
+        <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
+        {{_Bracnch.BranchName}}  
+        </option>
+      </select>
+    </div>  
+    <div class="col-md-3">
+      <select name="TemplateID" id="TemplateID"  class="form-control" formControlName="TemplateID" (change)="geTemplateNameListByTempID($event.target.value)">
+        <option value=0>Select Template</option>   
+        <option *ngFor="let _Temp of TemplateList" [value]="_Temp.TemplateID"  >  
+        {{_Temp.TemplateName}}  
+        </option>   
+      </select>   
+    </div>
+    <div class="col-md-3">    
+      <button type="button" class="btn btn-success" (click)="OnLoad()" style="padding: 5px 15px;">Go
+      </button>
+                      
+    </div>
+  </div>
+</form>
   <div class=" row">
-    <div class=" col-xl-6">
+    <div class=" col-xl-5" style="display: none;">
       <div class=" card bg-default">
         <div class=" card-header bg-black">
           <div class=" row align-items-center">
@@ -224,7 +260,7 @@
     </div>
 
 
-    <div class=" col-xl-6">
+    <div class=" col-xl-10">
       <div class=" card bg-default">
         <div class=" card-header bg-black">
           <div class=" row align-items-center">
@@ -260,6 +296,60 @@
           <div class=" chart">
             <div style="height:100%;width: 100%;" id="chart-fileupload" class="chart-canvas"></div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class=" col-xl-2">
+      <div class=" card bg-default">
+        <div class=" card-header bg-default">
+          <div class=" row align-items-center">
+            <div class=" col">
+            
+
+              <h5 class=" h3 text-white mb-0">statistics</h5>
+            </div>
+
+            <!-- <div class="col">
+              <ul class="nav nav-pills justify-content-end">
+                <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales"
+                  (click)="updateOptions('M')">
+                  <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{ active: clicked === true }"
+                    data-toggle="tab" (click)="clicked = true; clicked1 = false">
+                    <span class="d-none d-md-block">Month</span>
+                    <span class="d-md-none">M</span>
+                  </a>
+                </li>
+                <li class="nav-item" data-toggle="chart" data-target="#chart-sales" (click)="updateOptions('W')">
+                  <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{ active: clicked1 === true }"
+                    data-toggle="tab" (click)="clicked = false; clicked1 = true">
+                    <span class="d-none d-md-block">Week</span>
+                    <span class="d-md-none">W</span>
+                  </a>
+                </li>
+              </ul>
+            </div> -->
+
+
+          </div>
+        </div>
+
+        <div class="card-body bg-white" style="height: 400px;">
+          <p style="font-size: 12px; margin: 0 0 3px;"><b>Total Documents</b> :&nbsp;&nbsp;61997</p>
+          <p style="font-size: 12px; margin: 0 0 3px;"><b>Space Utilized</b>&nbsp;&nbsp;&nbsp;66.665GB</p>
+          <p style="font-size: 12px; margin: 0 0 3px;"><b>Available Space</b>&nbsp;&nbsp; :&nbsp;&nbsp;33.335GB</p>
+          <div style="border-top:1px solid #34637C; border-width: 2px; padding-bottom: 10px;"> </div>
+          <p style="font-size: 12px; margin: 0 0 3px;"><a style="color: #333333;" href="admin_layout.php"><b>Cabinets </b>&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp; 6</a></p><a style="color: #333333;" href="admin_layout.php">
+          </a><p style="font-size: 12px; margin: 0 0 3px;"><a style="color: #333333;" href="admin_layout.php"></a><a style="color: #333333;" href="admin_layout.php"><b>Folders</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;21</a></p>
+          <p style="font-size: 12px; margin: 0 0 3px;"><a style="color: #333333;" href="admin_layout.php"><b>Subfolders</b>&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;196</a></p>
+          <p style="font-size: 12px; margin: 0 0 3px; line-height: 15px;"><a style="color: #333333;" href="show_dataclass.php#tab-1"><b>Metadata</b> &nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;25</a></p>
+          <p style="font-size: 12px; margin: 0 0 3px;"><a style="color: #333333;" href="show_dataclass.php#tab-3"><b>Document Sets</b>&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;1</a></p>
+
+          <div style="border-top:1px solid #34637C; border-width: 2px; padding-bottom: 10px;"> </div>
+          <p style="font-size: 12px; margin: 0 0 3px; "><a style="color: #333333;" href="display_user.php"><b>Users</b>&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;9</a></p>
+          <p style="font-size: 12px; margin: 0 0 3px;"><a style="color: #333333;" href="display_group.php"><b>Groups</b>&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp; 12</a></p>
+          <div style="border-top:1px solid #34637C; border-width: 2px; padding-bottom: 10px;"> </div>
+          <p style="font-size: 12px; margin: 0 0 3px; "><b>Online Users</b>&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;1</p>
+          <div style="height: 93px;"> </div>
         </div>
       </div>
     </div>

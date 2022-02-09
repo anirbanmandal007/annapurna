@@ -60,7 +60,14 @@ export class DashboardComponent implements OnInit {
   _ActivityLog:any;
   activitylogChartData:any;
   chartActivityLog:any;
-
+  _TemplateList :any;  
+  TemplateList:any;
+  _TempD:any;
+  ContentSearchForm: FormGroup;
+  _DepartmentList: any;
+  _BranchList: any;
+  BranchList:any;
+  
   constructor(
      private formBuilder: FormBuilder,
      private _onlineExamService: OnlineExamServiceService,
@@ -70,13 +77,43 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
 
+    this.ContentSearchForm = this.formBuilder.group({
+      FileNo: ['', Validators.required],
+      TemplateID: [0, Validators.required], 
+      User_Token: localStorage.getItem('User_Token') ,
+      CreatedBy: localStorage.getItem('UserID') ,
+      Viewer: [''],
+      currentPage: [0],      
+      PageCount: [0],
+      //tickets: new FormArray([]),
+      SerchBy: [''],
+      DocID: [''],
+      SearchByID: [],
+      userID: localStorage.getItem('UserID') ,
+      ACC: [''],
+      MFileNo: [''],
+      DocuemntType: [''],
+      AccNo: [''],     
+      ToEmailID:[''],
+      ValidDate:[''],
+      IsAttachment:[''],
+      BranchID:['0'],
+      SubfolderID:[0],
+      DepartmentID:[0, Validators.required], 
+
+      
+  
+      });
      this.DashboardForm = this.formBuilder.group({
        BranchName: ['', Validators.required],
       User_Token:localStorage.getItem('User_Token'),
 
       id:[0]
      });
-   //  this.geBranchList();
+
+    this.getTemplate();
+    this.getDepartmentList();
+    this.geBranchList();
 
    this.BindUserLog();
    this.StatusList();
@@ -468,7 +505,6 @@ BindFileUpload()
 this.GetFileUploadList();
  let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
   dateAxis.renderer.minGridDistance = 50;
-
   // Create series
   function createAxisAndSeries(field, name, opposite, bullet) {
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis<AxisRenderer>());
@@ -548,6 +584,46 @@ this.GetFileUploadList();
 //       }
 //     });
 //   }
+
+getTemplate() {
+
+  const apiUrl = this._global.baseAPIUrl + 'TemplateMapping/GetTemplateMappingListByUserID?UserID=' + localStorage.getItem('UserID') + '&user_Token=' + localStorage.getItem('User_Token');
+
+  // const apiUrl = this._global.baseAPIUrl + 'Template/GetTemplate?user_Token=' + this.FileStorageForm.get('User_Token').value
+  this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
+    this.TemplateList = data;
+  //  this.ContentSearchForm.controls['TemplateID'].setValue(1);
+    
+    this.ContentSearchForm.controls['TemplateID'].setValue(data[0] ? data[0].TemplateID : 1);
+    //this.AddEditBranchMappingForm.controls['UserIDM'].setValue(0);
+    //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+  // console.log("TempID",data[0].TemplateID);
+  this._TempD = data[0] ? data[0].TemplateID : 1;
+  });
+}
+getDepartmentList() {
+  const apiUrl=this._global.baseAPIUrl+'DepartmentMapping/GetDepartmentByUser?ID='+ localStorage.getItem('UserID')+'&user_Token='+localStorage.getItem('User_Token') 
+  this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+    this._DepartmentList = data;
+    console.log("DepList",data);
+  //  this._FilteredList = data
+    //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+  });
+}
+geBranchList() {
+  //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+  const apiUrl =
+    this._global.baseAPIUrl +
+    "BranchMapping/GetBranchDetailsUserWise?ID=" +
+    localStorage.getItem('UserID') +
+    "&user_Token=" +
+    this.ContentSearchForm.get("User_Token").value;
+  this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+    this.BranchList = data;
+  //  this._FilteredList = data;
+    //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+  });
+}
 
 
 
