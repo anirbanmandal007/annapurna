@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpEventType, HttpClient } from '@angular/common/http';
 import swal from "sweetalert2";
+import { ToastrService } from "ngx-toastr";
 export enum SelectionType {
   single = "single",
   multi = "multi",
@@ -45,6 +46,7 @@ myFiles: string[] = [];
     private _global: Globalconstants,
     private router: Router,
     private route: ActivatedRoute,
+    public toastr: ToastrService,
     
     private http: HttpClient,
     private httpService: HttpClient  
@@ -70,7 +72,7 @@ myFiles: string[] = [];
       console.log(d);
       for (var key in d) {
         if (key == "roleName" || key == "remarks") {
-          if (d[key].toLowerCase().indexOf(val) !== -1) {
+          if (d[key].toLowerCase().indexOf(val.toLowerCase()) !== -1) {
             return true;
           }
         }
@@ -162,4 +164,45 @@ myFiles: string[] = [];
   {
     this.router.navigate(['/usermanagement/addrole']);
   }  
+
+
+  ShowErrormessage(data:any)
+  {
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error ! </span> <span data-notify="message"> '+ data +' </span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+      }
+    );
+  
+  
+  }
+
+  ShowMessage(data:any)
+  {
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success ! </span> <span data-notify="message"> '+ data +' </span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-success alert-notify"
+      }
+    );
+  
+  
+  }
 }

@@ -86,8 +86,10 @@ export class ChangePasswordComponent implements OnInit {
       }
       const apiUrl = this._global.baseAPIUrl + 'UserLogin/Changepassword';
       this._onlineExamService.postData(this.changepasswordform.value,apiUrl).subscribe((data: {}) => {     
-    //   console.log(data);
-        alert("Password changed successfully");
+    
+    this.ShowMessage(data);
+        //   console.log(data);
+     //   alert("Password changed successfully");
 
 
       //  this.toastr.show(
@@ -111,6 +113,25 @@ export class ChangePasswordComponent implements OnInit {
       //this.studentForm.patchValue({File: formData});
     }
 
+
+    ShowMessage(msg:any)
+    {
+  
+      this.toastr.show(
+        '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"><h4 class="text-white"> '+msg+' <h4></span></div>',
+        "",
+        {
+          timeOut: 3000,
+          closeButton: true,
+          enableHtml: true,
+          tapToDismiss: false,
+          titleClass: "alert-title",
+          positionClass: "toast-top-center",
+          toastClass:
+            "ngx-toastr alert alert-dismissible alert-success alert-notify"
+        }
+      );
+    }
 
 
     

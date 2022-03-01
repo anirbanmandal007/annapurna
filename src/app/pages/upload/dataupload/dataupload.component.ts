@@ -591,10 +591,11 @@ isValidationError: any;
     // return {
     //   'date-field': this._ColNameList.filter((el, index) => el.DisplayName === column.name)[0].FieldType === '3'
     // }
-    console.log(row, column);
+  //  console.log(row, column);
     const field = this._ColNameList.filter((el, index) => el.DisplayName === column.name)[0];
     const fieldIndex = this._ColNameList.findIndex(el => el.DisplayName === column.name);
     let cssClass = '';
+   // console.log(field.Ref1);
     switch(field.FieldType) {
       case ('1') : // Text field
         if(field.IsMandatory && row[fieldIndex] === '') { // Required field check
@@ -618,7 +619,16 @@ isValidationError: any;
         break;
 
       case ('5') :
-        if(!(/^[\w\-\s]+$/.test(row[fieldIndex]))) { // Alpha-Numeric validation check
+      //  console.log('row');
+      //console.log(row);
+     // console.log(fieldIndex);
+        if (fieldIndex==0)
+        {
+          if(row[fieldIndex] === '') { // Required field check
+            cssClass += ' error text-required';
+          }
+        }
+        else if(!(/^[\w\s]+$/.test(row[fieldIndex]))) { // Alpha-Numeric validation check
           cssClass = ' error alpha-numeric-only';
         }
         break;

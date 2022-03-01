@@ -109,6 +109,8 @@ export class BranchMappingComponent implements OnInit {
       "&user_Token=" +
       this.BranchMappingForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+console.log(data);
+
       this._BranchList = data;
       this._FilteredList = data;
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())

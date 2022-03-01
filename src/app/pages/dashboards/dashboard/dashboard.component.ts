@@ -291,7 +291,7 @@ export class DashboardComponent implements OnInit {
       this.chartFirst.validateData();
       this.GetFileUploadList();
       this.chartFirstFU.validateData();
-      this.GetActivityLog();
+     // this.GetActivityLog();
       this.chartActivityLog.validateData();
     }, 600000)
   }
@@ -303,7 +303,7 @@ export class DashboardComponent implements OnInit {
       if (this.chartFirst) {
         this.chartFirst.dispose();
         this.chartFirstFU.dispose();
-        this.chartActivityLog.dispose();
+     //   this.chartActivityLog.dispose();
         this.chartActivity.dispose();
       }
     });

@@ -447,14 +447,27 @@ if (this.myFiles.length >=1000)
           this.httpService.post(apiUrl, frmData).subscribe(
             data => {
               // SHOW A MESSAGE RECEIVED FROM THE WEB API.
-
+          //    const splitted: string[] = toSplit.split(",");
+       //   const splitted: string[] = data.split("$");
+       //const splitted: string[] = strmsg.split("$");
+       //const splitted: string[] = toSplit.split(",");
               fileUpload.clear();
               this.myFiles = [];
+              let strmsg =JSON.stringify(data);
+let x = strmsg.split(',');
+//console.log(x[0]);
 
-              var strmsg =data;
+           //   let strmsg =data;
+         //     this.myFiles = strmsg.split('-');
+              
+//               const stringToSplit =strmsg;
+// var  ccc = stringToSplit.split('-')
+
+            
+//               var splitted = strmsg.split('-'); 
 
               this.toastr.show(
-                '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success!</span> <span data-notify="message"> File Uploaded Succesfully. </span></div>',
+                '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success!</span> <span data-notify="message">' +x[0]+ ' </span></div>',
                 "",
                 {
                   timeOut: 3000,
@@ -468,8 +481,8 @@ if (this.myFiles.length >=1000)
                 }
               );       
             //  console.log (this.sMsg);()
-              var strmsg =data;
-           this.downloadFile(data);
+         //     var strmsg =data;
+          this.downloadFile(data);
               this.OnReset();    
               this.myFiles = [];                   
             },

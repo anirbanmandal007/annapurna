@@ -3,6 +3,7 @@ import { OnlineExamServiceService } from "./../../../Services/online-exam-servic
 import { Component, OnInit, TemplateRef } from "@angular/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { FormGroup,FormControl, FormBuilder, Validators } from "@angular/forms";
+import { ToastrService } from "ngx-toastr";
 import swal from "sweetalert2";
 export enum SelectionType {
   single = "single",
@@ -34,12 +35,14 @@ export class UsersComponent implements OnInit {
   //RoleList: any;
   _SingleUser: any = [];
   _UserID: any;
+  User:any;
 
   constructor(
     private modalService: BsModalService,
     private formBuilder: FormBuilder,
     private _onlineExamService: OnlineExamServiceService,
-    private _global: Globalconstants
+    private _global: Globalconstants,
+    public toastr: ToastrService,
   ) {}
   ngOnInit() {
     this.AddUserForm = this.formBuilder.group({
@@ -61,6 +64,8 @@ export class UsersComponent implements OnInit {
       
     this.geRoleList();
     this.geUserList();
+this.User ="Create User";
+
   }
 
   //Newly added code 
@@ -92,10 +97,10 @@ export class UsersComponent implements OnInit {
 
     let val = $event.target.value;
     this._FilteredList = this.UserList.filter(function (d) {
-      console.log(d);
+    //  console.log(d);
       for (var key in d) {
-        if (key == "name" || key == "email" || key == "userid") {
-          if (d[key].toLowerCase().indexOf(val) !== -1) {
+        if (key == "name" || key == "email" || key == "userid" || key == "mobile" || key == "roleName") {
+          if (d[key].toLowerCase().indexOf(val.toLowerCase()) !== -1) {
             return true;
           }
         }
@@ -132,6 +137,7 @@ export class UsersComponent implements OnInit {
   OnReset() {
     this.Reset = true;
     this.AddUserForm.reset();
+    this.User ="Create User";
   }
 
   OnClose()
@@ -141,6 +147,21 @@ export class UsersComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true; 
+
+    if(this.AddUserForm.value.sysRoleID <=0) {
+     this.ShowErrormessage("Select Role Name");
+     return;
+    }
+    
+    if(this.AddUserForm.value.userid.trim() =="") {
+      this.ShowErrormessage("Please enter user ID");
+      return;
+     }
+     if(this.AddUserForm.value.name.trim() =="") {
+      this.ShowErrormessage("Please enter user");
+      return;
+     }
+
     if(this.AddUserForm.value.User_Token == null) {
       this.AddUserForm.value.User_Token = localStorage.getItem('User_Token');
     }
@@ -153,7 +174,9 @@ export class UsersComponent implements OnInit {
         // .pipe(first())
         .subscribe((data) => {
           if (data != null) {
-            alert("Record Updated Succesfully..");
+           
+            this.ShowMessage("Record Updated Successfully.."); 
+            // alert("Record Updated Succesfully..");
             this.modalService.hide(1);
             this.OnReset();
             //this.router.navigate(['/student']);
@@ -171,14 +194,17 @@ export class UsersComponent implements OnInit {
         .postData(this.AddUserForm.value, apiUrl)
         // .pipe(first())
         .subscribe((data) => {
-          if (data != null) {
-            alert("Record Saved Successfully..");
-            this.OnReset();
+          if (data == 1) {
+           // alert("Record Saved Successfully..");
+           this.ShowMessage("Record Saved Successfully.."); 
+           
+           this.OnReset();
             //this.router.navigate(['/student']);
             this.geUserList();
             this.modalService.hide(1);
           } else {
-            alert("User already exists.");
+            this.ShowErrormessage("User already exists.");
+           // alert("User already exists.");
           }
         });
     }
@@ -187,6 +213,8 @@ export class UsersComponent implements OnInit {
   }
 
   editEmployee(template: TemplateRef<any>, value: any) {
+
+    this.User ="Edit user details";
     const apiUrl =
       this._global.baseAPIUrl +
       "Admin/GetDetails?ID=" +
@@ -206,7 +234,7 @@ export class UsersComponent implements OnInit {
         sysRoleID: that._SingleUser.sysRoleID,
         Remarks: that._SingleUser.remarks
       })
-      console.log('form', this.AddUserForm);
+    //  console.log('form', this.AddUserForm);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
     
@@ -214,6 +242,9 @@ export class UsersComponent implements OnInit {
   }
 
   deleteEmployee(id: any) {
+
+    if (id != localStorage.getItem('UserID'))
+{
     swal
       .fire({
         title: "Are you sure?",
@@ -229,7 +260,7 @@ export class UsersComponent implements OnInit {
         if (result.value) {
           this.AddUserForm.patchValue({
             id: id,
-            User_Token: "123123",
+            User_Token: localStorage.getItem('User_Token'),
           });
 
           const apiUrl = this._global.baseAPIUrl + "Admin/Delete";
@@ -247,8 +278,14 @@ export class UsersComponent implements OnInit {
             });
         }
       });
-  }
+    }
+    else
+    {
 
+      this.ShowErrormessage("Your already log in so you can not delete!");
+    }
+    }
+//---
   addUser(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
     this.AddUserForm.patchValue({
@@ -258,9 +295,53 @@ export class UsersComponent implements OnInit {
       confirmPass: '',
       email: '',
       mobile: '',
-      sysRoleID: '',
-      Remarks: ''
+      sysRoleID: 0,
+      Remarks:'',
+      id:''
     })
+    this.User ="Create user";
   }
+
+
+  ShowErrormessage(data:any)
+  {
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error ! </span> <span data-notify="message"> '+ data +' </span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+      }
+    );
+  
+  
+  }
+
+  ShowMessage(data:any)
+  {
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success ! </span> <span data-notify="message"> '+ data +' </span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-success alert-notify"
+      }
+    );
+  
+  
+  }
+
 }
 

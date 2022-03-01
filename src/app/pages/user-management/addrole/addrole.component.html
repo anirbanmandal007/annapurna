@@ -3,9 +3,8 @@
     <div class=" header-body">
       <div class=" row align-items-center py-4">
         <div class=" col-lg-6 col-7">
-          <h6 class=" h2  d-inline-block mb-0">Add Role</h6>
-
-          <!-- <nav
+          <h6 class=" h2 text-white d-inline-block mb-0">Role</h6>
+          <nav
             aria-label="breadcrumb"
             class=" d-none d-md-inline-block ml-md-4"
           >
@@ -19,11 +18,11 @@
               </li>
 
               <li aria-current="page" class=" breadcrumb-item active">
-                Role 
+                {{Role}} 
               </li>
             </ol>
           </nav>
-           -->
+          
         </div>
 
         <div class=" col-lg-6 col-5 text-right">
@@ -131,8 +130,8 @@
               </div>
             </div>
               <div>        
-                <button class=" btn btn-neutral" (click)="onSubmit()">Save</button>
-                <button class=" btn btn-neutral"  (click)="OnBack()">Back</button>
+                <button class=" btn btn-primary" (click)="onSubmit()">Submit</button>
+                <button class=" btn btn-warning"  (click)="OnBack()">Close</button>
             </div> 
   
           </form>

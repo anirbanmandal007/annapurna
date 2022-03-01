@@ -32,7 +32,10 @@ export class OnlineExamServiceService {
       console.error(
         "Backend returned code ${error.status}, " +
         "body was: ${error.error}");
-    }
+
+      }
+
+    //alert(error.error.message);
     return throwError('Something bad happened; please try again later.');
   }
   getAllData(apiUrl: string): Observable<any> {
@@ -67,6 +70,8 @@ export class OnlineExamServiceService {
 
   private extractData(res: Response) {
     let body = res;
+//console.log(res);
+
     return body || { };
   }
   

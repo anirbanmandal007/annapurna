@@ -352,8 +352,9 @@ export class DataEntryComponent implements OnInit {
             }
         }
 
-        if(el.FieldType === '5') { // Alpha-numeric validation check
+        if(el.FieldType === '5' ) { // Alpha-numeric validation check
           const fieldVal = this.DataEntryForm.get('_ColNameList').value[el.DisplayName];
+       //   console.log(el);
           if(fieldVal !== '' && !(/^[\w\-\s]+$/.test(fieldVal))) {
             alphaNumericValidation = false;
             this.toastr.show(
@@ -473,7 +474,7 @@ export class DataEntryComponent implements OnInit {
 
     onEdit(formData) {
 
-    console.log("form data: ",formData);
+ //   console.log("form data: ",formData);
     //console.log('ColName: ',this._ColNameList);     
     //alert(formData[0].FileNo) ;
 

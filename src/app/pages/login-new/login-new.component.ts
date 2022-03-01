@@ -49,7 +49,7 @@ export class LoginNewComponent implements OnInit {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.compose([Validators.required])],
       password: ['', Validators.required],
-      recaptcha: ['', Validators.required]
+     recaptcha: ['', Validators.required]
     });
 
     localStorage.clear();
@@ -64,12 +64,22 @@ export class LoginNewComponent implements OnInit {
   }  
   const apiUrl = this._global.baseAPIUrl + 'UserLogin/Create';
     this.authService.userLogin(this.loginForm.value,apiUrl).subscribe( data => {
-      if(data.length > 0)         
+      
+     console.log("that._LogData ",data);  
+      if(data.length > 0  && data[0].id !=0)         
       {        
         var that = this;
         that._LogData =data[0];
-     //   console.log("that._LogData ",that._LogData );      
+       console.log("that._LogData ",that._LogData.Days);      
+       if (that._LogData.Days <=15 )
+       {
+       //  alert(that._LogData.Days);
+       var mess= " Your password expires in  " + that._LogData.Days  + "  days. Change the password as soon as possible to prevent login problems"
+         //var mess="Your password will be expired in  Days" 
+        this.Message(mess);
+       }
 
+       
         localStorage.setItem('UserID',that._LogData.id) ;
         localStorage.setItem('currentUser',that._LogData.id) ;        
         localStorage.setItem('sysRoleID',that._LogData.sysRoleID) ;
@@ -79,6 +89,7 @@ export class LoginNewComponent implements OnInit {
     //  console.log("UN",this.loginForm.get("username").value);
       //console.log("ID",that._LogData.id);     
        
+      
         if (this.loginForm.get("username").value == "admin")
         {
           this.router.navigate(['dashboards/dashboard']);
@@ -92,20 +103,7 @@ export class LoginNewComponent implements OnInit {
     else
     {
 
-      this.toastr.show(
-        '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"> Invalid userid and password. </span></div>',
-        "",
-        {
-          timeOut: 3000,
-          closeButton: true,
-          enableHtml: true,
-          tapToDismiss: false,
-          titleClass: "alert-title",
-          positionClass: "toast-top-center",
-          toastClass:
-            "ngx-toastr alert alert-dismissible alert-danger alert-notify"
-        }
-      );
+          this.ErrorMessage(data[0].userid);
 //      alert("Invalid userid and password.");     
     }
 
@@ -113,11 +111,53 @@ export class LoginNewComponent implements OnInit {
   }
 
   handleSuccess(data) {
-    console.log(data);
+   // console.log(data);
   }
 
   get f(){
     return this.loginForm.controls;
   }
+
+  ErrorMessage(msg:any)
+  {
+
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"> '+msg+' </span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+      }
+    );
+  }
+
+  Message(msg:any)
+  {
+
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"><h4 class="text-white"> '+msg+' <h4></span></div>',
+      "",
+      {
+        timeOut: 7000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+      }
+    );
+  }
+
+
+
+  
   
 }

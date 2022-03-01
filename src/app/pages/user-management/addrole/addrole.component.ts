@@ -33,6 +33,7 @@ _UserList:any;
 myFiles: string[] = [];  
 _PageIDAndChk:any;
 _pageRights:any;
+Role:any;
 
   constructor(
     private modalService: BsModalService,
@@ -75,12 +76,13 @@ _pageRights:any;
     this.getRightList(Number(_RoleID) );
     this.AddRoleForm.controls['roleName'].setValue(localStorage.getItem('_RoleName'));
     this.AddRoleForm.controls['remarks'].setValue(localStorage.getItem('_RoleRemark'));  
-
+    this.Role ="Edit Role";
     }
     else 
     {
     this.getPageList(0);
     this.getRightList(0); 
+    this.Role ="Create Role";
 
     }
   }
@@ -147,13 +149,31 @@ _pageRights:any;
     onSubmit() {
 
       this.submitted = true;   
-      console.log('SubmitingForm',this.AddRoleForm);
+   //   console.log('SubmitingForm',this.AddRoleForm);
 
       // if (this.RoleForm.invalid) {
       // alert("Please Fill the Fields");
       // return;
       // }    
+   
+      if(this.AddRoleForm.value.roleName.trim() =="") {
+        this.ShowErrormessage("Please enter Role Name");
+        return;
+       }
 
+    
+
+      //  if(this.AddRoleForm.value.Roles.length <=0) {
+      //   this.ShowErrormessage("Please select  Role ");
+      //   return;
+      //  }
+
+      //  if(this.AddRoleForm.value._PageRight.length <=0) {
+      //   this.ShowErrormessage("Please select  page rights ");
+      //   return;
+      //  }
+
+      var _Flag=0;
 
       this._PageIDAndChk ="";
       for (let i = 0; i < this.AddRoleForm.value.Roles.length; i++) {
@@ -161,6 +181,10 @@ _pageRights:any;
       this._PageIDAndChk += this.AddRoleForm.value.Roles[i].id +','+  this.AddRoleForm.value.Roles[i].isChecked +'#'
       // console.log("Parent");
       // console.log(this._PageIDAndChk);
+if (this.AddRoleForm.value.Roles[i].isChecked)
+{
+  _Flag=1;
+}
 
       if (this.AddRoleForm.value.Roles[i].subItems.length > 0)
       {
@@ -183,6 +207,22 @@ _pageRights:any;
       }      
 
       }  
+
+      // alert(this._PageIDAndChk.length );
+      // alert(__pageRights.length );
+
+      
+      if(_Flag ==0) {
+        this.ShowErrormessage("Please select page rights ");
+        return;
+       }
+
+       
+      if(__pageRights.length <=0) {
+        this.ShowErrormessage("Please select rights ");
+        return;
+       }
+      
       this.AddRoleForm.patchValue({      
       CreatedBy:1,      
       User_Token: localStorage.getItem('User_Token'),
@@ -216,7 +256,45 @@ _pageRights:any;
       this.router.navigate(['/usermanagement/roles']);
 
       }
-
+      ShowErrormessage(data:any)
+      {
+        this.toastr.show(
+          '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Validation ! </span> <span data-notify="message"> '+ data +' </span></div>',
+          "",
+          {
+            timeOut: 3000,
+            closeButton: true,
+            enableHtml: true,
+            tapToDismiss: false,
+            titleClass: "alert-title",
+            positionClass: "toast-top-center",
+            toastClass:
+              "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+          }
+        );
+      
+      
+      }
+    
+      ShowMessage(data:any)
+      {
+        this.toastr.show(
+          '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success ! </span> <span data-notify="message"> '+ data +' </span></div>',
+          "",
+          {
+            timeOut: 3000,
+            closeButton: true,
+            enableHtml: true,
+            tapToDismiss: false,
+            titleClass: "alert-title",
+            positionClass: "toast-top-center",
+            toastClass:
+              "ngx-toastr alert alert-dismissible alert-success alert-notify"
+          }
+        );
+      
+      
+      }
     
     // OnSelectAll()
     // {                
