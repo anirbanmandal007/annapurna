@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import {catchError, map} from 'rxjs/operators'
 import { LoadingService } from './loading.service';
+import { Router } from '@angular/router';
 
 /**
  * This class is for intercepting http requests. When a request starts, we set the loadingSub property
@@ -19,13 +20,21 @@ import { LoadingService } from './loading.service';
 export class HttpRequestInterceptor implements HttpInterceptor {
 
   constructor(
-    private _loading: LoadingService
+    private _loading: LoadingService,
+    private _router: Router
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this._loading.setLoading(true, request.url);
     return next.handle(request)
       .pipe(catchError((err) => {
+        // Catch Invalid token responses
+        if ( err.error && err.error.Message === 'Invalid token!!!' )
+        {
+            this._router.navigate(['Login']).then(() => {
+                window.location.reload();
+            });
+        }
         this._loading.setLoading(false, request.url);
         return err;
       }))
@@ -35,5 +44,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         }
         return evt;
       }));
+
+      
   }
 }
