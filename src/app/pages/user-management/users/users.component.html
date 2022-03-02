@@ -165,12 +165,12 @@
                 <label class=" form-control-label" for="loginPass">
                   Password
                 </label>
-                <input name="pwd" id="loginPass" formControlName="pwd" required minlength="6" placeholder="Password" type="password" class="form-control">
+                <input name="pwd" id="loginPass" formControlName="pwd" required minlength="12" placeholder="Password" type="password" class="form-control">
                 <div  class="errorMsg-feedback" *ngIf="f.pwd.touched && f.pwd.hasError('required')">Password Required</div>
                 <div  class="errorMsg-feedback"
                     *ngIf="f.pwd.touched && f.pwd.errors">Password should meet the following criteria:
                       <ul>
-                        <li>Contain at least 8 characters</li>
+                        <li>Contain at least 12 characters</li>
                         <li>Contain at least 1 number</li>
                         <li>Contain at least 1 lowercase character (a-z)</li>
                         <li>Contain at least 1 uppercase character (A-Z)</li>
