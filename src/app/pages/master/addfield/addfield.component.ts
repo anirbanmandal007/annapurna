@@ -56,11 +56,12 @@ export class AddFieldComponent implements OnInit {
     });
 
     this._IndexID  = localStorage.getItem('_TempID') ;      
+    this.getTemplate();
     if (this._IndexID >0)
     {
         this.getindexListData();
     }
-    this.getTemplate();
+
   }
   
   getTemplate() {  

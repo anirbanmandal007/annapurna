@@ -24,9 +24,13 @@ import { TemplateconfigComponent } from "./templateconfig/templateconfig.compone
 import { RegionMappingComponent } from "./region-mapping/region-mapping.component";
 import { EntityComponent } from "./entity/entity.component";
 import { EntityMappingComponent } from "./entity-mapping/entity-mapping.component";
+import { DSConfigComponent } from "./DSConfig/DSConfig.component";
+import { TableModule } from 'primeng/table';
+
+
 
 @NgModule({
-  declarations: [DepartmentComponent, BranchMappingComponent,BranchComponent,EntityComponent,EntityMappingComponent,TemplateComponent,DocumentTypeComponent,DocTypeMappingComponent,ViewCustomFormComponent,AddFieldComponent,TemplateMappingComponent,TemplateconfigComponent,RegionMappingComponent],
+  declarations: [DepartmentComponent,DSConfigComponent,BranchMappingComponent,BranchComponent,EntityComponent,EntityMappingComponent,TemplateComponent,DocumentTypeComponent,DocTypeMappingComponent,ViewCustomFormComponent,AddFieldComponent,TemplateMappingComponent,TemplateconfigComponent,RegionMappingComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(DepartmentRoutes),
@@ -38,7 +42,8 @@ import { EntityMappingComponent } from "./entity-mapping/entity-mapping.componen
     PaginationModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    NgxPrintModule
+    NgxPrintModule,
+    TableModule
   ]
 })
 export class MasterModule {}

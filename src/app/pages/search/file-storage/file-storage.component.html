@@ -83,7 +83,8 @@
 
                                           <!-- <div class=" col-md-3"> -->
                                             <!-- <div class=" form-group"> -->
-                                            <div style="width: 67%; float: right;">    
+
+                                            <!-- <div style="width: 67%; float: right;">    
                                               <div class="reresh-table" style="width: 30px;float:right;text-align: right;">
                                                 <i style="cursor: pointer;" class="fa fa-sync" title="Restore Table" (click)="GetFileInfo('')"></i>
                                               </div>  
@@ -99,7 +100,7 @@
                                               top: 3px;
                                               right: 8px;" for="TemplateID" class=" form-control-label">  Select Template </label>
                                             </div>
-                                            
+                                             -->
                                             
                                             <!-- </div> -->
                                             
@@ -184,7 +185,13 @@
                                                         (click)="DeleteFullFile(doc)">
                                                     <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-trash"></i></span>
                                                     </button>
-                                                  
+                                               
+                                                    <!-- <button type="button" tooltip="Favourite"  style="padding:1px 1px 1px 1px;float: left"
+                                                    class="btn btn-icon btn-secondary  btn-icon-only rounded-circle"
+                                                    (click)="favourite(doc)">
+                                                <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-favourite"></i></span>
+                                                </button> -->
+                                              
                                                       
                                                       </td>
                                                       <td class="mat-action-items">
@@ -226,6 +233,12 @@
                                                             <button mat-menu-item (click)="DeleteFullFile(doc)" *ngIf="_isDelete == 'true'">
                                                               <i class="material-icons">delete</i>
                                                               <span>Delete File</span>
+                                                            </button>
+                                                         
+                                                            
+                                                            <button mat-menu-item (click)="favourite(doc)">
+                                                              <i class="material-icons">favorite</i>
+                                                              <span>Favourite File</span>
                                                             </button>
                                                          
                                                           
@@ -423,7 +436,7 @@
                   </ng-template>
 
                   <ng-template #EmailFormPopup let-c="close" let-d="dismiss" let-modal>
-                    <div class="modal-content">
+                    <div class="modal-content" style="width: 1000px; position: relative; right: 40%;">
                       <div class="modal-body p-0">
                         <div class=" card">
                           <div class=" card-header"><h3 class=" mb-0">Send Email</h3></div>
@@ -434,15 +447,38 @@
                                     <label class="form-control-label" for="ToEmailID">
                                       To 
                                     </label>
-                                    <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/>
-                                 
-                                                                     
-                                </div>                           
+                                    <!-- <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/> -->
+                                    <tag-input 
+                                      [(ngModel)]="emailReciepients" 
+                                      [ngModelOptions]="{standalone: true}"
+                                      placeholder="Enter email address"
+                                      [editable]='true' 
+                                      [errorMessages]="errorMessages"
+                                      [validators]="validators" 
+                                      #tagInput
+                                      [onAdding]="onAddedFunc">
+                                    </tag-input>
+                                  </div>
+                                  <div class="col-md-9">
+                                    <label class="form-control-label" for="Subject" style="float:left;padding-right: 45px; padding-top: 12px;" >
+                                      Subject
+                                       </label>
+                                       <input class="form-control mt-2 mb-2" style="width:86%;"  formControlName="Subject" placeholder="Subject" type="text"/>
+                                      
+                                  </div>
+                                  <div class="col-md-3" style="display: flex;justify-content:center;align-items: center;">
+                                    <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Pre Defined">
+                                    <label class="form-control-label" for="predefined" style="padding-top: 10px;">
+                                      Pre Difined Template 
+                                    </label>
+                                  </div>    
+                                  <angular-editor formControlName="htmlContent" [config]="editorConfig"></angular-editor>
+                                                             
             
                                 
                               </div>
                               <div class=" col-md-8" style="padding-top: 32px">  
-                                <button class="btn btn-primary" (click)="onSendEmail()"> Send</button>
+                                <button class="btn btn-primary" [disabled]="!emailReciepients.length" (click)="onSendEmail()"> Send</button>
                                 <button class="btn btn-primary"  (click)="hidepopup()"> Close</button>
                                
                               </div>
@@ -455,7 +491,7 @@
                   </ng-template>
 
                   <ng-template #ShareLinkFormPopup let-c="close" let-d="dismiss" let-modal>
-                    <div class="modal-content">
+                    <div class="modal-content" style="width: 1000px; position: relative; right: 40%;">
                       <div class="modal-body p-0">
                         <div class=" card">
                           <div class=" card-header"><h3 class=" mb-0">Share Link</h3></div>
@@ -466,8 +502,36 @@
                                     <label class="form-control-label" for="ToEmailID">
                                       To 
                                     </label>
-                                    <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/>
-                                                                                                      
+                                    <!-- <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/> -->
+                                    <tag-input 
+                                      [(ngModel)]="emailReciepientsShare" 
+                                      [ngModelOptions]="{standalone: true}" 
+                                      [editable]='true' 
+                                      placeholder="Enter email address"
+                                      [errorMessages]="errorMessages"
+                                      [validators]="validators" 
+                                      #tagInput
+                                      [onAdding]="onAddedFunc">
+                                    </tag-input>
+                                  </div>
+                                  <div class="col-md-9">
+                                    <label class="form-control-label" for="Subject" style="float:left;padding-right: 45px; padding-top: 12px;" >
+                                      Subject
+                                       </label>
+                                       <input class="form-control mt-2 mb-2" style="width:86%;"  formControlName="Subject" placeholder="Subject" type="text"/>
+                                      
+                                  </div>
+                                  <div class="col-md-3" style="display: flex;justify-content:center;align-items: center;">
+                                    <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Pre Defined">
+                                    <label class="form-control-label" for="predefined" style="padding-top: 10px;">
+                                      Pre Difined Template 
+                                    </label>
+                                  </div>
+                                  <!-- <br /> -->
+                                   <!-- <br />
+                                  -->
+                                  <angular-editor formControlName="htmlContent" [config]="editorConfig"></angular-editor>
+                                                                                                  
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label class="form-control-label" for="ValidDate">
@@ -484,9 +548,9 @@
                                 </div>                            
             
                                 
-                              </div>
+                              <!-- </div> -->
                               <div class=" col-md-8" style="padding-top: 32px">  
-                                <button class="btn btn-primary" (click)="onSendEmailByShare()"> Send</button>
+                                <button class="btn btn-primary" [disabled]="!emailReciepientsShare.length" (click)="onSendEmailByShare()"> Send</button>
                                 <button class="btn btn-primary"  (click)="hidepopup()"> Close</button>
                                
                               </div>
@@ -503,7 +567,7 @@
                       <div class="modal-body p-0">
                         <div class="card w-100">              
                           <div class=" card-header"><h3 class=" mb-0" >Document View
-                            <span style="float: right;cursor: pointer;" (click)="hidepopup()" class="btn-inner--icon"><i class="fa fa-times"></i></span>
+                            <span style="float: right;cursor: pointer;" (click)="hidepopup()" class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
                           </h3>
                           </div>
                          <div class="card-body">
@@ -556,7 +620,8 @@
                                   </table> -->
 
                                 </div>
-                                <div class="col-lg-8">
+
+                                <!-- <div class="col-lg-8">
                                   <ngx-extended-pdf-viewer  id="Viewer"                         
                                   [page] ="_PageNo"           
                                   [useBrowserLocale]="true" 
@@ -564,12 +629,37 @@
                                   [showHandToolButton]="true" 
                                   [height]="'120vh'"
                                   [showOpenFileButton]="false"
+                                  [enablePrint] = "false"
                                   *ngIf="FilePath" [src]="FilePath" 
                                                 
-                                  > <!-- by default, most CSS framework set the height to 0 -->
                                 
                               </ngx-extended-pdf-viewer>
+                                </div> -->
+
+                                <div class="col-lg-8" *ngIf="FilePath">
+                                  <ng-container *ngIf="fileExt != '.pdf'">
+                                    <ngx-doc-viewer
+                                      [url]="FilePath"
+                                      viewer="google"
+                                      style="width:100%;height:90vh;"
+                                    ></ngx-doc-viewer>
+                                  </ng-container>
+                                  <ng-container *ngIf="fileExt == '.pdf'">
+                                    <ngx-extended-pdf-viewer  id="Viewer"
+                                    [page] ="_PageNo"
+                                    [useBrowserLocale]="true"
+                                    [textLayer]="true"
+                                    [showHandToolButton]="true"
+                                    [height]="'90vh'"
+                      
+                                    *ngIf="FilePath" [src]="FilePath"
+                                    > 
+                      
+                                    </ngx-extended-pdf-viewer>
+                                  </ng-container>
                                 </div>
+
+
                               </div>
                             </div>
                           </div>
@@ -590,7 +680,7 @@
                       <div class="modal-body p-0">
                         <div class=" card">
                           <div class=" card-header"><h3 class=" mb-0">Version  Details
-                            <span style="float: right;cursor: pointer;" (click)="hidepopup()" class="btn-inner--icon"><i class="fa fa-times"></i></span>
+                            <span style="float: right;cursor: pointer;" (click)="hidepopup()" class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
                          
 
                           </h3></div>

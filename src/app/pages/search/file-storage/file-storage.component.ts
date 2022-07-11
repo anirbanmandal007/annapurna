@@ -2,7 +2,7 @@ import { Globalconstants } from "../../../Helper/globalconstants";
 import { OnlineExamServiceService } from "../../../Services/online-exam-service.service";
 import { Component, OnInit, TemplateRef, AfterViewInit, ViewChild, ChangeDetectorRef, HostListener } from "@angular/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
-import { FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
 import swal from "sweetalert2";
 import { Router, ActivatedRoute } from '@angular/router';
@@ -12,8 +12,9 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'angular-bootstra
 import { TreeNode } from 'primeng/api';
 import { saveAs } from 'file-saver';
 import { number } from "@amcharts/amcharts4/core";
-
-
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { of, throwError } from "rxjs";
+import { TagInputComponent as SourceTagInput } from 'ngx-chips';
 export enum SelectionType {
   single = "single",
   multi = "multi",
@@ -117,9 +118,59 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
   _VersionFilteredList:any;
   _VList:any;
   _isEdit:any;
+  fileExt;
   _TempD:any;
   first = 0;
   rows = 10;
+
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+      spellcheck: true,
+      height: 'auto',
+      minHeight: '360px',
+      maxHeight: 'auto',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Enter text here...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    // uploadUrl: 'v1/image',
+    // upload: (file: File) => {
+    //   return;
+    // },
+    // uploadWithCredentials: false,
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      ['bold', 'italic'],
+      ['fontSize']
+    ]
+  }
   
   tableHeader: any = [
     // { field: 'fileNo', header: this.TempField, index: 1 },
@@ -144,6 +195,9 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
   bsRangeValue: Date[];
   maxDate = new Date();
   selectAllTaggingRows: boolean = false;
+  emailReciepients = [];
+  emailReciepientsShare = [];
+  
   
   constructor(
     private modalService: BsModalService,
@@ -212,9 +266,11 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
       MFileNo: [''],
       DocuemntType: [''],
       ToEmailID:[''],
+      htmlContent: [''],
       ValidDate:[''],
       IsAttachment:[''],
-       
+      Subject:[''],
+      predefined:['']
 
     });
 
@@ -319,18 +375,32 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
       this.formattedData = this.immutableFormattedData;
     } else {
         let filteredArr = [];
-        this.immutableFormattedData.filter(d => {
+      //   this.immutableFormattedData.filter(d => {
+      //   for (var key in d) {
+      //     const strArr = val.split(',');
+      //     strArr.forEach(el => {
+      //       if (d[key] && el!== '' && d[key].toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+      //         if (filteredArr.filter(el => el.fileNo === d.fileNo).length === 0) {
+      //           filteredArr.push(d);
+      //         }
+      //       }
+      //     });
+      //   }
+      // });
+
+      this.formattedData = this.immutableFormattedData.filter(function (d) {
         for (var key in d) {
           const strArr = val.split(',');
           strArr.forEach(el => {
-            if (d[key] && el!== '' && d[key].toLowerCase().indexOf(el.toLowerCase()) !== -1) {
-              if (filteredArr.filter(el => el.fileNo === d.fileNo).length === 0) {
+            if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+              if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
                 filteredArr.push(d);
               }
             }
           });
         }
       });
+
       this.formattedData = filteredArr;
       this.loading = false;
     }
@@ -723,10 +793,15 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
     this._onlineExamService.getDataById(apiUrl).subscribe(res => {
       if (res) {
 
-    //  console.log("9090res",res);
+        //alert(res.substring(res.lastIndexOf('.'), res.length));
+        this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
+     console.log("9090res",res);
         this.FilePath = res;
          /// saveAs(res, row.ACC + '.pdf');
          this._TempFilePath = res;
+
+         console.log("9090res",res);
+
 
       }
     });
@@ -753,7 +828,7 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
     //   })
     // })
 
-    console.log(data);
+  //  console.log(data);
     
     data.forEach((el, index) => {
 
@@ -769,6 +844,7 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
           "DepartmentName": el.DepartmentName,  
           "SubfolderName": el.SubfolderName,   
           "FilePath": el.FilePath, 
+          "TemplateID": el.TemplateID, 
         
           
           
@@ -914,6 +990,7 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
 
   ShareLink(template: TemplateRef<any>)
   {
+    this.FileStorageForm.patchValue({htmlContent:  ''});
     var that = this;
   //console.log("Email", this.selectedRows);
     let _CSVData= "";
@@ -981,11 +1058,11 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
   }
 
   ViewDocument(template: TemplateRef<any>, row: any, indexTemplate: TemplateRef<any>) {
-    console.log("Viewrow",row);
+   // console.log("Viewrow",row);
     //console.log("this._FileNoList",this._FileNoList);
     //console.log("this. this._IndexList", this._IndexList);
 
-    //console.log("row.ref1", row.fileNo);
+   // console.log("row.ref1", row);
     this.MetaData(indexTemplate, row);
     var skinName = this._FileNoList.find(x=>x.pro == row.fileNo);   
     //console.log("skinName", skinName);
@@ -995,6 +1072,7 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
 
 
     $(".modal-dialog").css('max-width', '1300px');
+
     this.GetDocumentDetails(row);
 
     this.GetFullFile(row.fileNo);
@@ -1097,7 +1175,7 @@ viewFullFile(row:any)
 
   DownloadFileFromDB(Row: any) {
 
-    console.log("Row**",Row);
+  //  console.log("Row**",Row);
     const fileExt = Row.FilePath.substring(Row.FilePath.lastIndexOf('.'), Row.FilePath.length);
     const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadFileFromDB?ID=' + localStorage.getItem('UserID') + '&FileNo= ' + Row.fileNo + ' &user_Token=' + localStorage.getItem('User_Token');
     this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
@@ -1183,7 +1261,9 @@ viewFullFile(row:any)
   }
 
 
-  DeleteFile(Row: any) {
+  //
+
+  favourite(Row: any) {
     swal
       .fire({
         title: "Are you sure?",
@@ -1192,29 +1272,30 @@ viewFullFile(row:any)
         showCancelButton: true,
         buttonsStyling: false,
         confirmButtonClass: "btn btn-danger",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Yes, favourite it!",
         cancelButtonClass: "btn btn-secondary",
       })
       .then((result) => {
         if (result.value) {
           this.FileStorageForm.patchValue({
-            ACC: Row.AccNo,
-            DocID: Row.DocID
+            ACC: Row.fileNo,
+         //   DocID: Row.DocID
           });
-          const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/Delete';
+          const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/favourite';
           this._onlineExamService.postData(this.FileStorageForm.value, apiUrl)
             .subscribe(data => {
               swal.fire({
-                title: "Deleted!",
-                text: "Doc Type has been deleted.",
+                title: "favourite!",
+                text: "File has been Favourite.",
                 type: "success",
                 buttonsStyling: false,
                 confirmButtonClass: "btn btn-primary",
               });
-              this.getSearchResultByFileNo(Row.AccNo);
+             // this.getSearchResultByFileNo(Row.AccNo);
             });
         }
       });
+      this.GetFileInfo('');
   }
 
   // Model Popup For Docuemnt Inserstion 
@@ -1277,7 +1358,7 @@ viewFullFile(row:any)
 
   downloadFile(row: any) {
 
-    console.log("Row**",row);
+  //  console.log("Row**",row);
     const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadTagFile?ID='+localStorage.getItem('UserID')+'&DocID='+row.DocID+'&_fileName='+row.AccNo+'&user_Token='+localStorage.getItem('User_Token');
     this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
       if (res) {
@@ -1292,7 +1373,7 @@ viewFullFile(row:any)
 
   DownloadVersionFile(row: any) {
 
-    console.log("Row**",row);
+  //  console.log("Row**",row);
     const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/DownloadVersionFile?ID='+localStorage.getItem('UserID')+'&PageCount='+row.PageCount+'&_fileName='+row.FileNo +'&user_Token='+localStorage.getItem('User_Token');
     this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
       if (res) {
@@ -1407,7 +1488,7 @@ viewFullFile(row:any)
   event.stopPropagation();
 
   let  __FileNo =row.fileNo;
-  let  __TempID = this.FileStorageForm.get('TemplateID').value;
+  let  __TempID = row.TemplateID;
 
   const apiUrl=this._global.baseAPIUrl+'DataEntry/GetNextFile?id='+__TempID+'&FileNo='+__FileNo+'&user_Token='+ localStorage.getItem('User_Token');
 
@@ -1657,6 +1738,7 @@ this.modalRef.hide();
  
   
   SendEmail(template: TemplateRef<any>, row: any) {
+    this.FileStorageForm.patchValue({htmlContent:  ''});
     var that = this;
   
     if (row != null) {
@@ -1715,8 +1797,11 @@ this.modalRef.hide();
     {
 
     const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
-   
-    this._onlineExamService.postData(this.FileStorageForm.value, apiUrl)
+    // this.emailReciepients.forEach((el, i) => {
+      let toEmailString = ''; 
+      this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+      this.FileStorageForm.value.ToEmailID = toEmailString;
+      this._onlineExamService.postData(this.FileStorageForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
           title: "Email!",
@@ -1726,8 +1811,9 @@ this.modalRef.hide();
           confirmButtonClass: "btn btn-primary",
         });
 
-      }); 
-      this.modalRef.hide();
+      });
+    // });
+    this.modalRef.hide();
     //  this.getSearchResult();   
     }
     else
@@ -1740,8 +1826,11 @@ this.modalRef.hide();
   onSendEmailByShare() {
 
     const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmailBulkFiles';
-   
-    this._onlineExamService.postData(this.FileStorageForm.value, apiUrl)
+    // this.emailReciepientsShare.forEach((el, i) => {
+      let toEmailString = ''; 
+      this.emailReciepientsShare.forEach(el => toEmailString += el.display + ',');
+      this.FileStorageForm.value.ToEmailID = toEmailString;
+      this._onlineExamService.postData(this.FileStorageForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
           title: "Email!",
@@ -1752,6 +1841,8 @@ this.modalRef.hide();
         });
 
       }); 
+    // });
+    
      this.modalRef.hide();    
     ///  this.getSearchResult();
       //this.OnReset();
@@ -1929,7 +2020,7 @@ this.modalRef.hide();
   
   
 
-  console.log("this._HeaderList",this._HeaderList); 
+ // console.log("this._HeaderList",this._HeaderList); 
 
 }
 
@@ -1972,12 +2063,12 @@ this.modalRef.hide();
 
   }
 
-  openPdfFile() {
-    var link = document.createElement('a');
-    link.href = 'https://conceptdms.in/dmsinfo/assets/Upload/31-12-2020/c9810_42b9ef6c-c065-451d-a3a7-c6f899afba53.pdf';
-    link.download = 'https://conceptdms.in/dmsinfo/assets/Upload/31-12-2020/c9810_42b9ef6c-c065-451d-a3a7-c6f899afba53.pdf';
-    link.dispatchEvent(new MouseEvent('click'));
-  }
+  // openPdfFile() {
+  //   var link = document.createElement('a');
+  //   link.href = 'https://conceptdms.in/dmsinfo/assets/Upload/31-12-2020/c9810_42b9ef6c-c065-451d-a3a7-c6f899afba53.pdf';
+  //   link.download = 'https://conceptdms.in/dmsinfo/assets/Upload/31-12-2020/c9810_42b9ef6c-c065-451d-a3a7-c6f899afba53.pdf';
+  //   link.dispatchEvent(new MouseEvent('click'));
+  // }
 
 
   downloadBulkFileBYCSV(_CSVData:any) {
@@ -2042,5 +2133,59 @@ this.modalRef.hide();
   
   
   }
+
+  onItemAdded(event) {
+    console.log(event);
+  }
+
+  @HostListener('document:paste', ['$event']) blockPaste(e: KeyboardEvent) {
+    e.preventDefault();
+  }
+
+  @HostListener('document:copy', ['$event']) blockCopy(e: KeyboardEvent) {
+    e.preventDefault();
+  }
+
+  @HostListener('document:cut', ['$event']) blockCut(e: KeyboardEvent) {
+    e.preventDefault();
+  }
+
+
+@ViewChild('tagInput')
+tagInput: SourceTagInput;
+public validators = [ this.must_be_email.bind(this) ];
+public errorMessages = {
+    'must_be_email': 'Please be sure to use a valid email format'
+};
+public onAddedFunc = this.beforeAdd.bind(this);
+private addFirstAttemptFailed = false;
+
+private must_be_email(control: FormControl) {        
+
+    if (this.addFirstAttemptFailed && !this.validateEmail(control.value)) {
+        return { "must_be_email": true };
+    }
+    return null;
+}
+beforeAdd(tag: string) {
+
+  if (!this.validateEmail(tag)) {
+    if (!this.addFirstAttemptFailed) {
+      this.addFirstAttemptFailed = true;
+      this.tagInput.setInputValue(tag);
+    }
+
+    return throwError(this.errorMessages['must_be_email']);
+    //return of('').pipe(tap(() => setTimeout(() => this.tagInput.setInputValue(tag))));
+    
+  }
+  this.addFirstAttemptFailed = false;
+  return of(tag);
+}
+
+private validateEmail(text: string) {
+  var EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/i;
+  return (text && EMAIL_REGEXP.test(text));
+}
 
 }

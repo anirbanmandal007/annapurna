@@ -4,7 +4,9 @@ import { LogsComponent } from "./logs/logs.component";
 import { MetadataComponent } from "./metadata/metadata.component";
 import { TagReportComponent } from "./TagReport/TagReport.component";
 import { SpaceComponent } from "./Space/Space.component";
+import { EmailLogComponent } from "./EmailLog/EmailLog.component";
  
+
 export const reportRoutes: Routes = [
   {
     path: "",
@@ -28,6 +30,10 @@ export const reportRoutes: Routes = [
       {
         path: "space",
         component: SpaceComponent
+      }, 
+      {
+        path: "EmailLog",
+        component: EmailLogComponent
       },       
       
     ]

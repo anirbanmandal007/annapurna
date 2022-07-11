@@ -16,6 +16,7 @@ import { RoleComponent } from "./role/role.component";
 import { AddRoleComponent } from "./addrole/addrole.component";
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { NgxCaptchaModule } from 'ngx-captcha';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [UsersComponent,RoleComponent,AddRoleComponent, ChangePasswordComponent],
@@ -31,7 +32,9 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     NgxPrintModule,
-    NgxCaptchaModule
+    NgxCaptchaModule,
+    TableModule 
+
   ]
 })
 export class UserManagementModule {}

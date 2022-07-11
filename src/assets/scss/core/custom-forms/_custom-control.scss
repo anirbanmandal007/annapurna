@@ -9,14 +9,14 @@
     border: $custom-control-indicator-border-width solid
       $custom-control-indicator-border-color;
     @include transition($input-transition);
-    top: ($font-size-base * $line-height-base - $custom-control-indicator-size) /
-      2;
+    top: ($font-size-base * $line-height-base - $custom-control-indicator-size) *
+      0.5;
     left: -($custom-control-gutter + $custom-control-indicator-size - 1rem);
   }
 
   &::after {
-    top: ($font-size-base * $line-height-base - $custom-control-indicator-size) /
-      2;
+    top: ($font-size-base * $line-height-base - $custom-control-indicator-size) *
+      0.5;
     left: -($custom-control-gutter + $custom-control-indicator-size - 1rem);
   }
 

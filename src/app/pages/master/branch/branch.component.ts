@@ -33,7 +33,8 @@ export class BranchComponent implements OnInit {
   BranchForm: FormGroup;
   _FilteredList :any; 
  _BranchID: any =0;
-
+ first = 0;
+rows = 10;
   constructor(
     private modalService: BsModalService,
     public toastr: ToastrService,
@@ -44,7 +45,7 @@ export class BranchComponent implements OnInit {
   ngOnInit() {
     this.AddBranchForm = this.formBuilder.group({
       BranchName: ['', Validators.required],
-      DepartmentID: [1, Validators.required],
+      DepartmentID: [0, Validators.required],
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
       id:[0]
@@ -84,7 +85,8 @@ export class BranchComponent implements OnInit {
     const apiUrl=this._global.baseAPIUrl+'BranchMaster/GetBranchList?user_Token='+ localStorage.getItem('User_Token') 
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._BranchList = data;
-      this._FilteredList = data
+      this._FilteredList = data;
+      this.prepareTableData( this._BranchList,  this._FilteredList);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
@@ -138,7 +140,94 @@ export class BranchComponent implements OnInit {
     //this.studentForm.patchValue({File: formData});
   }
 
+  formattedData: any = [];
+  headerList: any;
+  immutableFormattedData: any;
+  loading: boolean = true;
+  prepareTableData(tableData, headerList) {
+    let formattedData = [];
+   // alert(this.type);
   
+  // if (this.type=="Checker" )
+  //{
+    let tableHeader: any = [
+      { field: 'srNo', header: "SR NO", index: 1 },
+      { field: 'DepartmentName', header: 'CABINET', index: 3 },
+      { field: 'BranchName', header: 'FOLDER', index: 2 },
+  
+      // { field: 'Ref3', header: 'Ref3', index: 3 },
+      // { field: 'Ref4', header: 'Ref4', index: 3 },
+      // { field: 'Ref5', header: 'Ref5', index: 3 },
+      // { field: 'Ref6', header: 'Ref6', index: 3 },
+  //    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+      //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+     // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+  
+    ];
+   
+    tableData.forEach((el, index) => {
+      formattedData.push({
+        'srNo': parseInt(index + 1),
+        'DepartmentName': el.DepartmentName,
+         'BranchName': el.BranchName,
+       'id': el.id,
+         'DepartmentID': el.DepartmentID,
+        // 'Ref5': el.Ref5,
+        // 'Ref6': el.Ref6
+      
+      });
+   
+    });
+    this.headerList = tableHeader;
+  //}
+  
+    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+    this.formattedData = formattedData;
+    this.loading = false;
+  
+  }
+  
+
+  searchTable($event) {
+    // console.log($event.target.value);
+  
+    let val = $event.target.value;
+    if(val == '') {
+      this.formattedData = this.immutableFormattedData;
+    } else {
+      let filteredArr = [];
+      const strArr = val.split(',');
+      this.formattedData = this.immutableFormattedData.filter(function (d) {
+        for (var key in d) {
+          strArr.forEach(el => {
+            if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+              if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+                filteredArr.push(d);
+              }
+            }
+          });
+        }
+      });
+      this.formattedData = filteredArr;
+    }
+  }
+  
+  
+  addBranch(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+
+    this.AddBranchForm.patchValue({
+      id:0,
+      BranchName:'',
+      DepartmentID: 0,
+       
+    })
+  }
+
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
+  }
   deleteBrnach(id: any) {
     swal
       .fire({
@@ -154,7 +243,7 @@ export class BranchComponent implements OnInit {
       .then((result) => {
         if (result.value) {
           this.AddBranchForm.patchValue({
-            id: id
+            id: id.id
           });
           const apiUrl = this._global.baseAPIUrl + 'BranchMaster/Delete';
           this._onlineExamService.postData(this.AddBranchForm.value,apiUrl)     
@@ -175,7 +264,7 @@ export class BranchComponent implements OnInit {
   editBranch(template: TemplateRef<any>, row: any) {
       var that = this;
       that._SingleDepartment = row;
-      console.log('data', row);
+   //   console.log('data', row);
       this.AddBranchForm.patchValue({
         id: that._SingleDepartment.id,
         BranchName: that._SingleDepartment.BranchName,
@@ -186,7 +275,5 @@ export class BranchComponent implements OnInit {
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     this.modalRef = this.modalService.show(template);
   }
-  addBranch(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
-  }
+
 }

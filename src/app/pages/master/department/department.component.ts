@@ -31,6 +31,8 @@ export class DepartmentComponent implements OnInit {
   Reset = false;     
   sMsg: string = '';    
  _DeptID: any=0;
+ first = 0;
+ rows = 10;
 
   constructor(
     private modalService: BsModalService,
@@ -80,8 +82,80 @@ export class DepartmentComponent implements OnInit {
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._DepartmentList = data;
       this._FilteredList = data
+      this.prepareTableData( this._DepartmentList,  this._FilteredList);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
+  }
+
+  formattedData: any = [];
+  headerList: any;
+  immutableFormattedData: any;
+  loading: boolean = true;
+  prepareTableData(tableData, headerList) {
+    let formattedData = [];
+   // alert(this.type);
+  
+  // if (this.type=="Checker" )
+  //{
+    let tableHeader: any = [
+      { field: 'srNo', header: "SR NO", index: 1 },
+      { field: 'DepartmentName', header: 'CABINET', index: 3 },
+      // { field: 'BranchName', header: 'FOLDER', index: 2 },
+  
+      // { field: 'Ref3', header: 'Ref3', index: 3 },
+      // { field: 'Ref4', header: 'Ref4', index: 3 },
+      // { field: 'Ref5', header: 'Ref5', index: 3 },
+      // { field: 'Ref6', header: 'Ref6', index: 3 },
+  //    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+      //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+     // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+  
+    ];
+   
+    tableData.forEach((el, index) => {
+      formattedData.push({
+        'srNo': parseInt(index + 1),
+        'DepartmentName': el.DepartmentName,
+         'id': el.id,
+         'DID': el.DID,
+        // 'Ref4': el.Ref4,
+        // 'Ref5': el.Ref5,
+        // 'Ref6': el.Ref6
+      
+      });
+   
+    });
+    this.headerList = tableHeader;
+  //}
+  
+    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+    this.formattedData = formattedData;
+    this.loading = false;
+  
+  }
+  
+  searchTable($event) {
+    // console.log($event.target.value);
+  
+    let val = $event.target.value;
+    if(val == '') {
+      this.formattedData = this.immutableFormattedData;
+    } else {
+      let filteredArr = [];
+      const strArr = val.split(',');
+      this.formattedData = this.immutableFormattedData.filter(function (d) {
+        for (var key in d) {
+          strArr.forEach(el => {
+            if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+              if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+                filteredArr.push(d);
+              }
+            }
+          });
+        }
+      });
+      this.formattedData = filteredArr;
+    }
   }
 
   OnReset() {
@@ -136,7 +210,7 @@ export class DepartmentComponent implements OnInit {
       .then((result) => {
         if (result.value) {
           this.AddDepartmentForm.patchValue({
-            id: id
+            id: id.DID
           });
           const apiUrl = this._global.baseAPIUrl + 'Department/Delete';
           this._onlineExamService.postData(this.AddDepartmentForm.value,apiUrl)     
@@ -167,5 +241,10 @@ export class DepartmentComponent implements OnInit {
   }
   addDepartment(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
+  }
+
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
   }
 }

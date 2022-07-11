@@ -30,6 +30,7 @@ import { ForgetPasswordComponent } from './pages/forget-password/forget-password
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { NgxCaptchaModule } from 'ngx-captcha';
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -47,6 +48,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     MatProgressSpinnerModule,
     NgMultiSelectDropDownModule.forRoot(),
     NgxCaptchaModule
+     
   ],
   declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent,LoginNewComponent, ForgetPasswordComponent],
   providers: [AuthGuardService, Listboxclass, Globalconstants, { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true }],

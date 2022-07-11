@@ -41,13 +41,14 @@ export class StatusComponent implements OnInit {
   TemplateList:any;
   BranchList:any;
  
-  _ColNameList = ["Customer", "Department", "FileNo", "PageCount", "IsIndexing","EntryDate"];
+  _ColNameList = ["Customer", "Department","SubfolderName" ,"FileNo", "PageCount", "IsIndexing","EntryDate","Status"];
 
-  tagItems = ["Bucharest", "Cluj", "Iasi", "Timisoara", "Piatra Neamt"];
 
   bsValue = new Date();
   bsRangeValue: Date[];
   maxDate = new Date();
+  first = 0;
+  rows = 10;
 
   constructor(
     private modalService: BsModalService,
@@ -71,6 +72,8 @@ export class StatusComponent implements OnInit {
 
     this.getTemplate();
     this.geBranchList();
+
+  
     
   }
 
@@ -111,14 +114,145 @@ export class StatusComponent implements OnInit {
       this.StatusReportForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this.BranchList = data;
+      this._FilteredList= data;
+     // console.log(data);
       this.StatusReportForm.controls['TemplateID'].setValue(0);
       this.StatusReportForm.controls['BranchID'].setValue(0);
-
-      
+     // this.prepareTableData( this.BranchList,  this._FilteredList);
+     this.BindHeader(this._FilteredList,this._FilteredList);
     //  this._FilteredList = data;
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
+
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
+  }
+
+  formattedData: any = [];
+headerList: any;
+immutableFormattedData: any;
+loading: boolean = true;
+prepareTableData(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'Department', header: 'CABINET', index: 3 },
+    { field: 'SubfolderName', header: 'SUB FOLDER NAME', index: 2 },
+    { field: 'FileNo', header: 'FILE NO.', index: 3 },
+    { field: 'PageCount', header: 'PAGE COUNT', index: 3 },
+    { field: 'IsIndexing', header: 'IS INDEXING', index: 3 },
+    { field: 'Status', header: 'STATUS', index: 3 },
+    { field: 'EntryDate', header: 'UPLOAD DATE', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+ //console.log("Tablelog",tableData);
+  tableData.forEach((el, index) => {
+    formattedData.push({
+      'srNo': parseInt(index + 1),
+      'Department': el.Department,
+      'BranchName': el.BranchName,
+      'id': el.id,
+      'SubfolderName': el.SubfolderName,
+      'FileNo': el.FileNo,
+      'PageCount': el.PageCount,
+      'IsIndexing': el.IsIndexing,
+      'Status': el.Status,
+      'EntryDate': el.EntryDate,
+
+      //BranchName
+    
+    });
+ 
+  });
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+
+BindHeader(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'Department', header: 'CABINET', index: 3 },
+    { field: 'SubfolderName', header: 'SUB FOLDER NAME', index: 2 },
+    { field: 'FileNo', header: 'FILE NO.', index: 3 },
+    { field: 'PageCount', header: 'PAGE COUNT', index: 3 },
+    { field: 'IsIndexing', header: 'IS INDEXING', index: 3 },
+    { field: 'Status', header: 'STATUS', index: 3 },
+    { field: 'EntryDate', header: 'UPLOAD DATE', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+//  //console.log("Tablelog",tableData);
+//   tableData.forEach((el, index) => {
+//     formattedData.push({
+//       'srNo': parseInt(index + 1),
+//       'Department': el.Department,
+//       'BranchName': el.BranchName,
+//       'id': el.id,
+//       'SubfolderName': el.SubfolderName,
+//       'FileNo': el.FileNo,
+//       'PageCount': el.PageCount,
+//       'IsIndexing': el.IsIndexing,
+//       'Status': el.Status,
+//       'EntryDate': el.EntryDate,
+
+//       //BranchName
+    
+//     });
+ 
+//   });
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+
+
+searchTable($event) {
+  // console.log($event.target.value);
+
+  let val = $event.target.value;
+  if(val == '') {
+    this.formattedData = this.immutableFormattedData;
+  } else {
+    let filteredArr = [];
+    const strArr = val.split(',');
+    this.formattedData = this.immutableFormattedData.filter(function (d) {
+      for (var key in d) {
+        strArr.forEach(el => {
+          if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+            if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+              filteredArr.push(d);
+            }
+          }
+        });
+      }
+    });
+    this.formattedData = filteredArr;
+  }
+}
+
 
   OnReset() {
     this.Reset = true;
@@ -171,7 +305,13 @@ export class StatusComponent implements OnInit {
       this._StatusList = data;          
       this._FilteredList = data;     
       
-      console.log(data);
+     // this.BranchList = data;
+   //   this._FilteredList= data;
+   //   console.log(data);
+     // this.StatusReportForm.controls['TemplateID'].setValue(0);
+    //  this.StatusReportForm.controls['BranchID'].setValue(0);
+      this.prepareTableData( this._StatusList,  this._FilteredList);
+   //   console.log(data);
 
   });
 

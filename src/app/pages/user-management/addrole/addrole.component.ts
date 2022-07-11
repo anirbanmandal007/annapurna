@@ -91,7 +91,7 @@ Role:any;
     const apiUrl=this._global.baseAPIUrl+'Role/GetPageList?ID='+ TID +'&user_Token='+this.AddRoleForm.get('User_Token').value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {  
 
-    console.log("Page List",data);
+    //console.log("Page List",data);
     this._PageList = data;
     this._PageList.forEach(item => {
     if(item.parent_id == 0) {
@@ -181,10 +181,7 @@ Role:any;
       this._PageIDAndChk += this.AddRoleForm.value.Roles[i].id +','+  this.AddRoleForm.value.Roles[i].isChecked +'#'
       // console.log("Parent");
       // console.log(this._PageIDAndChk);
-if (this.AddRoleForm.value.Roles[i].isChecked)
-{
-  _Flag=1;
-}
+
 
       if (this.AddRoleForm.value.Roles[i].subItems.length > 0)
       {
@@ -192,6 +189,11 @@ if (this.AddRoleForm.value.Roles[i].isChecked)
       this._PageIDAndChk += this.AddRoleForm.value.Roles[i].subItems[j].id +','+  this.AddRoleForm.value.Roles[i].subItems[j].isChecked +'#'
       // console.log("SubItem");
       // console.log(this._PageIDAndChk);
+
+      if (this.AddRoleForm.value.Roles[i].subItems[j].isChecked)
+{
+  _Flag=1;
+}
       }           
       }       
 
@@ -220,7 +222,7 @@ if (this.AddRoleForm.value.Roles[i].isChecked)
        
       if(__pageRights.length <=0) {
         this.ShowErrormessage("Please select rights ");
-        return;
+
        }
       
       this.AddRoleForm.patchValue({      

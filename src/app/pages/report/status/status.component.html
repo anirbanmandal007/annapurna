@@ -74,12 +74,53 @@
 
 
             <div class=" col-md-3">  
-              <button class="btn btn-primary" [disabled]="!isValid()" (click)="onSearch()"> Search</button>
-              <button class="btn btn-primary" [disabled]="!isValid()" (click)="onDownload()"> Download</button>       
+              <button class="btn" [disabled]="!isValid()" style="background: #005984;border: none;color: #fff;opacity: 1;" (click)="onSearch()"> Search</button>
+              <button class="btn" [disabled]="!isValid()" style="background-color: #F2A123;border: none;color: #fff;opacity: 1;" (click)="onDownload()"> Download</button>       
           </div>    
           </div>
         </div>
-        <div class="dataTables_wrapper py-4">
+
+        <div class="dataTables_wrapper checklist-table w-100">
+             
+          <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first" (onPage)="paginate($event)" [loading]="loading" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+            <ng-template pTemplate="caption">
+                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)" class="global-search">
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                   
+                    <th *ngFor="let col of headerList; let i = index;"  [ngStyle]="i==0 && {'width': '5%'}">
+                        {{col.header}}
+                        <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon>
+                    </th>
+                    <!-- <th style="width: 10%;">
+                      ACTION
+                    </th> -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                <tr>
+                   
+                    <td *ngFor="let col of headerList">
+                      {{car[col.field]}}
+                    </td>
+                      <!-- <td>
+                        <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-icon-only" (click)="editTemplate(TemplateFormPopup,car)">
+                          <span class="btn-inner--icon"><i class="fa fa-pen" aria-hidden="true"></i></span>
+                        </button>
+                        <button type="button" style="padding:0 0 5px 1px" class="btn btn-icon btn-icon-only" (click)="deleteTemplate(car)">
+                          <span class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
+                        </button>
+
+                      </td>  -->
+                </tr>
+            </ng-template>
+        </p-table>
+                         
+
+        </div>
+        <!-- <div class="dataTables_wrapper py-4">
           <div class="row">
             <div class="col-sm-12 col-md-6">
               <div class="dataTables_length" id="datatable_length">
@@ -135,8 +176,8 @@
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.Department}}</ng-template>
             </ngx-datatable-column>
           
-            <ngx-datatable-column name="Folder">
-              <ng-template let-row="row" ngx-datatable-cell-template>{{row.Customer}}</ng-template>
+            <ngx-datatable-column name="SubFolder">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.SubfolderName}}</ng-template>
             </ngx-datatable-column>
 
 
@@ -153,6 +194,10 @@
             <ng-template let-row="row" ngx-datatable-cell-template>{{row.IsIndexing}}</ng-template>
             </ngx-datatable-column>
 
+            <ngx-datatable-column name="Status">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.Status}}</ng-template>
+              </ngx-datatable-column>
+
             <ngx-datatable-column name="UploadDate">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.EntryDate}}</ng-template>
               </ngx-datatable-column>
@@ -160,13 +205,13 @@
               
             <!-- <ngx-datatable-column name="TAT">
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.TAT}}</ng-template>
-              </ngx-datatable-column> -->
+              </ngx-datatable-column> --
 
                       
 
           </ngx-datatable>
 
-        </div>
+        </div> -->
       </div>
     </form>
 

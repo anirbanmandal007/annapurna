@@ -49,7 +49,7 @@ export class LoginNewComponent implements OnInit {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.compose([Validators.required])],
       password: ['', Validators.required],
-     recaptcha: ['', Validators.required]
+      // recaptcha: ['', Validators.required]
     });
 
     localStorage.clear();
@@ -62,10 +62,11 @@ export class LoginNewComponent implements OnInit {
      if (this.loginForm.invalid) {
       return;
   }  
+
   const apiUrl = this._global.baseAPIUrl + 'UserLogin/Create';
     this.authService.userLogin(this.loginForm.value,apiUrl).subscribe( data => {
       
-     console.log("that._LogData ",data);  
+  //   console.log("that._LogData ",data);  
       if(data.length > 0  && data[0].id !=0)         
       {        
         var that = this;
@@ -94,7 +95,9 @@ export class LoginNewComponent implements OnInit {
         {
           this.router.navigate(['dashboards/dashboard']);
       }
-      else{
+      else if(this.loginForm.get("username").value == "upload") {
+        this.router.navigate(['upload/file-upload']);
+      } else {
         this.router.navigate(['search/quick-search']);       
 
       }
@@ -154,10 +157,6 @@ export class LoginNewComponent implements OnInit {
           "ngx-toastr alert alert-dismissible alert-danger alert-notify"
       }
     );
-  }
-
-
-
-  
+  }  
   
 }

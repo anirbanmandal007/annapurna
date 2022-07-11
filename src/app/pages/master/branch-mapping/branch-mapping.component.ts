@@ -37,12 +37,13 @@ export class BranchMappingComponent implements OnInit {
   Reset = false;
   sMsg: string = "";
   _userid: any = 0;
-
+  first = 0;
+  rows = 10;
   masterSelected: boolean;
   checklist: any;
   checkedList: any;
   __checkedList: string = "";
-
+  _DepartmentList:any;
   userEditID: number;
   master_checked: boolean = false;
   master_indeterminate: boolean = false;
@@ -69,7 +70,7 @@ export class BranchMappingComponent implements OnInit {
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
       id: [0],
-      UserIDS: ['', Validators.required],
+      UserIDS: [0, Validators.required],
       UserID: [0, Validators.required],
     });
     this.AddBranchMappingForm = this.formBuilder.group({
@@ -78,15 +79,16 @@ export class BranchMappingComponent implements OnInit {
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
       id: [0],
-      UserID: ["", Validators.required],
+      UserID: [0, Validators.required],
       checkedList: [""],
-          
+      DeptID: [0],
       checklist: this.formBuilder.array([]),
       selectAll: [false],
     });
 
     // this.geBranchListchecked();
     this.geUserList();
+    this.getDepartmentList();
     this.geBranchList(0);
   
     //this.getBranch(0);
@@ -95,24 +97,63 @@ export class BranchMappingComponent implements OnInit {
     this.Reset = true;
     this.BranchMappingForm.reset({ User_Token:  localStorage.getItem('User_Token') , UserID: 0 , UserIDS:0});
     this.checklistArray.clear();
-
     this.modalRef.hide();  
     //this.geBranchList();
   }
+  
+  getDepartmentList() {
+    const apiUrl=this._global.baseAPIUrl+'DepartmentMapping/GetDepartmentByUser?ID='+ localStorage.getItem('UserID')+'&user_Token='+localStorage.getItem('User_Token') 
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+      this._DepartmentList = data;
+     // console.log("DepList",data);
+    //  this._FilteredList = data
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
+  }
+  //GetBranchByDepartment
+
+
+  GetBranchByDepartment(DepartmentID:any)
+  {
+//const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+    const apiUrl =
+    this._global.baseAPIUrl +"BranchMapping/GetBranchByDeptUserWise?ID="+this.AddBranchMappingForm.get("UserID").value+"&user_Token="+localStorage.getItem('User_Token')+"&DeptID="+this.AddBranchMappingForm.get("DeptID").value;
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+    //this.BranchList = data;
+
+    console.log("Chk",data);
+    this.checkbox_list = [];
+    this.checkbox_list = data;
+    this.checklistArray.clear()
+    this.checkbox_list.forEach(item => {
+      let fg = this.formBuilder.group({
+        id: [item.id],
+        BranchName: [item.BranchName],
+        ischecked: [item.ischecked]
+        })
+        this.checklistArray.push(fg)
+    });
+
+//  this._FilteredList = data;
+//this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+});
+}
 
   geBranchList(userid: any) {
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     const apiUrl =
-      this._global.baseAPIUrl +
-      "BranchMapping/GetBranchDetailsUserWise?ID=" +
+      this._global.baseAPIUrl +"BranchMapping/GetBranchDetailsUserWise?ID="+
       userid +
       "&user_Token=" +
       this.BranchMappingForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-console.log(data);
+
+      //console.log(data);
 
       this._BranchList = data;
       this._FilteredList = data;
+
+      this.prepareTableData( this._BranchList,  this._FilteredList);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
@@ -133,12 +174,7 @@ console.log(data);
   }
   
   getBranch(userid: number) {
-    const apiUrl =
-      this._global.baseAPIUrl +
-      "BranchMapping/GetDetails?ID=" +
-      userid +
-      "&user_Token=" +
-      this.BranchMappingForm.get("User_Token").value;;
+    const apiUrl =this._global.baseAPIUrl +"BranchMapping/GetDetails?ID=" +userid+"&user_Token="+this.BranchMappingForm.get("User_Token").value;;
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
       this.checkbox_list = [];
@@ -173,44 +209,7 @@ console.log(data);
       role.patchValue({ischecked: _bool})
     });
   }
-  deleteBranch(BranchID: number) {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        type: "warning",
-        showCancelButton: true,
-        buttonsStyling: false,
-        confirmButtonClass: "btn btn-danger",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonClass: "btn btn-secondary",
-
-
-      })
-      .then((result) => {
-        if (result.value) {
-          this.BranchMappingForm.patchValue({
-            id: BranchID,
-          });
-          const apiUrl = this._global.baseAPIUrl + "BranchMapping/Delete";
-          this._onlineExamService
-            .postData(this.BranchMappingForm.value, apiUrl)
-            .subscribe((data) => {
-              swal.fire({
-                title: "Deleted!",
-                text: "Folder Mapping has been deleted.",
-                type: "success",
-                buttonsStyling: false,
-                confirmButtonClass: "btn btn-primary",
-              });
-              this.geBranchList(this.BranchMappingForm.get("UserIDS").value);
-              
-            });
-        }
-      });
-
-
-  }
+  
   filterTable($event) {
     let val = $event.target.value;
     this._FilteredList = this._BranchList.filter(function (d) {
@@ -227,7 +226,8 @@ console.log(data);
   addBranchMapping(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);  
     this.getBranchForUser(0);
-    this.BranchMappingForm.controls["UserID"].setValue(0);
+    this.AddBranchMappingForm.controls["DeptID"].setValue(0);
+    this.AddBranchMappingForm.controls["UserID"].setValue(0);
   }
   onSubmit() {
     this.submitted = true;
@@ -250,14 +250,14 @@ console.log(data);
 
     if (_chkstatus == false )
     {
-      console.log("_chkstatus" , _chkstatus);    
+  //    console.log("_chkstatus" , _chkstatus);    
       alert("Please select at lease one branch");
       return;
     }
 //console.log("UserID", this.AddBranchMappingForm.get('UserID').value);
     this.AddBranchMappingForm.patchValue({
       checkedList: this.__checkedList,
-      CreatedBy: 1,
+      CreatedBy: this.AddBranchMappingForm.get('UserID').value,
       UserID: this.AddBranchMappingForm.get('UserID').value,
     });
     var objectToSend = {
@@ -291,6 +291,7 @@ console.log(data);
         );
         this.OnReset();
         this.BranchMappingForm.controls["UserID"].setValue(0);
+        this.geBranchList(0);
       });
 
     //  }
@@ -327,12 +328,7 @@ console.log(data);
 
 
   }
-  editBranchMapping(template: TemplateRef<any>, userid: number) {
-    this.addBranchMapping(template)
-    this.checklistArray.clear()
-    this.AddBranchMappingForm.patchValue({UserID: userid})
-    this.getBranch(userid)
-  }
+ 
 
   checkUncheckAll() {
     for (var i = 0; i < this.checklist.length; i++) {
@@ -364,7 +360,134 @@ console.log(data);
     this.activeRow = event.row;
   }
 
+
+  formattedData: any = [];
+  headerList: any;
+  immutableFormattedData: any;
+  loading: boolean = true;
+  prepareTableData(tableData, headerList) {
+    let formattedData = [];
+   // alert(this.type);
   
+   //console.log("LL",tableData);
+  // if (this.type=="Checker" )
+  //{
+    let tableHeader: any = [
+      { field: 'srNo', header: "SR NO", index: 1 },
+      { field: 'UserName', header: 'USER NAME', index: 3 },
+      { field: 'DepartmentName', header: 'CABINET', index: 2 },
+      { field: 'BranchName', header: 'FOLDER', index: 2 },
+    
+  
+      // { field: 'Ref3', header: 'Ref3', index: 3 },
+      // { field: 'Ref4', header: 'Ref4', index: 3 },
+      // { field: 'Ref5', header: 'Ref5', index: 3 },
+      // { field: 'Ref6', header: 'Ref6', index: 3 },
+  //    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+      //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+     // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+  
+    ];
+   
+    tableData.forEach((el, index) => {
+      formattedData.push({
+        'srNo': parseInt(index + 1),
+        'UserName': el.UserName,
+         'BranchName': el.BranchName,
+         'DepartmentName': el.DepartmentName,
+         'id': el.id,
+         'UserID': el.UserID,
+        // 'Ref5': el.Ref5,
+        // 'Ref6': el.Ref6
+      
+      });
+   
+    });
+    this.headerList = tableHeader;
+  //}
+  
+    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+    this.formattedData = formattedData;
+    this.loading = false;
+  
+  }
+  
+  searchTable($event) {
+    // console.log($event.target.value);
+  
+    let val = $event.target.value;
+    if(val == '') {
+      this.formattedData = this.immutableFormattedData;
+    } else {
+      let filteredArr = [];
+      const strArr = val.split(',');
+      this.formattedData = this.immutableFormattedData.filter(function (d) {
+        for (var key in d) {
+          strArr.forEach(el => {
+            if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+              if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+                filteredArr.push(d);
+              }
+            }
+          });
+        }
+      });
+      this.formattedData = filteredArr;
+    }
+  }
+
+  deleteBranch(car: any) {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        buttonsStyling: false,
+        confirmButtonClass: "btn btn-danger",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonClass: "btn btn-secondary",
+
+
+      })
+      .then((result) => {
+        if (result.value) {
+          this.BranchMappingForm.patchValue({
+            id: car.id,
+          });
+          const apiUrl = this._global.baseAPIUrl + "BranchMapping/Delete";
+          this._onlineExamService
+            .postData(this.BranchMappingForm.value, apiUrl)
+            .subscribe((data) => {
+              swal.fire({
+                title: "Deleted!",
+                text: "Folder Mapping has been deleted.",
+                type: "success",
+                buttonsStyling: false,
+                confirmButtonClass: "btn btn-primary",
+              });
+              this.geBranchList(this.BranchMappingForm.get("UserIDS").value);
+              
+            });
+        }
+      });
+
+  }
+
+  editBranchMapping(template: TemplateRef<any>, row:any) {
+
+    console.log("row",row);
+    
+    this.addBranchMapping(template)
+    this.checklistArray.clear()
+    this.AddBranchMappingForm.patchValue({UserID: row.userid})
+    this.getBranch(row.userid)
+  }
+
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
+  }
 
 
 }

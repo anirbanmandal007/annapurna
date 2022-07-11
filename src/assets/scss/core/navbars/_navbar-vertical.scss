@@ -2,6 +2,8 @@
 // Vertical navbar + Sidenav
 //
 
+@use "sass:math";
+
 .navbar-vertical {
   padding-top: 0;
   border-width: 0 0 1px 0;
@@ -46,7 +48,7 @@
       &:before {
         content: "";
         display: block;
-        margin: $navbar-padding-y / 2;
+        margin: $navbar-padding-y * 0.5;
       }
     }
   }
@@ -83,7 +85,7 @@
         border: none;
 
         .dropdown-menu {
-          margin-left: $dropdown-item-padding-x / 2;
+          margin-left: $dropdown-item-padding-x * 0.5;
         }
       }
     }
@@ -249,8 +251,8 @@
 
           // Second level
           .navbar-nav .nav .nav-link {
-            padding-top: $navbar-vertical-nav-link-padding-y / 1.5;
-            padding-bottom: $navbar-vertical-nav-link-padding-y / 1.5;
+            padding-top: math.div($navbar-vertical-nav-link-padding-y, 1.5);
+            padding-bottom: math.div($navbar-vertical-nav-link-padding-y, 1.5);
             padding-left: $navbar-vertical-padding-x + $navbar-icon-min-width;
           }
 

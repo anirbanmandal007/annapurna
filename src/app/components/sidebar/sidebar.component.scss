@@ -44,6 +44,12 @@
     height: 16px;
     margin-right: 8px;
 }
+.EmailLog {
+    background: url('./../../../assets/img/icons/submenu/columns.svg') no-repeat;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
 .document-type {
     background: url('./../../../assets/img/icons/submenu/book.svg') no-repeat;
     width: 16px;
@@ -86,7 +92,7 @@
     height: 16px;
     margin-right: 8px;
 }
-.TemplateConfiguration {
+.DSConfig {
     background: url('./../../../assets/img/icons/submenu/briefcase.svg') no-repeat;
     width: 16px;
     height: 16px;
@@ -135,13 +141,13 @@
     height: 16px;
     margin-right: 8px;
 }
-.tagging {
+.Checker {
     background: url('./../../../assets/img/icons/submenu/tag.svg') no-repeat;
     width: 16px;
     height: 16px;
     margin-right: 8px;
 }
-.indexing {
+.Maker {
     background: url('./../../../assets/img/icons/submenu/database.svg') no-repeat;
     width: 16px;
     height: 16px;
@@ -233,4 +239,22 @@
     color: #000;
     font-family: Roboto, "Helvetica Neue", sans-serif;
     background: #eee;
+}
+
+.child-item-icon {
+    display: inline-block;
+    position: relative;
+    top: 2px;
+}
+
+.top-navbar {
+    background: transparent !important;
+}
+
+.topnav-menu-icon {
+    margin-right: 4px;
+}
+
+.ni::before {
+    color: #fff;
 }

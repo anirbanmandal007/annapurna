@@ -1,10 +1,10 @@
 import { Globalconstants } from "../../../Helper/globalconstants";
 import { OnlineExamServiceService } from "../../../Services/online-exam-service.service";
-import { Component, OnInit, TemplateRef,EventEmitter,Output } from "@angular/core";
+import { Component, OnInit, TemplateRef,EventEmitter,Output, HostListener, ViewChild } from "@angular/core";
 //import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ToastrService } from "ngx-toastr";
@@ -12,7 +12,9 @@ import { HttpEventType, HttpClient } from '@angular/common/http';
 import swal from "sweetalert2";
 import { saveAs } from 'file-saver';
 import { CommonService } from "src/app/Services/common.service";
-
+import { AngularEditorConfig } from "@kolkov/angular-editor";
+import { of, throwError } from "rxjs";
+import { TagInputComponent as SourceTagInput } from 'ngx-chips';
 declare var $: any;
 
 export enum SelectionType {
@@ -72,10 +74,61 @@ export class ContentSearchComponent implements OnInit {
   _isDocView:any=true;
   first = 0;
   rows = 10;
+  fileExt:any;
+
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+      spellcheck: true,
+      height: 'auto',
+      minHeight: '360px',
+      maxHeight: 'auto',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Enter text here...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    // uploadUrl: 'v1/image',
+    // upload: (file: File) => {
+    //   return;
+    // },
+    // uploadWithCredentials: false,
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      ['bold', 'italic'],
+      ['fontSize']
+    ]
+  }
 
   _FileDetails:string [][] = [];
   
   @Output() public onUploadFinished = new EventEmitter();
+  emailReciepientsShare = [];
       
     constructor(
       private modalService: BsModalService,
@@ -88,6 +141,7 @@ export class ContentSearchComponent implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       private _commonService: CommonService
+    
   
     ) { }
   
@@ -117,8 +171,9 @@ export class ContentSearchComponent implements OnInit {
       BranchID:['0'],
       SubfolderID:[0],
       DepartmentID:[0, Validators.required], 
-
-      
+      htmlContent: [''],
+      Subject:[''],
+      predefined:['']
   
       });
       this.getTemplate();
@@ -187,7 +242,7 @@ export class ContentSearchComponent implements OnInit {
       const apiUrl=this._global.baseAPIUrl+'DepartmentMapping/GetDepartmentByUser?ID='+ localStorage.getItem('UserID')+'&user_Token='+localStorage.getItem('User_Token') 
       this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
         this._DepartmentList = data;
-        console.log("DepList",data);
+       // console.log("DepList",data);
       //  this._FilteredList = data
         //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
       });
@@ -207,11 +262,11 @@ export class ContentSearchComponent implements OnInit {
       this.entries = $event.target.value;
     }
     filterTable($event) {
-      console.log($event.target.value);
+    //  console.log($event.target.value);
   
       let val = $event.target.value;
       this._FilteredList = this._FileList.filter(function (d) {
-        console.log(d);
+      //  console.log(d);
         for (var key in d) {
           if (key == "AccNo" || key == "BranchName" || key == "DocType" ) {
             if (d[key].toLowerCase().indexOf(val) !== -1) {
@@ -296,12 +351,7 @@ export class ContentSearchComponent implements OnInit {
           //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
         });
       }
-
-
-     
-
-
-
+  
       
 
       getTemplate() {
@@ -369,7 +419,7 @@ export class ContentSearchComponent implements OnInit {
       ];
       headerList.forEach((el, index) => {
         tableHeader.push({
-          field: 'metadata-' + parseInt(index+1), header: el.DisplayName, index: parseInt(7+index)
+          field: 'metadata-' + parseInt(index+1), header: el.DisplayName, index: parseInt(5+index)
         })
       })
      // console.log("tableData",tableData);
@@ -556,6 +606,8 @@ export class ContentSearchComponent implements OnInit {
         });
     
       }
+
+      
     
       DeleteFile(Row: any) {
         swal
@@ -596,6 +648,47 @@ export class ContentSearchComponent implements OnInit {
           });
        
       }
+
+      favourite(Row: any) {
+        swal
+          .fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            type: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonClass: "btn btn-danger",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonClass: "btn btn-secondary",
+          })
+          .then((result) => {
+            if (result.value) {
+              this.ContentSearchForm.patchValue({
+                ACC: Row.AccNo,
+                User_Token: localStorage.getItem('User_Token'),
+                userID: localStorage.getItem('UserID'),
+                DocID: Row.DocID
+              });
+
+              const that = this;
+              const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/favourite';
+              this._onlineExamService.postData(this.ContentSearchForm.value,apiUrl)     
+              .subscribe( data => {
+                  swal.fire({
+                    title: "favourite!",
+                    text: "File has been favourite.",
+                    type: "success",
+                    buttonsStyling: false,
+                    confirmButtonClass: "btn btn-primary",
+                  });
+                //  that.getSearchResult(that.ContentSearchForm.get('TemplateID').value);
+                });
+
+            }
+          });
+       
+      }
+
 
       // Model Popup For Docuemnt Inserstion 
     
@@ -723,7 +816,7 @@ export class ContentSearchComponent implements OnInit {
       let  __FileNo =row.AccNo;
       let  __TempID = row.TemplateID;
 
-      console.log("__TempID",__TempID);
+  //    console.log("__TempID",__TempID);
 
       const apiUrl=this._global.baseAPIUrl+'DataEntry/GetNextFile?id='+__TempID+'&FileNo='+__FileNo+'&user_Token='+ localStorage.getItem('User_Token');
   
@@ -731,7 +824,7 @@ export class ContentSearchComponent implements OnInit {
       this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
   
          this._IndexList = data;           
-         console.log("Index",data);
+        // console.log("Index",data);
       });
       // this.modalRef = this.modalService.show(template);
       }
@@ -767,7 +860,7 @@ export class ContentSearchComponent implements OnInit {
 
     ViewDocument(template: TemplateRef<any>, row: any, indexTemplate: TemplateRef<any>) {
       this.MetaData(indexTemplate, row);
-      console.log(row);
+    //  console.log(row);
     //  this.FilePath = row.RelPath;
       //this._TempFilePath =row.RelPath;
       this.modalRef = this.modalService.show(template);
@@ -780,18 +873,33 @@ export class ContentSearchComponent implements OnInit {
 
 
 
+    // GetFullFile(FileNo:any) {
+
+    //   const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/GetFullFile?ID='+localStorage.getItem('UserID')+'&&_fileName='+ FileNo +'&user_Token='+localStorage.getItem('User_Token');
+    //   this._onlineExamService.getDataById(apiUrl).subscribe(res => {
+    //     if (res) {
+  
+    //   //  console.log("9090res",res);
+    //       this.FilePath = res;
+    //        /// saveAs(res, row.ACC + '.pdf');
+    //        this._TempFilePath = res;
+
+  
+    //     }
+    //   });
+    // }
+
     GetFullFile(FileNo:any) {
 
       const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/GetFullFile?ID='+localStorage.getItem('UserID')+'&&_fileName='+ FileNo +'&user_Token='+localStorage.getItem('User_Token');
       this._onlineExamService.getDataById(apiUrl).subscribe(res => {
         if (res) {
   
-      //  console.log("9090res",res);
+       console.log("FilePath",res);
           this.FilePath = res;
            /// saveAs(res, row.ACC + '.pdf');
            this._TempFilePath = res;
-
-  
+           this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
         }
       });
     }
@@ -810,7 +918,7 @@ export class ContentSearchComponent implements OnInit {
         // this._FilteredList = data;
         this.documentDetails = data;
 
-        console.log("Doc Details",data);
+     //   console.log("Doc Details",data);
       });
     }
 
@@ -836,7 +944,7 @@ export class ContentSearchComponent implements OnInit {
 
     selectAllRows = false;
     selectAllRow(e) {
-        console.log("E-",e);
+     //   console.log("E-",e);
 
       this.selectedRows = [];
       this.selectedRowsForMetadata = [];
@@ -919,7 +1027,7 @@ export class ContentSearchComponent implements OnInit {
   this._HeaderList += '\n';
   let that = this;
 
-  console.log(this._MDList);
+ // console.log(this._MDList);
   this._MDList.forEach(stat => {
     // if ( that.selectedRows.indexOf(stat['Ref1']) > -1 ) {
       for (let j = 0; j < this._ColNameList.length; j++) {
@@ -1094,7 +1202,9 @@ GetFilterData(tempID:any) {
   onSendEmailByShare() {
 
     const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmailBulkFiles';
-   
+    let toEmailString = ''; 
+    this.emailReciepientsShare.forEach(el => toEmailString += el.display + ',');
+    this.ContentSearchForm.value.ToEmailID = toEmailString;
     this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
@@ -1129,14 +1239,16 @@ GetFilterData(tempID:any) {
     this.modalRef = this.modalService.show(template);
 
   }
-
+  emailReciepients = [];
   onSendEmail() {
 
     if (this.selectedRows.length <=10)
     {
   const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
   //  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/SendBulkTagFileOnMail?ID='+localStorage.getItem('UserID')+'&DocID='+1+'&_fileName='+ this.ContentSearchForm.controls['FileNo'].value +'&user_Token='+localStorage.getItem('User_Token');
-    
+    let toEmailString = ''; 
+    this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+    this.ContentSearchForm.value.ToEmailID = toEmailString;
     this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
@@ -1281,6 +1393,60 @@ ShowErrormessage(data:any)
 
 
 }
-  
+
+onItemAdded(event) {
+  console.log(event);
+}
+
+@HostListener('document:paste', ['$event']) blockPaste(e: KeyboardEvent) {
+  e.preventDefault();
+}
+
+@HostListener('document:copy', ['$event']) blockCopy(e: KeyboardEvent) {
+  e.preventDefault();
+}
+
+@HostListener('document:cut', ['$event']) blockCut(e: KeyboardEvent) {
+  e.preventDefault();
+}
+
+
+@ViewChild('tagInput')
+tagInput: SourceTagInput;
+public validators = [ this.must_be_email.bind(this) ];
+public errorMessages = {
+    'must_be_email': 'Please be sure to use a valid email format'
+};
+public onAddedFunc = this.beforeAdd.bind(this);
+private addFirstAttemptFailed = false;
+
+private must_be_email(control: FormControl) {        
+
+    if (this.addFirstAttemptFailed && !this.validateEmail(control.value)) {
+        return { "must_be_email": true };
+    }
+    return null;
+}
+beforeAdd(tag: string) {
+
+  if (!this.validateEmail(tag)) {
+    if (!this.addFirstAttemptFailed) {
+      this.addFirstAttemptFailed = true;
+      this.tagInput.setInputValue(tag);
+    }
+
+    return throwError(this.errorMessages['must_be_email']);
+    //return of('').pipe(tap(() => setTimeout(() => this.tagInput.setInputValue(tag))));
+    
+  }
+  this.addFirstAttemptFailed = false;
+  return of(tag);
+}
+
+private validateEmail(text: string) {
+  var EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/i;
+  return (text && EMAIL_REGEXP.test(text));
+}
+
       
 }

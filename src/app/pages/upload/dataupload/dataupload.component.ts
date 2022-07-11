@@ -60,6 +60,7 @@ isValidationError: any;
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
       id:[0],
+      UplaodBy:[],
       TemplateID: [0, Validators.required],
        CSVData:[""]
     });     
@@ -122,7 +123,7 @@ isValidationError: any;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
     this.TemplateList = data;
     this.DataUploadForm.controls['TemplateID'].setValue(0);
-     console.log("this._TemplateLis", data)
+    // console.log("this._TemplateLis", data)
     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
 
@@ -414,11 +415,17 @@ isValidationError: any;
         return;  
     } 
 
+    let _UplaodBy =0;    
+    if (this.DataUploadForm.get("UplaodBy").value)
+    {
+      _UplaodBy =1;
+    }
 
     this.DataUploadForm.patchValue({
       id: localStorage.getItem('UserID'),
       CSVData: this._CSVData,     
-      User_Token: localStorage.getItem('User_Token')    
+      User_Token: localStorage.getItem('User_Token')    ,
+      UplaodBy: _UplaodBy   
 
     });
     
@@ -596,18 +603,36 @@ isValidationError: any;
     const fieldIndex = this._ColNameList.findIndex(el => el.DisplayName === column.name);
     let cssClass = '';
    // console.log(field.Ref1);
+  // alert(field.IsMandatory);
     switch(field.FieldType) {
       case ('1') : // Text field
-        if(field.IsMandatory && row[fieldIndex] === '') { // Required field check
+        if(field.IsMandatory ==1 && row[fieldIndex] === '') { // Required field check
           cssClass += ' error text-required';
         }
-        if(!(/^[a-zA-Z\s]*$/.test(row[fieldIndex]))) { // Letter validation check
+        else if(field.IsMandatory ==0 && row[fieldIndex] === '') { // Required field check
+             break;
+         }
+
+       else if(!(/^[a-zA-Z\s]*$/.test(row[fieldIndex]))) { // Letter validation check
           cssClass += ' error letter-only';
         }
         break;
 
       case ('2') :
-        if(isNaN(row[fieldIndex])) {
+
+        if(field.IsMandatory ==1 && row[fieldIndex] === '') { // Required field check
+          cssClass += ' error text-required';
+        }
+        else if(field.IsMandatory ==0 && row[fieldIndex] === '') { // Required field check
+        
+         break;
+        }
+        else if (isNaN(row[fieldIndex])) {
+          cssClass = ' error numeric-only';
+        }
+        break;
+
+        if(field.IsMandatory ==1 && isNaN(row[fieldIndex])) {
           cssClass = ' error numeric-only';
         }
         break;
@@ -622,14 +647,29 @@ isValidationError: any;
       //  console.log('row');
       //console.log(row);
      // console.log(fieldIndex);
-        if (fieldIndex==0)
+        
+     
+     if (fieldIndex==0)
         {
           if(row[fieldIndex] === '') { // Required field check
             cssClass += ' error text-required';
           }
         }
+        else if(field.IsMandatory ==0 && row[fieldIndex] === '') 
+        { // Required field check
+        
+          break;
+         }
+
         else if(!(/^[\w\s]+$/.test(row[fieldIndex]))) { // Alpha-Numeric validation check
+
+          //alert(fieldIndex);
+        //  alert(row[fieldIndex]);
+          //Email ID	;
+          if (fieldIndex !=8)
+          {
           cssClass = ' error alpha-numeric-only';
+          }
         }
         break;
         

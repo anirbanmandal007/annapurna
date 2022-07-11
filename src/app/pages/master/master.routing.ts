@@ -12,6 +12,8 @@ import { TemplateconfigComponent } from "./templateconfig/templateconfig.compone
 import { RegionMappingComponent } from "./region-mapping/region-mapping.component";
 import { EntityComponent } from "./entity/entity.component";
 import { EntityMappingComponent } from "./entity-mapping/entity-mapping.component";
+import { DSConfigComponent } from "./DSConfig/DSConfig.component";
+
 
 export const DepartmentRoutes: Routes = [
   {
@@ -70,7 +72,13 @@ export const DepartmentRoutes: Routes = [
         path: "subfolder-mapping",
         component: EntityMappingComponent
       }
+      ,   
+      {
+        path: "DSConfig",
+        component: DSConfigComponent
+      }
 
+      
       
     ]
   }

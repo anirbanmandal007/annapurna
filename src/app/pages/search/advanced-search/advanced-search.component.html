@@ -254,8 +254,8 @@
                   </div>
 
                   <div class="col-md-3">
-                    <button type="button" class="btn btn-danger" (click)="onRemoveRow(i)" style="margin-top:20px;float: right;text-align: right;    padding: 5px 15px;">
-                      <i class="fa fa-times"></i>
+                    <button type="button" class="btn" (click)="onRemoveRow(i)" style="margin-top:20px;float: right;text-align: right;    padding: 5px 15px;">
+                      <img src="assets/img/icons/delete.svg">
                     </button>
                   </div>
                   <div class="col-md-1"></div>
@@ -609,7 +609,7 @@
             <div class="modal-body p-0">
               <div class="card w-100">              
                 <div class=" card-header"><h3 class=" mb-0" >Document View
-                  <span style="float: right;cursor: pointer;" (click)="hidepopup()" class="btn-inner--icon"><i class="fa fa-times"></i></span>
+                  <span style="float: right;cursor: pointer;" (click)="hidepopup()" class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
   
   
                 </h3></div>
@@ -648,6 +648,7 @@
                         [showHandToolButton]="true" 
                         [showOpenFileButton]="false"
                         [height]="'135vh'"
+                        [enablePrint] = "false"
                         [width]="100"
                         *ngIf="FilePath" [src]="FilePath" 
                                       
@@ -671,7 +672,7 @@
   
         
         <ng-template #ShareLinkFormPopup let-c="close" let-d="dismiss" let-modal>
-          <div class="modal-content">
+          <div class="modal-content" style="width: 1000px; position: relative; right: 40%;">
             <div class="modal-body p-0">
               <div class=" card">
                 <div class=" card-header"><h3 class=" mb-0">Share Link</h3></div>
@@ -682,7 +683,20 @@
                           <label class="form-control-label" for="ToEmailID">
                             To 
                           </label>
-                          <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/>
+                          <!-- <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/> -->
+                          <tag-input 
+                            [(ngModel)]="emailReciepientsShare" 
+                            [ngModelOptions]="{standalone: true}" 
+                            [editable]='true' 
+                            placeholder="Enter email address"
+                            [errorMessages]="errorMessages"
+                            [validators]="validators" 
+                            #tagInput
+                            [onAdding]="onAddedFunc"
+                          >
+                          </tag-input>
+                          <br />
+                          <angular-editor formControlName="htmlContent" [config]="editorConfig"></angular-editor>
                                                                                             
                       </div>
                       <div class="col-md-12 mb-3">
@@ -702,7 +716,7 @@
                       
                     </div>
                     <div class=" col-md-8" style="padding-top: 32px">  
-                      <button class="btn btn-primary" (click)="onSendEmailByShare()"> Send</button>
+                      <button class="btn btn-primary" [disabled]="!emailReciepientsShare.length" (click)="onSendEmailByShare()"> Send</button>
                       <button class="btn btn-primary"  (click)="hidepopup()"> Close</button>
                      
                     </div>
@@ -716,7 +730,7 @@
   
   
         <ng-template #EmailFormPopup let-c="close" let-d="dismiss" let-modal>
-          <div class="modal-content">
+          <div class="modal-content" style="width: 1000px; position: relative; right: 40%;">
             <div class="modal-body p-0">
               <div class=" card">
                 <div class=" card-header"><h3 class=" mb-0">Send Email</h3></div>
@@ -727,15 +741,26 @@
                           <label class="form-control-label" for="ToEmailID">
                             To 
                           </label>
-                          <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/>
-                       
+                          <!-- <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/> -->
+                       <tag-input 
+                          [(ngModel)]="emailReciepients" 
+                          [ngModelOptions]="{standalone: true}" 
+                          [editable]='true' 
+                          placeholder="Enter email address"
+                          [errorMessages]="errorMessages"
+                          [validators]="validators" 
+                          #tagInput
+                          [onAdding]="onAddedFunc">
+                        </tag-input>
+                        <br />
+                        <angular-editor formControlName="htmlContent" [config]="editorConfig"></angular-editor>
                                                            
                       </div>                           
   
                       
                     </div>
                     <div class=" col-md-8" style="padding-top: 32px">  
-                      <button class="btn btn-primary" (click)="onSendEmail()"> Send</button>
+                      <button class="btn btn-primary" [disabled]="!emailReciepients.length" (click)="onSendEmail()"> Send</button>
                       <button class="btn btn-primary"  (click)="hidepopup()"> Close</button>
                      
                     </div>

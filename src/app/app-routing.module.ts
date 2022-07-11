@@ -37,63 +37,78 @@ const routes: Routes = [
     children: [
       {
         path: "dashboards",
-        loadChildren: "./pages/dashboards/dashboards.module#DashboardsModule"
+        loadChildren: () => import('./pages/dashboards/dashboards.module').then(m => m.DashboardsModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "usermanagement",
-        loadChildren: "./pages/user-management/user-management.module#UserManagementModule"
+        loadChildren: () => import('./pages/user-management/user-management.module').then(m => m.UserManagementModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "master",
-        loadChildren: "./pages/master/master.module#MasterModule"
+        loadChildren: () => import('./pages/master/master.module').then(m => m.MasterModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "process",
-        loadChildren: "./pages/process/process.module#ProcessModule"
+        loadChildren: () => import('./pages/process/process.module').then(m => m.ProcessModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "report",
-        loadChildren: "./pages/report/report.module#ReportModule"
+        loadChildren: () => import('./pages/report/report.module').then(m => m.ReportModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "upload",
-        loadChildren: "./pages/upload/upload.module#UploadModule"
+        loadChildren: () => import('./pages/upload/upload.module').then(m => m.UploadModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "search",
-        loadChildren: "./pages/search/search.module#SearchModule"
+        loadChildren: () => import('./pages/search/search.module').then(m => m.SearchModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "components",
-        loadChildren: "./pages/components/components.module#ComponentsModule"
+        loadChildren: () => import('./pages/components/components.module').then(m => m.ComponentsModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "forms",
-        loadChildren: "./pages/forms/forms.module#FormsModules"
+        loadChildren: () => import('./pages/forms/forms.module').then(m => m.FormsModules),
+        canActivate: [AuthGuardService]
       },
       {
         path: "tables",
-        loadChildren: "./pages/tables/tables.module#TablesModule"
+        loadChildren: () => import('./pages/tables/tables.module').then(m => m.TablesModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "maps",
-        loadChildren: "./pages/maps/maps.module#MapsModule"
+        loadChildren: () => import('./pages/maps/maps.module').then(m => m.MapsModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "widgets",
-        loadChildren: "./pages/widgets/widgets.module#WidgetsModule"
+        loadChildren: () => import('./pages/widgets/widgets.module').then(m => m.WidgetsModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "charts",
-        loadChildren: "./pages/charts/charts.module#ChartsModule"
+        loadChildren: () => import('./pages/charts/charts.module').then(m => m.ChartsModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "calendar",
-        loadChildren: "./pages/calendar/calendar.module#CalendarModule"
+        loadChildren: () => import('./pages/calendar/calendar.module').then(m => m.CalendarModule),
+        canActivate: [AuthGuardService]
       },
       {
         path: "examples",
-        loadChildren: "./pages/examples/examples.module#ExamplesModule"
+        loadChildren: () => import('./pages/examples/examples.module').then(m => m.ExamplesModule),
+        canActivate: [AuthGuardService]
       }
     ]
   },
@@ -104,7 +119,7 @@ const routes: Routes = [
       {
         path: "examples",
         loadChildren:
-          "./layouts/auth-layout/auth-layout.module#AuthLayoutModule"
+          () => import('./layouts/auth-layout/auth-layout.module').then(m => m.AuthLayoutModule)
       }
     ]
   },

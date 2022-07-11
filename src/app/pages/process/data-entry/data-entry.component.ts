@@ -44,10 +44,11 @@ export class DataEntryComponent implements OnInit {
   _TempID: any =0;
   _FileNo:any="";
   _MDList:any;
- 
+  first = 0;
+  rows = 10;
   _PageNo:number=1;
   FilePath:any="../assets/1.pdf";
-  _Replacestr:any="C:/Inetpub/vhosts/dms.conceptlab.in/httpdocs/DMSInfo";
+
 // _Replacestr:any="D:/WW/14-Jully-2020/UI/src/assets";
   
   _TotalPages:any=0;
@@ -78,8 +79,11 @@ export class DataEntryComponent implements OnInit {
       submit_data:[''],     
       di:[''], 
       FVals:[''], 
+      RejectReason:[''], 
+      FileList:[''],  
       TemplateName:[''],    
       BranchName:[''],  
+      Status:['Maker'],
       
     });
     this.TempField = localStorage.getItem('Fname');
@@ -130,8 +134,11 @@ export class DataEntryComponent implements OnInit {
       const apiUrl = this._global.baseAPIUrl + 'DataEntry/GetPendingData?UserID=' + localStorage.getItem('UserID') + '&user_Token='+ localStorage.getItem('User_Token');
       this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._IndexPendingList = data;
-      this._FilteredList = data
-     console.log("IndexListPending",data);
+      this._FilteredList = data;
+
+      this.prepareTableData(this._FilteredList, this._IndexPendingList);
+
+   //  console.log("IndexListPending",data);
         //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
       });
     }
@@ -246,6 +253,10 @@ export class DataEntryComponent implements OnInit {
     let group = this.formBuilder.group(dynamic_form)
   //  console.log('Dynamic Form', group);
     this.DataEntryForm.controls['_ColNameList'] = group
+
+
+    this.onEdit(data);
+
     // this.DataUploadForm.patchValue({
     //   '_ColNameList' : group
     // })Object.keys(DataUploadForm.controls['_ColNameList']);.controls['_ColNameList']
@@ -313,7 +324,7 @@ export class DataEntryComponent implements OnInit {
         }
 
         if(el.FieldType === '1') { // Text field letter validation check
-          if(!(/^[a-z][a-z\s]*$/.test(this.DataEntryForm.get('_ColNameList').value[el.DisplayName]))) {
+          if(!(/^[a-zA-Z][a-zA-Z\s]*$/.test(this.DataEntryForm.get('_ColNameList').value[el.DisplayName]))) {
             textFieldLetterValidation = false;
             this.toastr.show(
               '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error!</span> <span data-notify="message"><b>' + el.DisplayName + '</b> : Only letters are allowed</span></div>',
@@ -354,8 +365,8 @@ export class DataEntryComponent implements OnInit {
 
         if(el.FieldType === '5' ) { // Alpha-numeric validation check
           const fieldVal = this.DataEntryForm.get('_ColNameList').value[el.DisplayName];
-       //   console.log(el);
-          if(fieldVal !== '' && !(/^[\w\-\s]+$/.test(fieldVal))) {
+          //console.log(index);
+          if(index >0 && fieldVal !== '' && !(/^[\w\-\s]+$/.test(fieldVal))) {
             alphaNumericValidation = false;
             this.toastr.show(
               '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error!</span> <span data-notify="message"><b>' + el.DisplayName + '</b> : Only letters and digits are allowed</span></div>',
@@ -483,7 +494,7 @@ export class DataEntryComponent implements OnInit {
     //console.log("_TempFilePath", _TempFilePath );
     //console.log("_Replacestr", this._Replacestr );
     _TempFilePath = _TempFilePath.replace(new RegExp(/\\/g),"/");
-    var _RPath = this._Replacestr.replace(new RegExp(/\\/g),"/");
+    
     //_TempFilePath = _TempFilePath.replace(this._Replacestr,"http://localhost/DMSInfo")   
 //    _TempFilePath = _TempFilePath.replace(_RPath,"https://dms.conceptlab.in/DMSInfo");
 //    this.FilePath = _TempFilePath ;
@@ -492,7 +503,7 @@ export class DataEntryComponent implements OnInit {
 
     let dynamic_form = {}
     formData.forEach(ele =>{
-    console.log('Element', ele);
+  //  console.log('Element', ele);
     dynamic_form[ele.IndexField] = ele.ColValues
     });
     //console.log('Dynamic Form In Edit', dynamic_form);
@@ -567,7 +578,7 @@ export class DataEntryComponent implements OnInit {
         this._onlineExamService.getDataById(apiUrl).subscribe(res => {
           if (res) {
     
-         // console.log("res",res);
+        console.log("FilePath",res);
             this.FilePath = res;
              /// saveAs(res, row.ACC + '.pdf');
     
@@ -665,5 +676,227 @@ export class DataEntryComponent implements OnInit {
 
 }
 
+ 
+OnReject() {
+  var that = this;
+ // console.log("row----",row);
+ /// this.FilePath = row.FilePath;
+if (this.DataEntryForm.get('RejectReason').value =="")
+{
+  this.ErrorMessage("Enter rejcet reason");
+
+} 
+
+  this.DataEntryForm.patchValue({
+    Status: 'Reject'
+  })
+
+  const apiUrl = this._global.baseAPIUrl + 'DataEntry/RejectFile';          
+  this._onlineExamService.postData(this.DataEntryForm.value,apiUrl)
+  // .pipe(first())
+
+  .subscribe( data => {
+    this.Message("File rejected succesfully.");
+    this.modalRef.hide();
+    that.GetIndexListPending();
+});
+
+}
+
+selectedEntries = [];
+allSelected = false;
+
+Message(msg:any)
+{
+
+  this.toastr.show(
+    '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"><h4 class="text-white"> '+msg+' <h4></span></div>',
+    "",
+    {
+      timeOut: 7000,
+      closeButton: true,
+      enableHtml: true,
+      tapToDismiss: false,
+      titleClass: "alert-title",
+      positionClass: "toast-top-center",
+      toastClass:
+        "ngx-toastr alert alert-dismissible alert-success alert-notify"
+    }
+  );
+}
+
+ErrorMessage(msg:any)
+{
+
+  this.toastr.show(
+    '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Validation !</span> <span data-notify="message"><h4 class="text-white"> '+msg+' <h4></span></div>',
+    "",
+    {
+      timeOut: 7000,
+      closeButton: true,
+      enableHtml: true,
+      tapToDismiss: false,
+      titleClass: "alert-title",
+      positionClass: "toast-top-center",
+      toastClass:
+        "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+    }
+  );
+}
+
+AutoMaker()
+{
+
+  //console.log(this._FilteredList);
+
+  if (this._FilteredList.length >0 && this.selectedRows.length >0 )
+  {
+
+    
+
+    let _CSVData= "";
+    for (let j = 0; j < this.selectedRows.length; j++) {          
+      _CSVData += this.selectedRows[j] + ',';
+      // headerArray.push(headers[j]);  
+     // console.log("CSV Data", _CSVData);
+    }
+    this.DataEntryForm.patchValue({
+    FileList: _CSVData
+   })
+
+  const apiUrl = this._global.baseAPIUrl + 'DataEntry/Automaker';          
+  this._onlineExamService.postData(this.DataEntryForm.value,apiUrl)
+  // .pipe(first())
+
+  .subscribe( data => {
+    this.Message("Auto maker succesfully.");
+    this.GetIndexListPending();
+});
+}
+
+}
+
+selectedRows = [];
+    
+//selectedRowsForMetadata = [];
+selectRow(e, row) {
+  this.selectAllRows = false;
+  e.originalEvent.stopPropagation();
+  if (e.checked) {
+    this.selectedRows.push(row.FileNo);
+   // this.selectedRowsForMetadata.push(row.fileNo);
+  } else {
+    this.selectAllRows = false;
+    var index = this.selectedRows.indexOf(row.FileNo);
+    this.selectedRows.splice(index, 1);
+  //  var indexMetadata = this.selectedRowsForMetadata.indexOf(row.FileNo);
+   // this.selectedRowsForMetadata.splice(indexMetadata, 1);
+  }
+}
+
+selectAllRows = false;
+selectAllRow(e) {
+  //  console.log("E-",e);
+
+  this.selectedRows = [];
+  //this.selectedRowsForMetadata = [];
+  if (e.checked) {
+    this.selectAllRows = true;
+    this.formattedData.forEach((el, index) => {
+      //  this.selectedRows.push(el.AccNo +"_" + el.DocID);
+      if(index >= this.first && index < this.first + this.rows) {
+        this.selectedRows.push(el.FileNo);
+      //  this.selectedRowsForMetadata.push(el.FileNo);
+        el.selected = true;
+      }
+    })
+  } else {
+    this.selectAllRows = false;
+    this.selectedRows = [];
+    this.formattedData.filter(el => el.selected).forEach(element => {
+      element.selected = false;
+    });
+}
+}
+
+formattedData: any = [];
+headerList: any;
+immutableFormattedData: any;
+loading: boolean = true;
+prepareTableData(tableData, headerList) {
+  let formattedData = [];
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+     { field: 'FileNo', header: 'File No', index: 2 },
+     { field: 'BranchName', header: 'Folder', index: 3 },
+     { field: 'TemplateName', header: 'Template Name', index: 3 },
+     { field: 'Status', header: 'Status', index: 3 },
+     { field: 'IsIndexing', header: 'IsIndexing', index: 3 },
+  
+     
+   
+  ];
+  // headerList.forEach((el, index) => {
+  //   tableHeader.push({
+  //     field: 'metadata-' + parseInt(index+1), header: el.DisplayName, index: parseInt(5+index)
+  //   })
+  // })
+//    console.log("tableData",tableData);
+  tableData.forEach((el, index) => {
+    formattedData.push({
+      'srNo': parseInt(index + 1),
+      'FileNo': el.FileNo,                  
+       'BranchName': el.BranchName,
+       'TemplateName': el.TemplateName,
+       'Status': el.Status,
+       'TemplateID': el.TemplateID,
+       'BranchID': el.BranchID,
+       'PageCount': el.PageCount,
+       'IsIndexing': el.IsIndexing,
+
+     
+    });
+    // headerList.forEach((el1, i) => {
+    //   formattedData[index]['metadata-' + parseInt(i + 1)] = el['Ref'+ parseInt(i+1)]
+    // });
+  });
+  this.headerList = tableHeader;
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+  
+
+//   console.log(this.formattedData);
+
+}
+
+searchTable($event) {
+  // console.log($event.target.value);
+
+  let val = $event.target.value;
+  if(val == '') {
+    this.formattedData = this.immutableFormattedData;
+  } else {
+    let filteredArr = [];
+    const strArr = val.split(',');
+    this.formattedData = this.immutableFormattedData.filter(function (d) {
+      for (var key in d) {
+        strArr.forEach(el => {
+          if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+            if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+              filteredArr.push(d);
+            }
+          }
+        });
+      }
+    });
+    this.formattedData = filteredArr;
+  }
+}
+
+paginate(e) {
+  this.first = e.first;
+  this.rows = e.rows;
+} 
 
 }

@@ -1,5 +1,5 @@
 <nav
-  class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white"
+  class="d-none sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white"
   id="sidenav-main"
   (mouseover)="onMouseEnterSidenav()"
   (mouseout)="onMouseLeaveSidenav()"
@@ -127,4 +127,29 @@
   </div>
 </perfect-scrollbar>
 
+</nav>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light top-navbar">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li *ngFor="let menuitem of menuItems" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="topnav-menu-icon ni {{ menuitem.icontype }}"></i>
+          {{ menuitem.title }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a *ngFor="let childitems of menuitem.children" class="dropdown-item" [routerLink]="[menuitem.path, childitems.path]">
+            <span class="child-item-icon" [ngClass]="childitems.path ? childitems.path: ''"></span>
+            {{ childitems.title }}
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
 </nav>

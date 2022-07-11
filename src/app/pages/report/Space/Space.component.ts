@@ -46,6 +46,8 @@ export class SpaceComponent implements OnInit {
   bsValue = new Date();
   bsRangeValue: Date[];
   maxDate = new Date();
+  first = 0;
+  rows = 10;
 
   constructor(
     private modalService: BsModalService,
@@ -69,7 +71,7 @@ export class SpaceComponent implements OnInit {
 
     this.getTemplate();
     this.geBranchList();
-    
+    this.BindHeader(this._StatusList,this._StatusList);
   }
 
   entriesChange($event) {
@@ -112,11 +114,119 @@ export class SpaceComponent implements OnInit {
       this.StatusReportForm.controls['TemplateID'].setValue(0);
       this.StatusReportForm.controls['BranchID'].setValue(0);
 
-      
+    //  this.prepareTableData( this.BranchList,  this._FilteredList);
     //  this._FilteredList = data;
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
+
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
+  }
+
+  formattedData: any = [];
+headerList: any;
+immutableFormattedData: any;
+loading: boolean = true;
+prepareTableData(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'Folder', header: 'FOLDER', index: 3 },
+    { field: 'SubFolder', header: 'SUB FOLDER', index: 2 },
+
+    { field: 'TemplateName', header: 'TEMPLATE NAME', index: 3 },
+    { field: 'Size', header: 'SIZE', index: 3 },
+    // { field: 'Ref5', header: 'Ref5', index: 3 },
+    // { field: 'Ref6', header: 'Ref6', index: 3 },
+//    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+ 
+  tableData.forEach((el, index) => {
+    formattedData.push({
+      'srNo': parseInt(index + 1),
+      'Folder': el.Folder,
+      'id': el.id,
+      'SubFolder': el.SubFolder,
+      'TemplateName': el.TemplateName,
+      'Size': el.Size,
+      // 'Ref6': el.Ref6
+    
+    });
+ 
+  });
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+
+
+BindHeader(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'Folder', header: 'FOLDER', index: 3 },
+    { field: 'SubFolder', header: 'SUB FOLDER', index: 2 },
+
+    { field: 'TemplateName', header: 'TEMPLATE NAME', index: 3 },
+    { field: 'Size', header: 'SIZE', index: 3 },
+    // { field: 'Ref5', header: 'Ref5', index: 3 },
+    // { field: 'Ref6', header: 'Ref6', index: 3 },
+//    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+ 
+ 
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+
+searchTable($event) {
+  // console.log($event.target.value);
+
+  let val = $event.target.value;
+  if(val == '') {
+    this.formattedData = this.immutableFormattedData;
+  } else {
+    let filteredArr = [];
+    const strArr = val.split(',');
+    this.formattedData = this.immutableFormattedData.filter(function (d) {
+      for (var key in d) {
+        strArr.forEach(el => {
+          if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+            if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+              filteredArr.push(d);
+            }
+          }
+        });
+      }
+    });
+    this.formattedData = filteredArr;
+  }
+}
 
   OnReset() {
     this.Reset = true;

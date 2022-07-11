@@ -9,7 +9,8 @@ import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { NgxPrintModule } from "ngx-print";
 import { ModalModule } from 'ngx-bootstrap/modal';
-
+ 
+ 
 import { RouterModule } from "@angular/router";
 import { DepartmentRoutes } from "./process.routing";
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -17,10 +18,13 @@ import { DataEntryComponent } from './data-entry/data-entry.component';
 import { FileTaggingComponent } from './file-tagging/file-tagging.component';
 import { EditIndexingComponent } from './EditIndexing/EditIndexing.component';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { CheckerComponent } from './checker/checker.component';
+import { TableModule } from 'primeng/table';
+import { CheckboxModule } from 'primeng/checkbox';
 //import { DataviewComponent } from './dataview/dataview.component';
 
 @NgModule({
-  declarations: [DataEntryComponent,FileTaggingComponent,EditIndexingComponent],
+  declarations: [DataEntryComponent,FileTaggingComponent,EditIndexingComponent,CheckerComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(DepartmentRoutes),
@@ -34,6 +38,8 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     NgxPrintModule,
+    CheckboxModule,
+    TableModule,
     NgxExtendedPdfViewerModule
   ]
 })

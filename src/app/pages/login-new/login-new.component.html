@@ -69,9 +69,10 @@
                     <div class="errorMsg-feedback" *ngIf="f.password.touched && f.password.hasError('required')">Enter
                       password</div>
                   </div>
-                  <ngx-recaptcha2 #captchaElem siteKey="6LfS3OYdAAAAAP7Xt5GrMYQsGhTItjfTYtUaxBzB" (success)="handleSuccess($event)" [size]="size"
+                  
+                  <!-- <ngx-recaptcha2 #captchaElem siteKey="6Lf0B58eAAAAAMA9umHGKya6yQprhUXGfumZyvJV" (success)="handleSuccess($event)" [size]="size"
                   [hl]="lang" [theme]="theme" [type]="type" formControlName="recaptcha">
-                  </ngx-recaptcha2>
+                  </ngx-recaptcha2> -->
 
                   <!-- <ngx-recaptcha2 #captchaElem siteKey="6Lf0B58eAAAAAMA9umHGKya6yQprhUXGfumZyvJV" (success)="handleSuccess($event)" [size]="size"
                   [hl]="lang" [theme]="theme" [type]="type" formControlName="recaptcha">

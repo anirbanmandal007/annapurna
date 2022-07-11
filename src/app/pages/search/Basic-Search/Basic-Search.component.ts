@@ -271,11 +271,11 @@ this.getTemplate();
       let formattedData = [];
       let tableHeader: any = [
         { field: 'srNo', header: "SR NO", index: 1 },
-         { field: 'AccNo', header: 'FILENAME', index: 2 },
+         { field: 'AccNo', header: 'FILE NAME', index: 2 },
          { field: 'DepartmentName', header: 'CABINET', index: 3 },
          { field: 'branch', header: 'FOLDER', index: 3 },
-         { field: 'SubfolderName', header: 'SUBFOLDER', index: 3 },
-            { field: 'TemplateName', header: 'TEMPALTENAME', index: 3 },
+         { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 },
+            { field: 'TemplateName', header: 'TEMPLATE NAME', index: 3 },
       //  { field: 'department', header: 'Department', index: 4 },
       //  { field: 'docType', header: 'Doc Type', index: 5 },
         { field: 'pageCount', header: 'PAGE COUNT', index: 6 },
@@ -482,7 +482,7 @@ this.getTemplate();
       this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
   
          this._IndexList = data;           
-         //console.log("Index",data);
+      //   console.log("Index",data);
       });
       // this.modalRef = this.modalService.show(template);
       }
@@ -503,7 +503,8 @@ this.getTemplate();
       //this._TempFilePath =row.RelPath;
       this.modalRef = this.modalService.show(template);
       $(".modal-dialog").css('max-width', '1330px');
-      this.GetDocumentDetails(row);
+   // console.log(row);
+    //  this.GetDocumentDetails(row);
       this.GetFullFile(row.AccNo);
 
     }
@@ -515,7 +516,7 @@ this.getTemplate();
       this._onlineExamService.getDataById(apiUrl).subscribe(res => {
         if (res) {
   
-      //  console.log("9090res",res);
+       console.log("FilePath",res);
           this.FilePath = res;
            /// saveAs(res, row.ACC + '.pdf');
            this._TempFilePath = res;
@@ -539,6 +540,9 @@ this.getTemplate();
         // this._IndexList = data;
         // this._FilteredList = data;
         this.documentDetails = data;
+
+       // console.log(data);
+
       });
     }
 

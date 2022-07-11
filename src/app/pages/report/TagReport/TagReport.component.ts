@@ -47,6 +47,8 @@ export class TagReportComponent implements OnInit {
   bsValue = new Date();
   bsRangeValue: Date[];
   maxDate = new Date();
+  first = 0;
+  rows = 10;
 
   constructor(
     private modalService: BsModalService,
@@ -62,12 +64,13 @@ export class TagReportComponent implements OnInit {
   ngOnInit() {
     this.TagReportForm = this.formBuilder.group({
       TemplateID: [0, Validators.required],   
-      TagID:[''],     
+      TagID:[0, Validators.required],        
       User_Token:  localStorage.getItem('User_Token') ,  
     });
-
+    this.BindHeader( this._StatusList,  this._FilteredList);      
     this.getTemplate();
-    this._DisplayName ="EMP CODE";
+    //this._DisplayName ="EMP CODE";
+    
   }
 
   entriesChange($event) {
@@ -144,13 +147,120 @@ export class TagReportComponent implements OnInit {
      // console.log("Data",data);
       this._StatusList = data;          
       this._FilteredList = data;  
-    //  console.log(" this._FilteredList = data;    ", data);        
+    //  console.log(" this._FilteredList = data;    ", data); 
+    this.prepareTableData( this._StatusList,  this._FilteredList);       
 
   });
 
   }
   
-  
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
+  }
+
+  formattedData: any = [];
+headerList: any;
+immutableFormattedData: any;
+loading: boolean = true;
+prepareTableData(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'FileNo', header: 'FILE NO.', index: 3 },
+    { field: 'TagName', header: 'DOCUMENT TYPE', index: 2 },
+
+    { field: 'Status', header: 'STATUS', index: 3 },
+    { field: 'PageCount', header: 'PAGE COUNT', index: 3 },
+    // { field: 'Ref5', header: 'Ref5', index: 3 },
+    // { field: 'Ref6', header: 'Ref6', index: 3 },
+//    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+ 
+  tableData.forEach((el, index) => {
+    formattedData.push({
+      'srNo': parseInt(index + 1),
+      'FileNo': el.FileNo,
+      'id': el.id,
+      'TagName': el.TagName,
+      'Status': el.Status,
+      'PageCount': el.PageCount,
+      // 'Ref6': el.Ref6
+    
+    });
+ 
+  });
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+
+BindHeader(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'FileNo', header: 'FILE NO.', index: 3 },
+    { field: 'TagName', header: 'DOCUMENT TYPE', index: 2 },
+
+    { field: 'Status', header: 'STATUS', index: 3 },
+    { field: 'PageCount', header: 'PAGE COUNT', index: 3 },
+    // { field: 'Ref5', header: 'Ref5', index: 3 },
+    // { field: 'Ref6', header: 'Ref6', index: 3 },
+//    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+ 
+ 
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+
+searchTable($event) {
+  // console.log($event.target.value);
+
+  let val = $event.target.value;
+  if(val == '') {
+    this.formattedData = this.immutableFormattedData;
+  } else {
+    let filteredArr = [];
+    const strArr = val.split(',');
+    this.formattedData = this.immutableFormattedData.filter(function (d) {
+      for (var key in d) {
+        strArr.forEach(el => {
+          if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+            if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+              filteredArr.push(d);
+            }
+          }
+        });
+      }
+    });
+    this.formattedData = filteredArr;
+  }
+}
+
   getTemplate() {  
 
     const apiUrl = this._global.baseAPIUrl + 'TemplateMapping/GetTemplateMappingListByUserID?UserID=' + localStorage.getItem('UserID') + '&user_Token='+localStorage.getItem('User_Token')   

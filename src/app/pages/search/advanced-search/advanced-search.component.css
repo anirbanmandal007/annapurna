@@ -289,3 +289,7 @@ button.btn.btn-cl {
     
   }
 
+::ng-deep .error-messages .error-message {
+    position: relative;
+    top: 0;
+}

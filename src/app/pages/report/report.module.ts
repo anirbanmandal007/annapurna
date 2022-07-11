@@ -14,16 +14,17 @@ import { reportRoutes } from "./report.routing";
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SpaceComponent } from "./Space/Space.component";
 import { StatusComponent } from "./status/status.component";
-
+import { TableModule } from 'primeng/table';
 import { LogsComponent } from "./logs/logs.component";
 import { MetadataComponent } from "./metadata/metadata.component";
-
 import { TagReportComponent } from "./TagReport/TagReport.component";
+
+import { EmailLogComponent } from "./EmailLog/EmailLog.component";
 
 
 
 @NgModule({
-  declarations: [StatusComponent,LogsComponent,MetadataComponent,TagReportComponent,SpaceComponent],
+  declarations: [StatusComponent,LogsComponent,MetadataComponent,TagReportComponent,SpaceComponent,EmailLogComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(reportRoutes),
@@ -36,7 +37,8 @@ import { TagReportComponent } from "./TagReport/TagReport.component";
     BsDatepickerModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    NgxPrintModule
+    NgxPrintModule,
+    TableModule,
   ]
 })
 export class ReportModule {}

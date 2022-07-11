@@ -40,14 +40,24 @@
         <div class="card-header">
             <div class="position-relative row form-group">      
       
+              <div class="col-sm-2">     
+                <!-- <label class="form-control-label" for="TemplateID">Customer :</label>   -->
+                <select name="DeptID"  class="form-control" formControlName="DeptID" (change)="GetBranchByDepartment($event.target.value)"  >
+                  <option value=0>Select Cabinet</option>   
+                  <option *ngFor="let _Department of _DepartmentList" [value]="_Department.id"  >  
+                  {{_Department.DepartmentName}}  
+                  </option>
+                </select>
+              </div> 
               <div class="col-sm-2">               
                 <select name="BranchID" id="BranchID" class="form-control" formControlName="BranchID" (change)="GetSubfolderByBranchID($event.target.value)"  >
                   <option value='0'>Select Folder</option>   
-                  <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.BranchID"  >  
+                  <option *ngFor="let _Bracnch of BranchList" [value]="_Bracnch.id"  >  
                   {{_Bracnch.BranchName}}  
                   </option>
                 </select>
               </div>  
+
               <div class="col-sm-2">               
                 <select name="SubfolderID" id="SubfolderID" class="form-control" formControlName="SubfolderID" >
                   <option value=0>Select Sub Folder</option>   
@@ -117,9 +127,9 @@
               </div> -->
 
 
-              <div class="col-sm-5">
+              <div class="col-sm-4">
                 <p-fileUpload #fileUpload (onSelect)="getFileDetails($event)" customUpload="true" (uploadHandler)="uploadFiles(fileUpload)"
-                  multiple="multiple" invalidFileSizeMessageSummary accept=".pdf" invalidFileTypeMessageSummary>
+                  multiple="multiple" invalidFileSizeMessageSummary invalidFileTypeMessageSummary>
                   <ng-template pTemplate="content">
                       <ul *ngIf="myFiles.length">
                           <!-- <li *ngFor="let file of myFiles">{{file.name}} - {{file.size}} bytes</li> -->
@@ -127,46 +137,84 @@
                   </ng-template>
                 </p-fileUpload>
               </div>
-              <!-- <div class="col-sm-3">               
-                <div class="custom-file">
-                  <input type="file" id="customFileUploadMultiple" multiple="multiple" class="custom-file-input"  (change)="getFileDetails($event)">                
-                  <label
-                    class=" custom-file-label"
-                    for="customFileUploadMultiple"
-                  >
-                    Choose files
-                  </label>
+
+              <!-- <div class="col-sm-2">               
+                <select name="DSConfigName" id="BranchID" class="form-control" formControlName="DSConfigName">
+                  <option value='0'>Select DG Template</option>   
+                  <option *ngFor="let _DSConfig of _DSConfigList" [value]="_DSConfig.id"  >  
+                  {{_DSConfig.DSConfigName}}  
+                  </option>
+                </select>
+              </div>   -->
+
+              <div class="col-sm-5">
+                <div class="form-group" style="font-size: 14px;Vertical-align: middle">
+                  Upload By Template Name
+                  <label class=" custom-toggle custom-toggle-success ml-1" style="vertical-align: bottom;">
+                    <input checked="checked" type="checkbox" formControlName="UplaodBy"/>
+                    <span
+                      class=" custom-toggle-slider rounded-circle"
+                      data-label-off="NO"
+                      data-label-on="YES"              >
+                    </span>
+                  </label>       
                 </div>
               </div>
-              <div class="col-sm-1">               
-                <button type="button" class="btn btn-success" (click)="uploadFiles()" [disabled]="myFiles.length>0?'':'disabled'">
-                  <i class=" fas fa-file-upload fa-2x"></i>
-                </button>
-              </div> -->
-                <!-- <div class="col-md-2">
-                    <input type="file" id="file" multiple  #file placeholder="Choose file"  (change)="getFileDetails($event)">                
-                  </div>
-    
-                  <div class="col-md-2">                
-                    <button type="button" class="btn btn-success" (click)="uploadFiles()">Upload File</button>
-                  </div>
-    
-                  <div class="col-md-8">
-                    
-                    <span class="upload">
-                      {{progress}}%
-                    </span>
-                    <span class="upload" *ngIf="message">
-                      {{message}}
-                    </span>
-                  </div> -->
-    
+
+
+ 
             </div>   
 
         </div>
         
+
+        <div class="dataTables_wrapper checklist-table w-100">
+             
+          <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first" (onPage)="paginate($event)" [loading]="loading" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+            <ng-template pTemplate="caption">
+                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)" class="global-search">
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                   
+                    <th *ngFor="let col of headerList; let i = index;"  [ngStyle]="i==0 && {'width': '5%'}">
+                        {{col.header}}
+                        <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon>
+                    </th>
+                    <!-- <th style="width: 10%;">
+                      ACTION
+                    </th> -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                <tr>
+                   
+                    <td *ngFor="let col of headerList">
+                      {{car[col.field]}}
+                    </td>
+<!-- <td>
+  <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-icon-only" (click)="editBranch(BranchFormPopup,car)">
+    <span class="btn-inner--icon"><i class="fa fa-pen"></i></span>
+  </button>
+  <button type="button" style="padding:0 0 5px 1px" class="btn btn-icon btn-icon-only" (click)="deleteBrnach(car)">
+    <span class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
+  </button>
+
+</td> -->
+                   
+
+  
+
+                
+                </tr>
+            </ng-template>
+        </p-table>
+                         
+
+        </div>
           
-        <div class="dataTables_wrapper py-4" style="display: none;">
+        <!-- <div class="dataTables_wrapper py-4" style="display: none;">
           <div class="row">
             <div class="col-sm-12 col-md-4">
               <div class="dataTables_length" id="datatable_length">
@@ -229,7 +277,9 @@
               <ng-template let-row="row" ngx-datatable-cell-template>{{row.type}}</ng-template>
             </ngx-datatable-column> 
           </ngx-datatable>
-        </div>
+        </div> -->
+
+
       </div>
     </form>
     </div>

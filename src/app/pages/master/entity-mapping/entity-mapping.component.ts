@@ -37,15 +37,17 @@ export class EntityMappingComponent implements OnInit {
   Reset = false;
   sMsg: string = "";
   _userid: any = 0;
-
+  _DepartmentList:any;
   masterSelected: boolean;
   checklist: any;
   checkedList: any;
   __checkedList: string = "";
-
   userEditID: number;
   master_checked: boolean = false;
   master_indeterminate: boolean = false;
+  BranchList:any;
+  first = 0;
+  rows = 10;
   // checkbox_list  = [
   //   { id: 100, BranchName: 'order 1' },
   //   { id: 200, BranchName: 'order 2' },
@@ -69,6 +71,7 @@ export class EntityMappingComponent implements OnInit {
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
       id: [0],
+      
       UserIDS: ['', Validators.required],
       UserID: [0, Validators.required],
     });
@@ -80,7 +83,9 @@ export class EntityMappingComponent implements OnInit {
       id: [0],
       UserID: ["", Validators.required],
       checkedList: [""],
-          
+      BranchID:[0, Validators.required],
+      DeptID:[0, Validators.required],
+
       checklist: this.formBuilder.array([]),
       selectAll: [false],
     });
@@ -88,6 +93,7 @@ export class EntityMappingComponent implements OnInit {
     // this.geBranchListchecked();
     this.geUserList();
     this.geEntityList(0);
+    this.getDepartmentList();
   
     //this.getBranch(0);
   }
@@ -100,6 +106,28 @@ export class EntityMappingComponent implements OnInit {
     //this.geBranchList();
   }
 
+  getDepartmentList() {
+    const apiUrl=this._global.baseAPIUrl+'DepartmentMapping/GetDepartmentByUser?ID='+ localStorage.getItem('UserID')+'&user_Token='+localStorage.getItem('User_Token') 
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+      this._DepartmentList = data;
+     // console.log("DepList",data);
+    //  this._FilteredList = data
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
+  }
+
+  GetBranchByDepartment(DepartmentID:any)
+  {
+//const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+    const apiUrl =
+    this._global.baseAPIUrl +"BranchMapping/GetBranchByDeptUserWise?ID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token')+"&DeptID="+this.AddEntityMappingForm.get("DeptID").value;
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+    this.BranchList = data;
+//  this._FilteredList = data;
+//this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+});
+}
+
   geEntityList(userid: any) {
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     const apiUrl =
@@ -111,8 +139,9 @@ export class EntityMappingComponent implements OnInit {
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this._EntityList = data;
       this._FilteredList = data;
-
-      data
+      this.prepareTableData( this._EntityList,  this._FilteredList);
+//console.log(this._EntityList);
+    //  data
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
@@ -133,12 +162,7 @@ export class EntityMappingComponent implements OnInit {
   }
   
   getEntity(userid: number) {
-    const apiUrl =
-      this._global.baseAPIUrl +
-      "SubFolderMapping/GetDetails?ID=" +
-      userid +
-      "&user_Token=" +
-      this.EntityMappingForm.get("User_Token").value;;
+    const apiUrl =this._global.baseAPIUrl +"SubFolderMapping/GetDetailsByBranch?ID="+userid +"&BranchID="+this.AddEntityMappingForm.get("BranchID").value +"&user_Token="+this.EntityMappingForm.get("User_Token").value;
     //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
       this.checkbox_list = [];
@@ -173,44 +197,7 @@ export class EntityMappingComponent implements OnInit {
       role.patchValue({ischecked: _bool})
     });
   }
-  deleteEntity(EntityID: number) {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        type: "warning",
-        showCancelButton: true,
-        buttonsStyling: false,
-        confirmButtonClass: "btn btn-danger",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonClass: "btn btn-secondary",
 
-
-      })
-      .then((result) => {
-        if (result.value) {
-          this.EntityMappingForm.patchValue({
-            id: EntityID,
-          });
-          const apiUrl = this._global.baseAPIUrl + "SubFolderMapping/Delete";
-          this._onlineExamService
-            .postData(this.EntityMappingForm.value, apiUrl)
-            .subscribe((data) => {
-              swal.fire({
-                title: "Deleted!",
-                text: "Sub Folder Mapping has been deleted.",
-                type: "success",
-                buttonsStyling: false,
-                confirmButtonClass: "btn btn-primary",
-              });
-              this.geEntityList(this.EntityMappingForm.get("UserIDS").value);
-              
-            });
-        }
-      });
-
-
-  }
   filterTable($event) {
     let val = $event.target.value;
     this._FilteredList = this._EntityList.filter(function (d) {
@@ -327,12 +314,7 @@ export class EntityMappingComponent implements OnInit {
 
 
   }
-  editEntityMapping(template: TemplateRef<any>, userid: number) {
-    this.addEntityMapping(template)
-    this.checklistArray.clear()
-    this.AddEntityMappingForm.patchValue({UserID: userid})
-    this.geEntityList(userid)
-  }
+
 
   checkUncheckAll() {
     for (var i = 0; i < this.checklist.length; i++) {
@@ -363,8 +345,130 @@ export class EntityMappingComponent implements OnInit {
   onActivate(event) {
     this.activeRow = event.row;
   }
-
+  formattedData: any = [];
+  headerList: any;
+  immutableFormattedData: any;
+  loading: boolean = true;
+  prepareTableData(tableData, headerList) {
+    let formattedData = [];
+   // alert(this.type);
   
+  // if (this.type=="Checker" )
+  //{
+    let tableHeader: any = [
+      { field: 'srNo', header: "SR NO", index: 1 },
+      { field: 'UserName', header: 'USER NAME', index: 3 },
+      { field: 'DepartmentName', header: 'CABINET', index: 2 },
+      { field: 'BranchName', header: 'FOLDER', index: 2 },
+      { field: 'SubfolderName', header: 'SUB FOLDER', index:3},
+    
+  
+      // { field: 'Ref3', header: 'Ref3', index: 3 },
+      // { field: 'Ref4', header: 'Ref4', index: 3 },
+      // { field: 'Ref5', header: 'Ref5', index: 3 },
+      // { field: 'Ref6', header: 'Ref6', index: 3 },
+  //    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+      //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+     // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+  
+    ];
+   
+    tableData.forEach((el, index) => {
+      formattedData.push({
+        'srNo': parseInt(index + 1),
+        'UserName': el.UserName,
+        'SubfolderName': el.SubfolderName,
+        'BranchName': el.BranchName,
+          'id': el.id,
+          'DepartmentName': el.DepartmentName,
+        // 'Ref3': el.Ref3,
+        // 'Ref4': el.Ref4,
+        // 'Ref5': el.Ref5,
+        // 'Ref6': el.Ref6
+      
+      });
+   
+    });
+    this.headerList = tableHeader;
+  //}
+  
+    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+    this.formattedData = formattedData;
+    this.loading = false;
+  
+  }
+  
+  searchTable($event) {
+    // console.log($event.target.value);
+  
+    let val = $event.target.value;
+    if(val == '') {
+      this.formattedData = this.immutableFormattedData;
+    } else {
+      let filteredArr = [];
+      const strArr = val.split(',');
+      this.formattedData = this.immutableFormattedData.filter(function (d) {
+        for (var key in d) {
+          strArr.forEach(el => {
+            if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+              if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+                filteredArr.push(d);
+              }
+            }
+          });
+        }
+      });
+      this.formattedData = filteredArr;
+    }
+  }
+  
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
+  }
+  editEntityMapping(template: TemplateRef<any>, userid: number) {
+    this.addEntityMapping(template)
+    this.checklistArray.clear()
+    this.AddEntityMappingForm.patchValue({UserID: userid})
+    this.geEntityList(userid)
+  }
+  deleteEntity(EntityID: number) {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        buttonsStyling: false,
+        confirmButtonClass: "btn btn-danger",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonClass: "btn btn-secondary",
 
+
+      })
+      .then((result) => {
+        if (result.value) {
+          this.EntityMappingForm.patchValue({
+            id: EntityID,
+          });
+          const apiUrl = this._global.baseAPIUrl + "SubFolderMapping/Delete";
+          this._onlineExamService
+            .postData(this.EntityMappingForm.value, apiUrl)
+            .subscribe((data) => {
+              swal.fire({
+                title: "Deleted!",
+                text: "Sub Folder Mapping has been deleted.",
+                type: "success",
+                buttonsStyling: false,
+                confirmButtonClass: "btn btn-primary",
+              });
+              this.geEntityList(this.EntityMappingForm.get("UserIDS").value);
+              
+            });
+        }
+      });
+
+
+  }
 
 }

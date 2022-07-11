@@ -16,6 +16,7 @@ import { DataUploadComponent } from './dataupload/dataupload.component';
 //import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import { SftpUploadComponent } from "./sftpupload/sftpupload.component";
+import { TableModule } from 'primeng/table';
 
 //sftpuploadForm
 
@@ -36,7 +37,8 @@ import { SftpUploadComponent } from "./sftpupload/sftpupload.component";
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     NgxPrintModule,
-    FileUploadModule
+    FileUploadModule,
+    TableModule
   ]
 })
 export class UploadModule {}

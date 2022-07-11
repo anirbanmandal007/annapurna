@@ -264,22 +264,34 @@ export class SidebarComponent implements OnInit {
     this.routes = [];
     this.AddRoleForm.value.Roles.forEach(role => {
       if(role.isChecked || role.subItems.filter(el=> el.isChecked).length > 0) {
-        let route = this.getRoute(role.page_name) 
+        let route = this.getRoute(role.page_name);
+        if(route && Object.keys(route).length !== 0) {
+          route.ParentID = role.ParentID;
+          route.ChildID = role.ChildID;
+        }
         if(route) {
           role.subItems.forEach(subRoute => {
             if(subRoute.isChecked) {
-              let matchedRoute = this.getRoute(subRoute.page_name)
-               if(matchedRoute &&  route.children) 
-                  route.children.push(matchedRoute);
-               
-            }
+              let matchedRoute = this.getRoute(subRoute.page_name);
+              if(matchedRoute && Object.keys(matchedRoute).length !== 0) {
+                matchedRoute.ParentID = subRoute.ParentID;
+                matchedRoute.ChildID = subRoute.ChildID;
+              }
+              if(matchedRoute &&  route.children) 
+                route.children.push(matchedRoute);
+              }
           });
         }
         this.routes.push(route)
       }
     });
    // console.log('Routes',this.routes);
+    this.routes.sort((a: any, b: any) => a.ParentID - b.ParentID);
+    this.routes.map(route => {
+      route.children.sort((a: any, b: any) => a.ChildID - b.ChildID);
+    });
     this.menuItems = this.routes.filter(menuItem => menuItem);
+    this._commonService.setMenuAccess(this.menuItems);
     this.router.events.subscribe(event => {
       this.isCollapsed = true;
     });
@@ -298,16 +310,16 @@ export class SidebarComponent implements OnInit {
           icontype: "ni-shop text-primary",
           isCollapsed: true,
           children: [
-            { path: "dashboard", title: "Dashboard", type: "link" },
+            { path: "dashboard", title: "Dashboard", type: "link", ChildID: 0 },
 
           ]
         }
         break;
       }
-      // case "Userdashboard":{
-      //   route = { path: "Userdashboard", title: "User Dashboard", type: "link" }
-      //   break;
-      // }
+      case "Userdashboard":{
+        route = { path: "Userdashboard", title: "User Dashboard", type: "link"}
+        break;
+      }
       case "User Management": {
         route = {
           path: "/usermanagement",
@@ -324,7 +336,7 @@ export class SidebarComponent implements OnInit {
         break;
       }
       case "Add Role":{
-        route = { path: "roles", title: "Roles", type: "link" }
+        route = { path: "roles", title: "Roles", type: "link"}
         break;
       }
       case "Change Password":{
@@ -344,17 +356,17 @@ export class SidebarComponent implements OnInit {
       }
       case "CSV Upload": {
       //  route.children.push({ path: "data-upload", title: "Data Upload", type: "link"})
-      route = { path: "data-upload", title: "CSV Upload", type: "link" }
+      route = { path: "data-upload", title: "CSV Upload", type: "link"}
         break;
       }
       case "File Upload": {
        // route.children.push({ path: "file-upload", title: "File Upload", type: "link" })
-       route = { path: "file-upload", title: "File Upload", type: "link" }
+       route = { path: "file-upload", title: "File Upload", type: "link"}
         break;
       }
     case "Sftp Upload": {
        // route.children.push({ path: "file-upload", title: "File Upload", type: "link" })
-       route = { path: "sftpupload", title: "SFTP Upload", type: "link" }
+       route = { path: "sftpupload", title: "SFTP Upload", type: "link"}
         break;
       }
 
@@ -366,7 +378,7 @@ export class SidebarComponent implements OnInit {
           icontype: "fa fa-certificate text-danger",
           isCollapsed: true,
           children: [
-            { path: "template", title: "Template", type: "link" },
+            { path: "template", title: "Template", type: "link", ChildID: 0 },
           ]
         }
         break;
@@ -415,6 +427,12 @@ export class SidebarComponent implements OnInit {
         route = { path: "subfolder-mapping", title: "Sub Folder Mapping", type: "link" }
         break;
       }  
+      case "DSConfig":{
+        route = { path: "DSConfig", title: "DSConfig", type: "link" }
+        break;
+      }  
+
+      
       case "Process":{
         route = {
           path: "/process",
@@ -424,9 +442,19 @@ export class SidebarComponent implements OnInit {
           isCollapsed: true,
           children: [
       
-            { path: "indexing", title: "Indexing", type: "link" }
+             {path: "Maker", title: "Maker", type: "link", ChildID: 0 }
           ]
         }
+        break;
+      }
+
+      // case "Maker":{
+      //   route = { path: "Maker", title: "Maker", type: "link" }
+      //   break;
+      // }
+
+      case "Checker":{
+        route = { path: "Checker", title: "Checker", type: "link" }
         break;
       }
 
@@ -505,7 +533,17 @@ export class SidebarComponent implements OnInit {
         route = { path: "space", title: "Space Utilized", type: "link" }
         break;
       }
+      case "DocumentStatus":{
+        route = { path: "DocumentStatus", title: "Document Status", type: "link" }
+        break;
+      }
+      case "EmailLog":{
+        route = { path: "EmailLog", title: "Email Log", type: "link" }
+        break;
+      }
 
+
+      
       
       // case "Database Log":{
       //   route = { path: "logs", title: "Logs", type: "link" }
@@ -541,6 +579,8 @@ export class SidebarComponent implements OnInit {
               subItems: this.formBuilder.array([]),
               id: [item.id],
               parent_id: [item.parent_id],
+              ParentID: [item.ParentID], 
+              ChildID: [item.ChildID]
             });
             this.roles.push(fg);
           }
@@ -558,6 +598,8 @@ export class SidebarComponent implements OnInit {
                 subItems: [[]],
                 id: [item.id],
                 parent_id: [item.parent_id],
+                ParentID: [item.ParentID], 
+                ChildID: [item.ChildID]
               });
               let subItems = found.get("subItems") as FormArray;
               subItems.push(fg);

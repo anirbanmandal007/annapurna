@@ -343,3 +343,8 @@ button.btn.btn-cl {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+::ng-deep .error-messages .error-message {
+  position: relative;
+  top: 0;
+}

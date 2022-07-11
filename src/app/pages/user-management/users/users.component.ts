@@ -36,6 +36,8 @@ export class UsersComponent implements OnInit {
   _SingleUser: any = [];
   _UserID: any;
   User:any;
+  first = 0;
+  rows = 10;
 
   constructor(
     private modalService: BsModalService,
@@ -93,7 +95,7 @@ this.User ="Create User";
     this.entries = $event.target.value;
   }
   filterTable($event) {
-    console.log($event.target.value);
+  //  console.log($event.target.value);
 
     let val = $event.target.value;
     this._FilteredList = this.UserList.filter(function (d) {
@@ -130,9 +132,86 @@ this.User ="Create User";
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
       this.UserList = data;
       this._FilteredList = data;
+      this.prepareTableData( this.UserList,  this._FilteredList);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
+
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
+  }
+
+  formattedData: any = [];
+headerList: any;
+immutableFormattedData: any;
+loading: boolean = true;
+prepareTableData(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'name', header: 'NAME', index: 3 },
+    { field: 'userid', header: 'USER ID', index: 2 },
+
+    { field: 'email', header: 'EMAIL', index: 3 },
+    { field: 'mobile', header: 'MOBILE', index: 3 },
+    { field: 'roleName', header: 'ROLE', index: 3 },
+    // { field: 'Ref6', header: 'Ref6', index: 3 },
+//    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+ 
+  tableData.forEach((el, index) => {
+    formattedData.push({
+      'srNo': parseInt(index + 1),
+      'name': el.name,
+      'id': el.id,
+      'userid': el.userid,
+      'email': el.email,
+      'mobile': el.mobile,
+      'roleName': el.roleName
+    
+    });
+ 
+  });
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+
+searchTable($event) {
+  // console.log($event.target.value);
+
+  let val = $event.target.value;
+  if(val == '') {
+    this.formattedData = this.immutableFormattedData;
+  } else {
+    let filteredArr = [];
+    const strArr = val.split(',');
+    this.formattedData = this.immutableFormattedData.filter(function (d) {
+      for (var key in d) {
+        strArr.forEach(el => {
+          if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+            if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+              filteredArr.push(d);
+            }
+          }
+        });
+      }
+    });
+    this.formattedData = filteredArr;
+  }
+}
 
   OnReset() {
     this.Reset = true;

@@ -1,6 +1,6 @@
 import { Globalconstants } from "../../../Helper/globalconstants";
 import { OnlineExamServiceService } from "../../../Services/online-exam-service.service";
-import { Component, OnInit, TemplateRef,EventEmitter,Output } from "@angular/core";
+import { Component, OnInit, TemplateRef,EventEmitter,Output, ViewChild } from "@angular/core";
 //import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -13,6 +13,9 @@ import swal from "sweetalert2";
 import { saveAs } from 'file-saver';
 import { CommonService } from "src/app/Services/common.service";
 import { AlternativeComponent } from "../../dashboards/alternative/alternative.component";
+import { of, throwError } from "rxjs";
+import { TagInputComponent as SourceTagInput } from 'ngx-chips';
+import { AngularEditorConfig } from "@kolkov/angular-editor";
 
 declare var $: any;
 
@@ -80,8 +83,56 @@ export class AdvancedSearchComponent implements OnInit {
   dropdownList = [];
   selectedItems = [];
   dropdownSettings:IDropdownSettings;
-  
-
+  emailReciepients = [];
+  emailReciepientsShare = [];
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+      spellcheck: true,
+      height: 'auto',
+      minHeight: '360px',
+      maxHeight: 'auto',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Enter text here...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    // uploadUrl: 'v1/image',
+    // upload: (file: File) => {
+    //   return;
+    // },
+    // uploadWithCredentials: false,
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      ['bold', 'italic'],
+      ['fontSize']
+    ]
+  }
   range = new FormGroup({
     start: new FormControl(),
     end: new FormControl()
@@ -110,34 +161,34 @@ export class AdvancedSearchComponent implements OnInit {
     ngOnInit() {
       document.body.classList.add('CS');
       this.ContentSearchForm = this.formBuilder.group({
-      FileNo: ['', Validators.required],
-      TemplateID: [0, Validators.required],                
-      _ColNameList: this._ColNameList,
-      User_Token: localStorage.getItem('User_Token') ,
-      CreatedBy: localStorage.getItem('UserID') ,
-      Viewer: [''],
-      currentPage: [0],      
-      PageCount: [0],
-      //tickets: new FormArray([]),
-      SerchBy: [''],
-      DocID: [''],
-      SearchByID: [],
-      userID: localStorage.getItem('UserID') ,
-      ACC: [''],
-      MFileNo: [''],
-      DocuemntType: [''],
-      AccNo: [''],     
-      ToEmailID:[''],
-      ValidDate:[''],
-      IsAttachment:[''],
-      BranchID:['0'],
-      DeptID:['0'],
-      SubfolderID:[0], 
-      RootID:[0],
-      TempIDList:[''],
-      TList:[],
-      filters: this.formBuilder.array([]),
-  
+        FileNo: ['', Validators.required],
+        TemplateID: [0, Validators.required],                
+        _ColNameList: this._ColNameList,
+        User_Token: localStorage.getItem('User_Token') ,
+        CreatedBy: localStorage.getItem('UserID') ,
+        Viewer: [''],
+        currentPage: [0],      
+        PageCount: [0],
+        //tickets: new FormArray([]),
+        SerchBy: [''],
+        DocID: [''],
+        SearchByID: [],
+        userID: localStorage.getItem('UserID') ,
+        ACC: [''],
+        MFileNo: [''],
+        DocuemntType: [''],
+        AccNo: [''],     
+        ToEmailID:[''],
+        ValidDate:[''],
+        IsAttachment:[''],
+        BranchID:['0'],
+        DeptID:['0'],
+        SubfolderID:[0], 
+        RootID:[0],
+        TempIDList:[''],
+        TList:[],
+        filters: this.formBuilder.array([]),
+        htmlContent: [''],
       });
       this.getTemplate();
       this._PageNo = 1;
@@ -169,22 +220,10 @@ export class AdvancedSearchComponent implements OnInit {
 //this.geBranchList();
 //this.getDepartmnet();
 
-this.getRootList();
+//this.getRootList();
     }
 
-    getRootList() {
-    
-      const apiUrl=this._global.baseAPIUrl+"RootMaster/GetRootByUserID?UserID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token'); 
-      this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
-        this._RootList = data;
-     //  this._FilteredList = data
-     this.ContentSearchForm.controls['DeptID'].setValue(0);
-     this.ContentSearchForm.controls['BranchID'].setValue(0);
-     this.ContentSearchForm.controls['SubfolderID'].setValue(0);  
-       //console.log(this._FilteredList );
-        //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-      });
-    }
+
 
 
     onAddFilterRow() {
@@ -1290,7 +1329,9 @@ GetFilterData(tempID:any) {
   onSendEmailByShare() {
 
     const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmailBulkFiles';
-   
+    let toEmailString = ''; 
+    this.emailReciepientsShare.forEach(el => toEmailString += el.display + ',');
+    this.ContentSearchForm.value.ToEmailID = toEmailString;
     this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
@@ -1332,7 +1373,9 @@ GetFilterData(tempID:any) {
     {
   const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
   //  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/SendBulkTagFileOnMail?ID='+localStorage.getItem('UserID')+'&DocID='+1+'&_fileName='+ this.ContentSearchForm.controls['FileNo'].value +'&user_Token='+localStorage.getItem('User_Token');
-    
+  let toEmailString = ''; 
+  this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+  this.ContentSearchForm.value.ToEmailID = toEmailString;
     this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
@@ -1477,6 +1520,41 @@ ShowErrormessage(data:any)
 
 
 }
-  
+@ViewChild('tagInput')
+tagInput: SourceTagInput;
+public validators = [ this.must_be_email.bind(this) ];
+public errorMessages = {
+    'must_be_email': 'Please be sure to use a valid email format'
+};
+public onAddedFunc = this.beforeAdd.bind(this);
+private addFirstAttemptFailed = false;
+
+private must_be_email(control: FormControl) {        
+
+    if (this.addFirstAttemptFailed && !this.validateEmail(control.value)) {
+        return { "must_be_email": true };
+    }
+    return null;
+}
+beforeAdd(tag: string) {
+
+  if (!this.validateEmail(tag)) {
+    if (!this.addFirstAttemptFailed) {
+      this.addFirstAttemptFailed = true;
+      this.tagInput.setInputValue(tag);
+    }
+
+    return throwError(this.errorMessages['must_be_email']);
+    //return of('').pipe(tap(() => setTimeout(() => this.tagInput.setInputValue(tag))));
+    
+  }
+  this.addFirstAttemptFailed = false;
+  return of(tag);
+}
+
+private validateEmail(text: string) {
+  var EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/i;
+  return (text && EMAIL_REGEXP.test(text));
+}
       
 }

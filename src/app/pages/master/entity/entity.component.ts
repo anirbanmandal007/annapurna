@@ -33,7 +33,9 @@ export class EntityComponent implements OnInit {
   _FilteredList :any; 
  _EntityID: any =0;
  BranchList:any;
-
+ _DepartmentList:any;
+ first = 0;
+ rows = 10;
   constructor(
     private modalService: BsModalService,
     public toastr: ToastrService,
@@ -47,11 +49,52 @@ export class EntityComponent implements OnInit {
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID') ,
       BranchID:[0, Validators.required],
+      DeptID:[0, Validators.required],
       id:[0]
     });
+  
+    this.getDepartmentList();
     this.getEntityList();
-    this.geBranchList();
+    //this.geBranchList();
   }
+
+
+//   getDeptList() {  
+  
+//     const apiUrl=this._global.baseAPIUrl+'DocMaster/GetDocList?user_Token='+localStorage.getItem('User_Token');
+//     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+//     this._DepartmentList = data;
+//  //  this.AddEntityForm.controls['DocID'].setValue(0);
+//    console.log("Dept",this._DepartmentList);
+//     //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+//     });
+//     }
+
+    getDepartmentList() {
+      const apiUrl=this._global.baseAPIUrl+'DepartmentMapping/GetDepartmentByUser?ID='+ localStorage.getItem('UserID')+'&user_Token='+localStorage.getItem('User_Token') 
+      this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
+        this._DepartmentList = data;
+       // console.log("DepList",data);
+      //  this._FilteredList = data
+        //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+      });
+    }
+
+
+    
+    GetBranchByDepartment(DepartmentID:any)
+    {
+  //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+      const apiUrl =
+      this._global.baseAPIUrl +"BranchMapping/GetBranchByDeptUserWise?ID="+localStorage.getItem('UserID')+"&user_Token="+localStorage.getItem('User_Token')+"&DeptID="+this.AddEntityForm.get("DeptID").value;
+      this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+      this.BranchList = data;
+
+      console.log("BranchID",data);
+//  this._FilteredList = data;
+  //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+});
+}
 
   entriesChange($event) {
     this.entries = $event.target.value;
@@ -84,7 +127,8 @@ export class EntityComponent implements OnInit {
     const apiUrl=this._global.baseAPIUrl+'SubfolderController/GetSubfolderList?user_Token='+ localStorage.getItem('User_Token') 
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._EntityList = data;
-      this._FilteredList = data
+      this._FilteredList = data;
+      this.prepareTableData( this._EntityList,  this._FilteredList);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
@@ -98,7 +142,7 @@ export class EntityComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    console.log(this.AddEntityForm);
+   // console.log(this.AddEntityForm);
     if (this.AddEntityForm.invalid) {
       alert("Please Fill the Fields");
       return;
@@ -128,7 +172,106 @@ export class EntityComponent implements OnInit {
     //this.studentForm.patchValue({File: formData});
   }
 
+    
+  addBranch(template: TemplateRef<any>) {
+    this.AddEntityForm.controls['BranchID'].setValue(0);
+    this.AddEntityForm.controls['SubfolderName'].setValue('');
+    this.modalRef = this.modalService.show(template);
+  }
+
   
+  geBranchList() {
+    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
+    const apiUrl =
+      this._global.baseAPIUrl +
+      "BranchMapping/GetBranchDetailsUserWise?ID=" +
+      localStorage.getItem('UserID') +
+      "&user_Token=" +
+      this.AddEntityForm.get("User_Token").value;
+    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
+      this.BranchList = data;
+
+      this.AddEntityForm.controls['BranchID'].setValue(0);
+
+     // this._FilteredList = data;
+      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
+    });
+  }
+
+
+  formattedData: any = [];
+  headerList: any;
+  immutableFormattedData: any;
+  loading: boolean = true;
+  prepareTableData(tableData, headerList) {
+    let formattedData = [];
+   // alert(this.type);
+  
+  // if (this.type=="Checker" )
+  //{
+    let tableHeader: any = [
+      { field: 'srNo', header: "SR NO", index: 1 },
+      { field: 'DepartmentName', header: 'CABINET', index: 2 },
+      { field: 'BranchName', header: 'FOLDER', index: 2 },
+  
+      { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 },
+    
+      // { field: 'Ref3', header: 'Ref3', index: 3 },
+      // { field: 'Ref4', header: 'Ref4', index: 3 },
+      // { field: 'Ref5', header: 'Ref5', index: 3 },
+      // { field: 'Ref6', header: 'Ref6', index: 3 },
+  //    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+      //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+     // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+  
+    ];
+   
+    tableData.forEach((el, index) => {
+      formattedData.push({
+        'srNo': parseInt(index + 1),
+        'SubfolderName': el.SubfolderName,
+        'id': el.id,
+        'BranchName': el.BranchName,
+       'DepartmentName': el.DepartmentName,
+        // 'Ref5': el.Ref5,
+        // 'Ref6': el.Ref6
+      
+      });
+   
+    });
+    this.headerList = tableHeader;
+  //}
+  
+    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+    this.formattedData = formattedData;
+    this.loading = false;
+  
+  }
+  
+  searchTable($event) {
+    // console.log($event.target.value);
+  
+    let val = $event.target.value;
+    if(val == '') {
+      this.formattedData = this.immutableFormattedData;
+    } else {
+      let filteredArr = [];
+      const strArr = val.split(',');
+      this.formattedData = this.immutableFormattedData.filter(function (d) {
+        for (var key in d) {
+          strArr.forEach(el => {
+            if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+              if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+                filteredArr.push(d);
+              }
+            }
+          });
+        }
+      });
+      this.formattedData = filteredArr;
+    }
+  }
+
   deleteEntity(id: any) {
     swal
       .fire({
@@ -174,28 +317,9 @@ export class EntityComponent implements OnInit {
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     this.modalRef = this.modalService.show(template);
   }
-  addBranch(template: TemplateRef<any>) {
-    this.AddEntityForm.controls['BranchID'].setValue(0);
-    this.AddEntityForm.controls['SubfolderName'].setValue('');
-    this.modalRef = this.modalService.show(template);
-  }
 
-  
-  geBranchList() {
-    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
-    const apiUrl =
-      this._global.baseAPIUrl +
-      "BranchMapping/GetBranchDetailsUserWise?ID=" +
-      localStorage.getItem('UserID') +
-      "&user_Token=" +
-      this.AddEntityForm.get("User_Token").value;
-    this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-      this.BranchList = data;
-
-      this.AddEntityForm.controls['BranchID'].setValue(0);
-
-     // this._FilteredList = data;
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
-    });
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
   }
 }

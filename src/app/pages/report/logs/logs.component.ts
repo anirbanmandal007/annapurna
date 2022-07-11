@@ -45,6 +45,8 @@ export class LogsComponent implements OnInit {
   bsValue = new Date();
   bsRangeValue: Date[];
   maxDate = new Date();
+  first = 0;
+  rows = 10;
 
   constructor(
     private modalService: BsModalService,
@@ -59,13 +61,17 @@ export class LogsComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.LogReportForm = this.formBuilder.group({
-      DATEFROM: ['', Validators.required],
-      DATETO: ['', Validators.required],  
+      DATEFROM: [''],
+      DATETO: [''],  
       ActiivtyID:[''],  
       User_Token:  localStorage.getItem('User_Token') ,  
       CreatedBy: localStorage.getItem('UserID') ,      
     });
     this.LogReportForm.controls['ActiivtyID'].setValue(0);    
+
+
+    this.getLogList();
+    this.BindHeader(this._StatusList,this._StatusList);
   }
 
   entriesChange($event) {
@@ -241,13 +247,117 @@ export class LogsComponent implements OnInit {
     .subscribe( data => {
       this._StatusList = data;          
       this._FilteredList = data;   
-      
+      this.prepareTableData( this._StatusList,  this._FilteredList);
      //console.log("Log",data);
 
   });
 
 
   } 
+  paginate(e) {
+    this.first = e.first;
+    this.rows = e.rows;
+  }
+
+  formattedData: any = [];
+headerList: any;
+immutableFormattedData: any;
+loading: boolean = true;
+prepareTableData(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'UserName', header: 'USER NAME', index: 3 },
+    { field: 'FileNo', header: 'ACTION', index: 2 },
+    { field: 'Activity', header: 'ACTION TYPE', index: 3 },
+    { field: 'LogDate', header: 'LOG DATE', index: 3 },
+    // { field: 'Ref5', header: 'Ref5', index: 3 },
+    // { field: 'Ref6', header: 'Ref6', index: 3 },
+//    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+ 
+  tableData.forEach((el, index) => {
+    formattedData.push({
+      'srNo': parseInt(index + 1),
+      'UserName': el.UserName,
+      'id': el.id,
+      'FileNo': el.FileNo,
+      'Activity': el.Activity,
+      'LogDate': el.LogDate,
+      // 'Ref6': el.Ref6
+    
+    });
+ 
+  });
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+
+
+BindHeader(tableData, headerList) {
+  let formattedData = [];
+ // alert(this.type);
+
+// if (this.type=="Checker" )
+//{
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'UserName', header: 'USER NAME', index: 3 },
+    { field: 'FileNo', header: 'ACTION', index: 2 },
+    { field: 'Activity', header: 'ACTION TYPE', index: 3 },
+    { field: 'LogDate', header: 'LOG DATE', index: 3 },
+    // { field: 'Ref5', header: 'Ref5', index: 3 },
+    // { field: 'Ref6', header: 'Ref6', index: 3 },
+//    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+    //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+   // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+
+  ];
+ 
+ 
+  this.headerList = tableHeader;
+//}
+
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+
+}
+searchTable($event) {
+  // console.log($event.target.value);
+
+  let val = $event.target.value;
+  if(val == '') {
+    this.formattedData = this.immutableFormattedData;
+  } else {
+    let filteredArr = [];
+    const strArr = val.split(',');
+    this.formattedData = this.immutableFormattedData.filter(function (d) {
+      for (var key in d) {
+        strArr.forEach(el => {
+          if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+            if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+              filteredArr.push(d);
+            }
+          }
+        });
+      }
+    });
+    this.formattedData = filteredArr;
+  }
+}
 
  
 }

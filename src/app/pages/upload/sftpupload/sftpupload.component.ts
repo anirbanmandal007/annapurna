@@ -44,6 +44,8 @@ _TempID: any = 0;
 
 myFiles:string [] = [];
 _FileDetails:string [][] = [];
+first = 0;
+rows = 10;
 
 @Output() public onUploadFinished = new EventEmitter();
   constructor(
@@ -65,6 +67,8 @@ _FileDetails:string [][] = [];
 this.GetCountOnly();
 this.getDepartmnet();
 this.geBranchList(0);
+
+//this.BindHeader( this._FilteredList, this._FilteredList);
   }   
   getDepartmnet() {
 
@@ -143,7 +147,8 @@ this.geBranchList(0);
       this.sftpuploadForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this._FileList = data;
-      this._FilteredList = data;    
+      this._FilteredList = data;  
+      this.prepareTableData( this._FilteredList, this._FilteredList);  
      
     });
   }
@@ -164,6 +169,8 @@ this.geBranchList(0);
       this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       this._FileList = data;
       this._FilteredList = data;   
+
+      this.prepareTableData( this._FilteredList, this._FilteredList);
      
     });
   }
@@ -296,5 +303,118 @@ this.geBranchList(0);
       return true;
 
   }
+
+
+  formattedData: any = [];
+  headerList: any;
+  immutableFormattedData: any;
+  loading: boolean = true;
+  prepareTableData(tableData, headerList) {
+    let formattedData = [];
+   // alert(this.type);
+  
+  // if (this.type=="Checker" )
+  //{
+    let tableHeader: any = [
+      { field: 'srNo', header: "SR NO", index: 1 },
+      { field: 'DepartmentName', header: 'CABINET', index: 3 },
+      { field: 'TemplateName', header: 'TEMPLATE', index: 2 },
+  
+       { field: 'BranchName', header: 'FOLDER', index: 3 },
+       { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 },
+      { field: 'FileCount', header: 'FILE COUNT', index: 3 },
+      // { field: 'Ref6', header: 'Ref6', index: 3 },
+  //    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+      //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+     // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+  
+    ];
+    console.log("this.formattedData", tableData);
+    tableData.forEach((el, index) => {
+      formattedData.push({
+        'srNo': parseInt(index + 1),
+        'DepartmentName': el.DepartmentName,
+         'TemplateName': el.TemplateName,
+     
+         'BranchName': el.BranchName,
+         'SubfolderName': el.SubfolderName,
+      'FileCount': el.FileCount
+      
+      });
+   
+    });
+    this.headerList = tableHeader;
+  //}
+  
+    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+    this.formattedData = formattedData;
+    this.loading = false;
+  
+   // console.log("this.formattedData", this.formattedData);
+  }
+  
+  BindHeader(tableData, headerList) {
+    let formattedData = [];
+   // alert(this.type);
+  
+  // if (this.type=="Checker" )
+  //{
+    let tableHeader: any = [
+      { field: 'srNo', header: "SR NO", index: 1 },
+      { field: 'DepartmentName', header: 'CABINET', index: 3 },
+      { field: 'TemplateName', header: 'TEMPLATE', index: 2 },
+  
+       { field: 'BranchName', header: 'FOLDER', index: 3 },
+       { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 },
+      { field: 'FileCount', header: 'FILE COUNT', index: 3 },
+      // { field: 'Ref4', header: 'Ref4', index: 3 },
+      // { field: 'Ref5', header: 'Ref5', index: 3 },
+      // { field: 'Ref6', header: 'Ref6', index: 3 },
+  //    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
+      //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
+     // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
+  
+    ];
+   
+    
+    this.headerList = tableHeader;
+  //}
+  
+    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+    this.formattedData = formattedData;
+    this.loading = false;
+  
+  }
+  
+  
+  searchTable($event) {
+    // console.log($event.target.value);
+  
+    let val = $event.target.value;
+    if(val == '') {
+      this.formattedData = this.immutableFormattedData;
+    } else {
+      let filteredArr = [];
+      const strArr = val.split(',');
+      this.formattedData = this.immutableFormattedData.filter(function (d) {
+        for (var key in d) {
+          strArr.forEach(el => {
+            if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+              if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
+                filteredArr.push(d);
+              }
+            }
+          });
+        }
+      });
+      this.formattedData = filteredArr;
+    }
+  }
+
+  
+paginate(e) {
+this.first = e.first;
+this.rows = e.rows;
+}
   
 }

@@ -40,7 +40,7 @@
         <div class="card-header">
           <div class="position-relative row form-group">
             
-            <div class="col-sm-3">
+            <div class="col-sm-2">
               <select name="TemplateID" id="TemplateID" class="form-control" formControlName="TemplateID"
                 (change)="geTemplateNameListByTempID($event.target.value)">
                 <option value=0>Select Template</option>
@@ -62,13 +62,27 @@
               </div>
             </div>
             <div class="col-sm-1"></div>
-            <div class="col-sm-5">
-              <button type="button" class="btn btn-success" style="font-size: 20px" (click)="onSubmit()" [disabled]="hasDataError()">
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-success" style="font-size: 14px" (click)="onSubmit()" [disabled]="hasDataError()">
                 Upload CSV <i class=" fas fa-file-upload"></i>
               </button>
-              <button type="button" class="btn btn-warning" style="font-size: 20px" (click)="downloadFile()">
+              <button type="button" class="btn btn-warning" style="font-size: 14px" (click)="downloadFile()">
                 Download CSV <i class=" fas fa-file-download"></i> 
               </button>
+            </div>
+
+            <div class="col-sm-3">
+              <div class="form-group" style="font-size: 14px;">
+                Upload By Template Name
+                <label class=" custom-toggle custom-toggle-success ml-1" style="vertical-align: bottom;">
+                  <input checked="checked" type="checkbox" formControlName="UplaodBy"/>
+                  <span
+                    class=" custom-toggle-slider rounded-circle"
+                    data-label-off="NO"
+                    data-label-on="YES"              >
+                  </span>
+                </label>       
+              </div>
             </div>
           </div>  
         </div>
