@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit {
   fileExt: any;
   private _IndexList: {};
   modalRef: BsModalRef;
+  isUserTable: boolean;
 
   constructor(
      private formBuilder: FormBuilder,
@@ -948,6 +949,7 @@ else if (this.type=="Folder" )
 else if (this.type=="User")
 {
  // console.log("tableData",tableData);
+ this.isUserTable = true;
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },{ field: 'USERID', header: 'USER ID', index: 2 },
     { field: 'LastLoginDatetime', header: 'LAST LOGIN DATE', index: 3 },

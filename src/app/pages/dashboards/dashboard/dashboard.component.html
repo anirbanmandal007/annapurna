@@ -336,7 +336,7 @@
                                       </td>
                                        -->
                                       <td *ngFor="let col of headerList">
-                                        <ng-container *ngIf="col.field === 'IsSend'">
+                                        <ng-container *ngIf="isUserTable && col.field === 'Status'">
                                             <ng-container *ngIf="car[col.field] === 'Y'">
                                                 <img height="40" width="50" src="assets/img/icons/dashboard/online.png" />
                                             </ng-container>
@@ -347,7 +347,7 @@
                                         <!-- <ng-container *ngIf="col.field === 'FileNo'">
                                             <a href="javascript:void(0)" (click)="MetaData(ImageViewFormPopup, car)">{{car[col.field]}}</a>
                                         </ng-container> -->
-                                        <ng-container *ngIf="col.field !== 'IsSend'">
+                                        <ng-container *ngIf="!isUserTable || col.field !== 'Status'">
                                             {{car[col.field]}} 
                                         </ng-container>
                                       </td>
