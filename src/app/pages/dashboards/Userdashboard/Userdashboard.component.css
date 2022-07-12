@@ -302,3 +302,33 @@
   .dropdown-menu li a:hover{
     color:#005984 !important
   }
+
+  .close > span:not(.sr-only) {
+    font-size: 35px;
+    color: red;
+}
+
+.modal-body {
+    padding: 0 1.5rem;
+}
+
+.modal-header {
+    padding-bottom: 0;
+}
+
+::ng-deep .error-messages .error-message {
+    position: relative;
+    top: 0;
+}
+
+.action-buttons {
+    width: 100%;
+    display: inline-block;
+}
+
+.btn-inner--icon i:not(.fas):not(.fab) {
+    position: relative;
+    right: 1.5px;
+    bottom: 1px;
+    top: 0;
+  }

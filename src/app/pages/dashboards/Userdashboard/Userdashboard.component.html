@@ -467,6 +467,9 @@
         <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">{{type}}</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closePopup()">
+                <span aria-hidden="true">&times;</span>
+              </button>
         </div>
         <div class="modal-body">
             <div class="card-body">
@@ -506,7 +509,12 @@
                                   </td>
                                    -->
                                   <td *ngFor="let col of headerList">
-                                    {{car[col.field]}}
+                                    <ng-container *ngIf="col.field === 'FileNo' && isFileNoLink">
+                                        <a href="javascript:void(0)" (click)="MetaData(ImageViewFormPopup, car)">{{car[col.field]}}</a>
+                                    </ng-container>
+                                    <ng-container *ngIf="col.field !== 'FileNo' || !isFileNoLink">
+                                        {{car[col.field]}}
+                                    </ng-container>
                                   </td>
 
                                  
@@ -534,4 +542,201 @@
         </div>
         </div>
     </div>
+</div>
+
+
+<ng-template #ImageViewFormPopup let-c="close" let-d="dismiss" let-modal>
+    <div class="modal-content" id="fileStorageDocView">
+        <div class="modal-body p-0">
+        <div class="card w-100">              
+            <div class=" card-header"><h3 class=" mb-0" >Document View
+            <span style="float: right;cursor: pointer;" (click)="hidepopup()" class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
+            </h3>
+            </div>
+            <div class="card-body" style="padding:0">
+                <div class="action-buttons">
+                    <div style="float: right;" *ngIf="_ShareLink == 'true'" >
+                        <button type="button" tooltip="Share link" style="padding:1px 1px 1px 1px;float: left"
+                        class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="ShareLink(ShareLinkFormPopup)" >
+                        <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-share-alt actionIcon"></i></span>
+                        </button>
+                    </div>
+                    <div style="float: right;" *ngIf="_isEmail == 'true'" >
+                        <button type="button" tooltip="Send E-Mail" style="padding:1px 1px 1px 1px;float: left"
+                        class="btn btn-icon btn-secondary btn-icon-only rounded-circle"   (click)="SendBulkEmail(EmailFormPopup)">
+                        <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-envelope actionIcon"></i></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                <div class="col-lg-4 metadata-table">
+                
+                    <table class="table-hover table">                
+                    <tr *ngFor="let Ilst of _IndexList">                   
+                        <td><b>{{Ilst.DisplayName}}</b></td>
+                        <td>{{Ilst.ColValues}}</td>                    
+                        </tr>                
+                    </table>
+
+                </div>
+
+                <div class="col-lg-8" *ngIf="FilePath">
+                    <ng-container *ngIf="fileExt != '.pdf'">
+                    <ngx-doc-viewer
+                        [url]="FilePath"
+                        viewer="google"
+                        style="width:100%;height:90vh;"
+                    ></ngx-doc-viewer>
+                    </ng-container>
+                    <ng-container *ngIf="fileExt == '.pdf'">
+                    <ngx-extended-pdf-viewer  id="Viewer"
+                    [page] ="_PageNo"
+                    [useBrowserLocale]="true"
+                    [textLayer]="true"
+                    [showHandToolButton]="true"
+                    [height]="'90vh'"
+        
+                    *ngIf="FilePath" [src]="FilePath"
+                    > 
+        
+                    </ngx-extended-pdf-viewer>
+                    </ng-container>
+                </div>
+
+
+                </div>
+            </div>
+            </div>
+            <br>
+            </div>
+    </div>
+</ng-template>  
+
+<div [formGroup]="downloadForm">
+<ng-template #EmailFormPopup let-c="close" let-d="dismiss" let-modal>
+    <div class="modal-content" style="width: 1000px; position: relative; right: 40%;">
+      <div class="modal-body p-0">
+        <div class=" card">
+          <div class=" card-header"><h3 class=" mb-0">Send Email</h3></div>
+         <div class="card-body">
+            <div class="form-row">
+                
+                <div class="col-md-12 mb-3">
+                    <label class="form-control-label" for="ToEmailID">
+                      To 
+                    </label>
+                    <!-- <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/> -->
+                    <tag-input 
+                      [(ngModel)]="emailReciepients" 
+                      [ngModelOptions]="{standalone: true}"
+                      placeholder="Enter email address"
+                      [editable]='true' 
+                      [errorMessages]="errorMessages"
+                      [validators]="validators" 
+                      #tagInput
+                      [onAdding]="onAddedFunc">
+                    </tag-input>
+                  </div>
+                  <div class="col-md-9">
+                    <label class="form-control-label" for="Subject" style="float:left;padding-right: 45px; padding-top: 12px;" >
+                      Subject
+                       </label>
+                       <input class="form-control mt-2 mb-2" style="width:86%;"  formControlName="Subject" placeholder="Subject" type="text"/>
+                      
+                  </div>
+                  <div class="col-md-3" style="display: flex;justify-content:center;align-items: center;">
+                    <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Pre Defined">
+                    <label class="form-control-label" for="predefined" style="padding-top: 10px;">
+                      Pre Difined Template 
+                    </label>
+                  </div>    
+                  <angular-editor formControlName="htmlContent" [config]="editorConfig"></angular-editor>
+                                             
+
+                
+              </div>
+              <div class=" col-md-8" style="padding-top: 32px">  
+                <button class="btn btn-primary" [disabled]="!emailReciepients.length" (click)="onSendEmail()"> Send</button>
+                <button class="btn btn-primary"  (click)="hidepopup()"> Close</button>
+               
+              </div>
+              <!-- <button type="button" class="btn btn-warning" (click)="OnReset()">Clear</button> -->
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #ShareLinkFormPopup let-c="close" let-d="dismiss" let-modal>
+    <div class="modal-content" style="width: 1000px; position: relative; right: 40%;">
+      <div class="modal-body p-0">
+        <div class=" card">
+          <div class=" card-header"><h3 class=" mb-0">Share Link</h3></div>
+         <div class="card-body">
+            <div class="form-row">
+                
+                <div class="col-md-12 mb-3">
+                    <label class="form-control-label" for="ToEmailID">
+                      To 
+                    </label>
+                    <!-- <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/> -->
+                    <tag-input 
+                      [(ngModel)]="emailReciepientsShare" 
+                      [ngModelOptions]="{standalone: true}" 
+                      [editable]='true' 
+                      placeholder="Enter email address"
+                      [errorMessages]="errorMessages"
+                      [validators]="validators" 
+                      #tagInput
+                      [onAdding]="onAddedFunc">
+                    </tag-input>
+                  </div>
+                  <div class="col-md-9">
+                    <label class="form-control-label" for="Subject" style="float:left;padding-right: 45px; padding-top: 12px;" >
+                      Subject
+                       </label>
+                       <input class="form-control mt-2 mb-2" style="width:86%;"  formControlName="Subject" placeholder="Subject" type="text"/>
+                      
+                  </div>
+                  <div class="col-md-3" style="display: flex;justify-content:center;align-items: center;">
+                    <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Pre Defined">
+                    <label class="form-control-label" for="predefined" style="padding-top: 10px;">
+                      Pre Difined Template 
+                    </label>
+                  </div>
+                  <!-- <br /> -->
+                   <!-- <br />
+                  -->
+                  <angular-editor formControlName="htmlContent" [config]="editorConfig"></angular-editor>
+                                                                                  
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-control-label" for="ValidDate">
+                      Expire On
+                    </label>
+                    <input type="text" formControlName="ValidDate"  placeholder="Valid Date" class="form-control"  bsDatepicker [bsValue]="bsValue"
+                    [bsConfig]="{
+                      isAnimated: true,
+                      containerClass: 'theme-red'
+                    }"
+                    [minDate]="today"
+                  />  
+                
+                </div>                            
+
+                
+              <!-- </div> -->
+              <div class=" col-md-8" style="padding-top: 32px">  
+                <button class="btn btn-primary" [disabled]="!emailReciepientsShare.length" (click)="onSendEmailByShare()"> Send</button>
+                <button class="btn btn-primary"  (click)="hidepopup()"> Close</button>
+               
+              </div>
+              <!-- <button type="button" class="btn btn-warning" (click)="OnReset()">Clear</button> -->
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 </div>

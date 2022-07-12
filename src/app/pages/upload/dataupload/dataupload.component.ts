@@ -655,21 +655,13 @@ isValidationError: any;
             cssClass += ' error text-required';
           }
         }
-        else if(field.IsMandatory ==0 && row[fieldIndex] === '') 
-        { // Required field check
+        else if(field.IsMandatory ==0 && row[fieldIndex] === '') { // Required field check
         
           break;
          }
 
         else if(!(/^[\w\s]+$/.test(row[fieldIndex]))) { // Alpha-Numeric validation check
-
-          //alert(fieldIndex);
-        //  alert(row[fieldIndex]);
-          //Email ID	;
-          if (fieldIndex !=8)
-          {
           cssClass = ' error alpha-numeric-only';
-          }
         }
         break;
         

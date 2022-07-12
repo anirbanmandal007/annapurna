@@ -197,7 +197,7 @@ searchTable($event) {
       .then((result) => {
         if (result.value) {
           this.RoleForm.patchValue({
-            id: id.id,
+            id: id,
             User_Token: localStorage.getItem('User_Token'),
           });
 

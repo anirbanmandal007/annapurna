@@ -12,6 +12,13 @@ import { DashboardsRoutes } from "./dashboards.routing";
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TableModule } from 'primeng/table';
+import { ModalModule } from "ngx-bootstrap/modal";
+import { NgxExtendedPdfViewerModule } from "ngx-extended-pdf-viewer";
+import { NgxDocViewerModule } from "ngx-doc-viewer";
+import { AngularEditorModule } from "@kolkov/angular-editor";
+import { TagInputModule } from "ngx-chips";
+import { BsDatepickerModule } from "ngx-bootstrap";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [DashboardComponent, AlternativeComponent,UserdashboardComponent],
@@ -23,7 +30,15 @@ import { TableModule } from 'primeng/table';
     TooltipModule.forRoot(),
     RouterModule.forChild(DashboardsRoutes),
     NgxChartsModule,
-    TableModule
+    TableModule,
+    ModalModule.forRoot(),
+    NgxDocViewerModule,
+    NgxExtendedPdfViewerModule,
+    AngularEditorModule,
+    TagInputModule,
+    BsDatepickerModule.forRoot(),
+    ReactiveFormsModule,
+    FormsModule
    // BrowserAnimationsModule
   ],
   exports: [DashboardComponent, AlternativeComponent]

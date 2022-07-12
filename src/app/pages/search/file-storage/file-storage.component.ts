@@ -795,12 +795,12 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
 
         //alert(res.substring(res.lastIndexOf('.'), res.length));
         this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
-     console.log("9090res",res);
+    // console.log("9090res",res);
         this.FilePath = res;
          /// saveAs(res, row.ACC + '.pdf');
          this._TempFilePath = res;
 
-         console.log("9090res",res);
+
 
 
       }

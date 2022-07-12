@@ -16,6 +16,7 @@ am4core.useTheme(am4themes_animated);
 
 
 import { AxisRenderer } from '@amcharts/amcharts4/charts';
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
  
 
@@ -37,7 +38,11 @@ export class DashboardComponent implements OnInit {
   downloadCount: any;
   displayStyle: string;
   type: any;
-
+  private _TempFilePath: any;
+  FilePath: any;
+  fileExt: any;
+  private _IndexList: {};
+  modalRef: BsModalRef;
 
   constructor(
      private formBuilder: FormBuilder,
@@ -45,6 +50,7 @@ export class DashboardComponent implements OnInit {
      private _onlineExamService: OnlineExamServiceService,
      private _global: Globalconstants,
     private zone: NgZone,
+    private modalService: BsModalService,
     @Inject(PLATFORM_ID) private platformId,
   ) {
      am4core.useTheme(am4themes_animated);}
@@ -1276,7 +1282,7 @@ else if (this.type=="Checker" )
 
 
 DownloadFiles(type:any) {
-
+  this.formattedData = [];
   const apiUrl=this._global.baseAPIUrl+'Status/DownloaddashboardData?userID=0&Type='+type+'&user_Token='+localStorage.getItem('User_Token')
   this._onlineExamService.getAllData(apiUrl).subscribe((data:any) => {     
     this._FilteredList =data;
@@ -1524,6 +1530,47 @@ this.Folder =  this.FolderCnt;
       }
     );
   }
+  }
+
+  MetaData(template: TemplateRef<any>, row: any)
+  {
+
+
+  this.modalRef = this.modalService.show(template);
+
+
+  $(".modal-dialog").css('max-width', '1300px');
+  event.stopPropagation();
+
+  let  __FileNo =row.FileNo;
+  let  __TempID = row.TemplateID || 0;
+
+  const apiUrl=this._global.baseAPIUrl+'DataEntry/GetNextFile?id='+__TempID+'&FileNo='+__FileNo+'&user_Token='+ localStorage.getItem('User_Token');
+
+  //const apiUrl=this._global.baseAPIUrl+'DataEntry/GetNextFile?id'+  + '' FileNo='+ __FileNo + '&user_Token=123123'
+  this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
+     this._IndexList = data;
+     this.GetFullFile(row.FileNo);        
+    // console.log("Index",data);
+  });
+  // this.modalRef = this.modalService.show(template);
+  }
+
+  GetFullFile(FileNo:any) {
+
+    const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/GetFullFile?ID='+localStorage.getItem('UserID')+'&&_fileName='+ FileNo +'&user_Token='+localStorage.getItem('User_Token');
+    this._onlineExamService.getDataById(apiUrl).subscribe(res => {
+      if (res) {
+
+        //alert(res.substring(res.lastIndexOf('.'), res.length));
+        this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
+    // console.log("9090res",res);
+        this.FilePath = res;
+         /// saveAs(res, row.ACC + '.pdf');
+         this._TempFilePath = res;
+
+      }
+    });
   }
 
 }

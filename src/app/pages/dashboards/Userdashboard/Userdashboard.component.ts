@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from "@angular/core";
+import { Component, OnInit, NgZone, TemplateRef, ViewChild } from "@angular/core";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import dataviz from "@amcharts/amcharts4/themes/dataviz";
@@ -6,8 +6,8 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 am4core.useTheme(am4themes_animated);
 import { Globalconstants } from "../../../Helper/globalconstants";
 import { OnlineExamServiceService } from "../../../Services/online-exam-service.service";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-
+import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
+import swal from "sweetalert2";
 //import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 //import { Label } from 'ng2-charts';
 
@@ -19,6 +19,11 @@ am4core.useTheme(am4themes_animated);
 
 import { AxisRenderer } from '@amcharts/amcharts4/charts';
 import { any } from "@amcharts/amcharts4/.internal/core/utils/Array";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { TagInputComponent as SourceTagInput } from 'ngx-chips';
+import { of, throwError } from "rxjs";
+import { AngularEditorConfig } from "@kolkov/angular-editor";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-dashboard",
@@ -100,15 +105,83 @@ export class UserdashboardComponent implements OnInit {
   FolderCnt:any;
   CabinetCnt:any;
   SubFolderCnt:any;
+  fileExt: any;
+  FilePath: any;
+  private _TempFilePath: any;
+  private _IndexList: {};
+  modalRef: BsModalRef;
+  isFileNoLink: boolean;
+  emailReciepients = [];
+  emailReciepientsShare = [];
+  selectedRows = [];
+  selectAllRows: boolean = false;
+  _isEmail: string;
+  _ShareLink: string;
+  bsValue = new Date();
+  bsRangeValue: Date[];
+  maxDate = new Date();
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+      spellcheck: true,
+      height: 'auto',
+      minHeight: '360px',
+      maxHeight: 'auto',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Enter text here...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    // uploadUrl: 'v1/image',
+    // upload: (file: File) => {
+    //   return;
+    // },
+    // uploadWithCredentials: false,
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      ['bold', 'italic'],
+      ['fontSize']
+    ]
+  }
+  public onAddedFunc = this.beforeAdd.bind(this);
+  downloadForm: FormGroup;
   constructor(
      private formBuilder: FormBuilder,
      private _onlineExamService: OnlineExamServiceService,
      private _global: Globalconstants,
+     private modalService: BsModalService,
+     public toastr: ToastrService,
     private zone: NgZone
   ) { }
 
   ngOnInit() {
-
+      this._isEmail= localStorage.getItem('Email');
+      this._ShareLink= localStorage.getItem('Link');
      this.UserDashboardForm = this.formBuilder.group({
        BranchName: ['', Validators.required],
       User_Token:localStorage.getItem('User_Token'),
@@ -120,7 +193,33 @@ export class UserdashboardComponent implements OnInit {
 
    //this.BindUserLog();
    this.StatusList();
+   this.downloadForm = this.formBuilder.group({
+    FileNo: [''],
+    searchText: [],
+    TemplateID:[0],
+    DeptID: [0],
+    BranchID: [0],
+    CreatedBy: localStorage.getItem('UserID'),
+    User_Token: localStorage.getItem('User_Token'),
+    Viewer: [''],
+    currentPage: 0,
+    PageCount: 0,
+  //  tickets: new FormArray([]),
+    SerchBy: [''],
+    DocID: [''],
+    SearchByID: [],
+    userID: localStorage.getItem('UserID'),
+    ACC: [''],
+    MFileNo: [''],
+    DocuemntType: [''],
+    ToEmailID:[''],
+    htmlContent: [''],
+    ValidDate:[''],
+    IsAttachment:[''],
+    Subject:[''],
+    predefined:['']
 
+  });
   }
 
 
@@ -546,6 +645,7 @@ loadChartsData() {
 
   closePopup() {
     this.displayStyle = "none";
+    this.isFileNoLink = false;
   }
 
 
@@ -629,6 +729,7 @@ prepareTableData(tableData, headerList) {
 // }
 else if (this.type=="Upload" )
 {
+  this.isFileNoLink = true;
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },{ field: 'FileNo', header: 'FileNo', index: 2 },
   //  { field: 'ActivityName', header: 'Activity Name', index: 3 },{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
@@ -715,6 +816,7 @@ else if (this.type=="Folder" )
 
 else if (this.type=="View" || this.type=="Viewed" )
 {
+  this.isFileNoLink = true;
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },
     { field: 'Cabinet', header: 'CABINET', index: 2 },
@@ -759,6 +861,7 @@ else if (this.type=="View" || this.type=="Viewed" )
 
 else if (this.type=="Download"  )
 {
+  this.isFileNoLink = true;
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },
     { field: 'Cabinet', header: 'CABINET', index: 2 },
@@ -1035,6 +1138,7 @@ else if (this.type=="Checker" )
 
 else if (this.type=="Email"  )
 {
+  this.isFileNoLink = true;
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },
     { field: 'Cabinet', header: 'CABINET', index: 2 },
@@ -1122,6 +1226,7 @@ else if (this.type=="Deleted"  )
 }
 else if (this.type=="Searched"  )
 {
+  this.isFileNoLink = true;
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },
     { field: 'Cabinet', header: 'CABINET', index: 2 },
@@ -1166,6 +1271,7 @@ else if (this.type=="Searched"  )
 
 else if (this.type=="Favourite"  )
 {
+  this.isFileNoLink = true;
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },
     { field: 'Cabinet', header: 'CABINET', index: 2 },
@@ -1289,5 +1395,203 @@ this.Folder =  this.FolderCnt;
 
   }
 
+  MetaData(template: TemplateRef<any>, row: any)
+  {
+
+
+  this.modalRef = this.modalService.show(template);
+
+
+  $(".modal-dialog").css('max-width', '1300px');
+  event.stopPropagation();
+
+  let  __FileNo =row.FileNo;
+  let  __TempID = row.TemplateID || 0;
+
+  const apiUrl=this._global.baseAPIUrl+'DataEntry/GetNextFile?id='+__TempID+'&FileNo='+__FileNo+'&user_Token='+ localStorage.getItem('User_Token');
+
+  //const apiUrl=this._global.baseAPIUrl+'DataEntry/GetNextFile?id'+  + '' FileNo='+ __FileNo + '&user_Token=123123'
+  this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
+     this._IndexList = data;
+     this.GetFullFile(row.FileNo);        
+    // console.log("Index",data);
+  });
+  // this.modalRef = this.modalService.show(template);
+  }
+
+  GetFullFile(FileNo:any) {
+
+    const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/GetFullFile?ID='+localStorage.getItem('UserID')+'&&_fileName='+ FileNo +'&user_Token='+localStorage.getItem('User_Token');
+    this._onlineExamService.getDataById(apiUrl).subscribe(res => {
+      if (res) {
+
+        //alert(res.substring(res.lastIndexOf('.'), res.length));
+        this.fileExt = res.substring(res.lastIndexOf('.'), res.length);
+    // console.log("9090res",res);
+        this.FilePath = res;
+         /// saveAs(res, row.ACC + '.pdf');
+         this._TempFilePath = res;
+
+      }
+    });
+  }
+
+
+  ShareLink(template: TemplateRef<any>)
+  {
+    this.downloadForm.patchValue({htmlContent:  ''});
+    var that = this;
+  //console.log("Email", this.selectedRows);
+    let _CSVData= "";
+    for (let j = 0; j < this.selectedRows.length; j++) {          
+      _CSVData += this.selectedRows[j] + ',';
+      // headerArray.push(headers[j]);  
+     // console.log("CSV Data", _CSVData);
+    }
+    this.downloadForm.controls['ACC'].setValue(_CSVData);
+    this.downloadForm.controls['FileNo'].setValue(_CSVData);
+  
+    // if (_CSVData != null) {
+     
+    // }
+
+    this.modalRef = this.modalService.show(template);
+
+  }
+
+  SendBulkEmail(template: TemplateRef<any>)
+  {
+    var that = this;
+  //console.log("Email", this.selectedRows);
+    let _CSVData= "";
+    for (let j = 0; j < this.selectedRows.length; j++) {          
+      _CSVData += this.selectedRows[j] + ',';
+      // headerArray.push(headers[j]);  
+     // console.log("CSV Data", _CSVData);
+    }
+    this.downloadForm.controls['ACC'].setValue(_CSVData);
+    this.downloadForm.controls['FileNo'].setValue(_CSVData);
+  
+    // if (_CSVData != null) {
+     
+    // }
+
+    this.modalRef = this.modalService.show(template);
+
+  }
+
+  @ViewChild('tagInput')
+  tagInput: SourceTagInput;
+  public validators = [ this.must_be_email.bind(this) ];
+  public errorMessages = {
+      'must_be_email': 'Please be sure to use a valid email format'
+  };
+  private addFirstAttemptFailed = false;
+
+  private must_be_email(control: FormControl) {        
+
+      if (this.addFirstAttemptFailed && !this.validateEmail(control.value)) {
+          return { "must_be_email": true };
+      }
+      return null;
+  }
+
+  beforeAdd(tag: string) {
+
+    if (!this.validateEmail(tag)) {
+      if (!this.addFirstAttemptFailed) {
+        this.addFirstAttemptFailed = true;
+        this.tagInput.setInputValue(tag);
+      }
+  
+      return throwError(this.errorMessages['must_be_email']);
+      //return of('').pipe(tap(() => setTimeout(() => this.tagInput.setInputValue(tag))));
+      
+    }
+    this.addFirstAttemptFailed = false;
+    return of(tag);
+  }
+
+  private validateEmail(text: string) {
+    var EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/i;
+    return (text && EMAIL_REGEXP.test(text));
+  }
+
+  onSendEmail() {
+
+    if (this.selectedRows.length <=10)
+    {
+
+    const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
+    // this.emailReciepients.forEach((el, i) => {
+      let toEmailString = ''; 
+      this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+      this.downloadForm.value.ToEmailID = toEmailString;
+      this._onlineExamService.postData(this.downloadForm.value, apiUrl)
+      .subscribe(data => {
+        swal.fire({
+          title: "Email!",
+          text: "Email send successfully",
+          type: "success",
+          buttonsStyling: false,
+          confirmButtonClass: "btn btn-primary",
+        });
+
+      });
+    // });
+    this.modalRef.hide();
+    //  this.getSearchResult();   
+    }
+    else
+    {
+      this.ShowErrormessage("You can not send more than 10 files on mails.");
+    }
+
+  }
+
+  onSendEmailByShare() {
+
+    const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmailBulkFiles';
+    // this.emailReciepientsShare.forEach((el, i) => {
+      let toEmailString = ''; 
+      this.emailReciepientsShare.forEach(el => toEmailString += el.display + ',');
+      this.downloadForm.value.ToEmailID = toEmailString;
+      this._onlineExamService.postData(this.downloadForm.value, apiUrl)
+      .subscribe(data => {
+        swal.fire({
+          title: "Email!",
+          text: "Email send successfully",
+          type: "success",
+          buttonsStyling: false,
+          confirmButtonClass: "btn btn-primary",
+        });
+
+      }); 
+    // });
+    
+     this.modalRef.hide();    
+    ///  this.getSearchResult();
+      //this.OnReset();
+  }
+
+  ShowErrormessage(data:any)
+  {
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Validation ! </span> <span data-notify="message"> '+ data +' </span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+      }
+    );
+  
+  
+  }
 
 }
