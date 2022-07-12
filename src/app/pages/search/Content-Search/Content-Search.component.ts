@@ -79,9 +79,9 @@ export class ContentSearchComponent implements OnInit {
   editorConfig: AngularEditorConfig = {
     editable: true,
       spellcheck: true,
-      height: 'auto',
-      minHeight: '360px',
-      maxHeight: 'auto',
+      height: '150px',
+      minHeight: '150px',
+      maxHeight: '150px',
       width: 'auto',
       minWidth: '0',
       translate: 'yes',

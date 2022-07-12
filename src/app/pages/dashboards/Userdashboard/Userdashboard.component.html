@@ -469,7 +469,7 @@
             <h4 class="modal-title">{{type}}</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closePopup()">
                 <span aria-hidden="true">&times;</span>
-              </button>
+            </button>
         </div>
         <div class="modal-body">
             <div class="card-body">
@@ -549,9 +549,12 @@
     <div class="modal-content" id="fileStorageDocView">
         <div class="modal-body p-0">
         <div class="card w-100">              
-            <div class=" card-header"><h3 class=" mb-0" >Document View
-            <span style="float: right;cursor: pointer;" (click)="hidepopup()" class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
-            </h3>
+            <div class=" card-header">
+                <h3 class=" mb-0" >Document View
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDocViewPopup()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h3>
             </div>
             <div class="card-body" style="padding:0">
                 <div class="action-buttons">
@@ -616,8 +619,14 @@
 <ng-template #EmailFormPopup let-c="close" let-d="dismiss" let-modal>
     <div class="modal-content" style="width: 1000px; position: relative; right: 40%;">
       <div class="modal-body p-0">
-        <div class=" card">
-          <div class=" card-header"><h3 class=" mb-0">Send Email</h3></div>
+        <div class=" card m-0">
+          <div class=" card-header">
+            <h3 class=" mb-0">Send Email
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeSendEmailPopup()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </h3>
+        </div>
          <div class="card-body">
             <div class="form-row">
                 
@@ -629,6 +638,7 @@
                     <tag-input 
                       [(ngModel)]="emailReciepients" 
                       [ngModelOptions]="{standalone: true}"
+                      [secondaryPlaceholder]="'Enter email address'"
                       placeholder="Enter email address"
                       [editable]='true' 
                       [errorMessages]="errorMessages"
@@ -657,7 +667,7 @@
               </div>
               <div class=" col-md-8" style="padding-top: 32px">  
                 <button class="btn btn-primary" [disabled]="!emailReciepients.length" (click)="onSendEmail()"> Send</button>
-                <button class="btn btn-primary"  (click)="hidepopup()"> Close</button>
+                <button class="btn btn-primary"  (click)="closeSendEmailPopup()"> Close</button>
                
               </div>
               <!-- <button type="button" class="btn btn-warning" (click)="OnReset()">Clear</button> -->
@@ -671,8 +681,14 @@
   <ng-template #ShareLinkFormPopup let-c="close" let-d="dismiss" let-modal>
     <div class="modal-content" style="width: 1000px; position: relative; right: 40%;">
       <div class="modal-body p-0">
-        <div class=" card">
-          <div class=" card-header"><h3 class=" mb-0">Share Link</h3></div>
+        <div class=" card m-0">
+          <div class=" card-header">
+            <h3 class=" mb-0">Share Link
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeShareLinkPopup(ShareLinkFormPopup)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </h3>
+        </div>
          <div class="card-body">
             <div class="form-row">
                 
@@ -684,7 +700,8 @@
                     <tag-input 
                       [(ngModel)]="emailReciepientsShare" 
                       [ngModelOptions]="{standalone: true}" 
-                      [editable]='true' 
+                      [editable]='true'
+                      [secondaryPlaceholder]="'Enter email address'"
                       placeholder="Enter email address"
                       [errorMessages]="errorMessages"
                       [validators]="validators" 
@@ -729,7 +746,7 @@
               <!-- </div> -->
               <div class=" col-md-8" style="padding-top: 32px">  
                 <button class="btn btn-primary" [disabled]="!emailReciepientsShare.length" (click)="onSendEmailByShare()"> Send</button>
-                <button class="btn btn-primary"  (click)="hidepopup()"> Close</button>
+                <button class="btn btn-primary"  (click)="closeShareLinkPopup()"> Close</button>
                
               </div>
               <!-- <button type="button" class="btn btn-warning" (click)="OnReset()">Clear</button> -->

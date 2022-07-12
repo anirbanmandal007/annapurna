@@ -109,6 +109,7 @@ export class UserdashboardComponent implements OnInit {
   FilePath: any;
   private _TempFilePath: any;
   private _IndexList: {};
+  docViewModalRef: BsModalRef;
   modalRef: BsModalRef;
   isFileNoLink: boolean;
   emailReciepients = [];
@@ -123,9 +124,9 @@ export class UserdashboardComponent implements OnInit {
   editorConfig: AngularEditorConfig = {
     editable: true,
       spellcheck: true,
-      height: 'auto',
-      minHeight: '360px',
-      maxHeight: 'auto',
+      height: '150px',
+      minHeight: '150px',
+      maxHeight: '150px',
       width: 'auto',
       minWidth: '0',
       translate: 'yes',
@@ -646,6 +647,18 @@ loadChartsData() {
   closePopup() {
     this.displayStyle = "none";
     this.isFileNoLink = false;
+  }
+
+  closeDocViewPopup() {
+    this.docViewModalRef.hide();
+  }
+
+  closeSendEmailPopup() {
+    this.modalRef.hide();
+  }
+
+  closeShareLinkPopup(template: TemplateRef<any>) {
+    this.modalRef.hide();
   }
 
 
@@ -1399,7 +1412,7 @@ this.Folder =  this.FolderCnt;
   {
 
 
-  this.modalRef = this.modalService.show(template);
+  this.docViewModalRef = this.modalService.show(template);
 
 
   $(".modal-dialog").css('max-width', '1300px');

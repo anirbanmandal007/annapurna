@@ -332,3 +332,7 @@
     bottom: 1px;
     top: 0;
   }
+
+.modal {
+    height: 90vh;
+}
