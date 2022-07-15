@@ -53,30 +53,41 @@
                                             
                                             <!-- <button class="btn btn-primary download-btn" *ngIf="selectedRows.length>0 || selectAllRows">Download <span *ngIf="!selectAllRows">{{selectedRows.length}}</span><span *ngIf="selectAllRows">all</span> item<span *ngIf="selectedRows.length>1 || selectAllRows">s</span></button>
                                              -->
-                                             <div style="width: 30%">
+                                             <div style="width: 60%;float: left;display: flex;">
                                               <div *ngIf="_isDownload == 'true'" >
-                                                <button type="button" tooltip="Download Files" style="padding:1px 1px 1px 1px;float: left"
-                                                  class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="DownloadBulkFiles()" >
-                                                  <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-download actionIcon"></i></span>
+                                                <button type="button" tooltip="Download Files"
+                                                  class="btn btn-icon btn-icon-only rounded-circle search_icon_btn"  (click)="DownloadBulkFiles()" >
+                                                  <span class="btn-inner--icon">
+                                                    <img src="assets/img/file-download.png" class="actionIcon" id="actionIcon">
+                                                    <!-- <i id="actionIcon" class="fa fa-download actionIcon"></i> -->
+                                                  </span>
                                                 </button> 
                                               </div>
                                               <div *ngIf="_ShareLink == 'true'" >
-                                                <button type="button" tooltip="Share link" style="padding:1px 1px 1px 1px;float: left"
-                                                class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="ShareLink(ShareLinkFormPopup)" >
-                                                <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-share-alt actionIcon"></i></span>
+                                                <button type="button" tooltip="Share link"
+                                                class="btn btn-icon btn-icon-only rounded-circle search_icon_btn"  (click)="ShareLink(ShareLinkFormPopup)" >
+                                                <span class="btn-inner--icon">
+                                                  <img src="assets/img/share_links.png" class="actionIcon" id="actionIcon">
+                                                  <!-- <i id="actionIcon" class="fa fa-share-alt actionIcon"></i> -->
+                                                </span>
                                                 </button>
                                               </div>
                                               <div *ngIf="_isEmail == 'true'" >
-                                              <button type="button" tooltip="Send E-Mail" style="padding:1px 1px 1px 1px;float: left"
-                                              class="btn btn-icon btn-secondary btn-icon-only rounded-circle"   (click)="SendBulkEmail(EmailFormPopup)">
-                                              <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-envelope actionIcon"></i></span>
+                                              <button type="button" tooltip="Send E-Mail"
+                                              class="btn btn-icon btn-icon-only rounded-circle search_icon_btn" (click)="SendBulkEmail(EmailFormPopup)">
+                                              <span class="btn-inner--icon">
+                                                <img src="assets/img/send-mail.png" class="actionIcon" id="actionIcon" style="width:75%">
+                                                <!-- <i id="actionIcon" class="fa fa-envelope actionIcon"></i> -->
+                                              </span>
                                             </button>
                                             </div>
                                             <div>
-                                              <button type="button" tooltip="Download Metadata" style="padding:1px 1px 1px 1px;float: left; position: relative;
-                                                  bottom: 3px;left: 3px;"
-                                                  class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="DownloadMetadata()" >
-                                                  <span class="btn-inner--icon"><i id="actionIcon" class="fas fa-file-download actionIcon"></i></span>
+                                              <button type="button" tooltip="Download Metadata"
+                                                  class="btn btn-icon btn-icon-only rounded-circle search_icon_btn"  (click)="DownloadMetadata()" >
+                                                  <span class="btn-inner--icon">
+                                                    <img src="assets/img/download-matadata.png" class="actionIcon" id="actionIcon">
+                                                    <!-- <i id="actionIcon" class="fas fa-file-download actionIcon/"></i> -->
+                                                  </span>
                                               </button>
                                             </div>
                                           </div>
@@ -204,17 +215,17 @@
                                                               <span>View Index Data</span>
                                                             </button> -->
                                                             <button mat-menu-item (click)="ViewDocument(ImageViewFormPopup,doc,MetaDataFormPopup)">
-                                                                <i class="material-icons">preview</i>
+                                                                <!-- <i class="material-icons">preview</i> -->
                                                                 <span>Document View</span>
                                                               </button>
 
                                                             <button mat-menu-item (click)="EditRowData(doc)" *ngIf="_isEdit == 'true'">
-                                                              <i class="material-icons">edit</i>
+                                                              <!-- <i class="material-icons">edit</i> -->
                                                               <span>Edit Index Data</span>
                                                             </button>
                                                              
                                                             <button mat-menu-item (click)="DownloadFileFromDB(doc)" *ngIf="_isDownload == 'true'">
-                                                              <i class="material-icons">file_download</i>
+                                                              <!-- <i class="material-icons">file_download</i> -->
                                                               <span>Download File</span>
                                                             </button>
                                                           
@@ -225,19 +236,19 @@
                                                              -->
                                                                                                                  
                                                             <button mat-menu-item (click)="SendEmail(EmailFormPopup,doc)" *ngIf="_isEmail == 'true'">
-                                                              <i class="material-icons">mail_outline</i>
+                                                              <!-- <i class="material-icons">mail_outline</i> -->
                                                               <span>Send Email</span>
                                                             </button>
                                                          
                                                          
                                                             <button mat-menu-item (click)="DeleteFullFile(doc)" *ngIf="_isDelete == 'true'">
-                                                              <i class="material-icons">delete</i>
+                                                              <!-- <i class="material-icons">delete</i> -->
                                                               <span>Delete File</span>
                                                             </button>
                                                          
                                                             
                                                             <button mat-menu-item (click)="favourite(doc)">
-                                                              <i class="material-icons">favorite</i>
+                                                              <!-- <i class="material-icons">favorite</i> -->
                                                               <span>Favourite File</span>
                                                             </button>
                                                          
@@ -467,7 +478,7 @@
                                       
                                   </div>
                                   <div class="col-md-3" style="display: flex;justify-content:center;align-items: center;">
-                                    <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Pre Defined">
+                                    <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Default Template">
                                     <label class="form-control-label" for="predefined" style="padding-top: 10px;">
                                       Pre Difined Template 
                                     </label>
@@ -515,16 +526,14 @@
                                     </tag-input>
                                   </div>
                                   <div class="col-md-9">
-                                    <label class="form-control-label" for="Subject" style="float:left;padding-right: 45px; padding-top: 12px;" >
-                                      Subject
-                                       </label>
+                                
                                        <input class="form-control mt-2 mb-2" style="width:86%;"  formControlName="Subject" placeholder="Subject" type="text"/>
                                       
                                   </div>
                                   <div class="col-md-3" style="display: flex;justify-content:center;align-items: center;">
                                     <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Pre Defined">
                                     <label class="form-control-label" for="predefined" style="padding-top: 10px;">
-                                      Pre Difined Template 
+                                      Default Template
                                     </label>
                                   </div>
                                   <!-- <br /> -->

@@ -1,36 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300;1,400&display=swap');
-
-
-@font-face {
-  font-family: 'Gill-Sans-MT';
-  src: url('../../../assets/fonts/Gill Sans MT Book Italic.ttf') format('ttf'),
-      url('../../../assets/fonts/Gill Sans MT Book Italic.ttf') format('ttf');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Arialn';
-  src: url('../../../assets/fonts/Arialn.ttf') format('ttf'),
-      url('../../../assets/fonts/Arialn.ttf') format('ttf');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+::placeholder{
+  color: #005984;
+  font-weight: 500;
 }
 .login{
 width: 100%;
 float: left;
 }
 .login_logo{
-background: #005E82;
-height: 100vh;
-border-right: 4px solid #ffcc00;
+background: #005984;
+height: 100%;
+// border-right: 4px solid #ffcc00;
 align-items: center;
 display: flex;
 justify-content: center;
 }
 .login_img img{
-width: 35%;
+width: 70%;
 }
 .login_logo p{
 color: #ffc000;
@@ -44,33 +29,41 @@ font-style: italic;
   height:100vh;
 }
 .login_field{
-width: 100%;
-float: left;
-padding: 80px 0 30px;
-background-image: url(../../../assets/background.jpg);
-background-position: center;
-background-repeat: no-repeat;
-background-size: cover;
-background-size: cover;
+width: 80%;
+margin: 0 auto;
+padding: 20px;
+background-color: #ECF4FD;
+border-radius: 8px;
 }
-.white_bg{
-  float: left;
-  background-color: #f5fafc;
-  padding: 20px 50px;
-  width: 80%;
-  margin-left: 65px;
+.login_heading{
+  align-items: center;
 }
-.white_bg h5{
-  font-size: 20px;
-letter-spacing: 0px;
-line-height: 28px;
-color: #a8b6bc;
-font-weight: 500;
-font-family: "Poppins";
-padding-bottom: 20px;
+.login_heading h5{
+  color: #005984;
+  font-size: 28px;
+  font-weight: 800;
+}
+.login_heading a{
+  color: #ffcc00;
+  font-size: 16px;
+  font-weight: 800;
+  font-family:"Gill Sans Nova Light" !important;
+}
+.input_bg{
+  background-color: #005984;
+  padding: 50px 10px 20px;
+  margin: 0 0 20px !important;
 }
 .input-icon img{
   width: 15px;
+}
+.sign_btn{
+  float: right;
+  background: #005984;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  padding: 5px 25px;
 }
 input,
 input[type="radio"] + label,
@@ -88,6 +81,7 @@ border-radius: 3px;
 -o-transition: 0.35s ease-in-out;
 transition: 0.35s ease-in-out;
 transition: all 0.35s ease-in-out;
+font-family:"Gill Sans Nova Light" !important;
 }
 input:focus {
 outline: 0;
@@ -196,19 +190,21 @@ clear: both;
 position: relative;
 }
 .input-group-icon input {
-  border-radius: 5px;
-  filter: drop-shadow(0px 3px 3.5px rgba(0,0,0,0.16));
+  border-radius: 0px;
   background-color: #ffffff;
-  border: none;
-  padding: 17px 0 17px 65px;
+  padding: 10px 0 10px 65px;
+  border: 2px solid #ffcc00;
+  color: #005984;
+  font-weight: 600;
 }
 .input-group-icon .input-icon {
 position: absolute;
-top: 0;
-left: 15px;
+top: 0px;
+left:0;
+border-right: 1.5px solid #ffcc00;
 width: 3.4em;
-height: 3.4em;
-line-height: 3.4em;
+height: 2.8em;
+line-height: 2.4em;
 text-align: center;
 pointer-events: none;
 }

@@ -339,10 +339,10 @@ export class SidebarComponent implements OnInit {
         route = { path: "roles", title: "Roles", type: "link"}
         break;
       }
-      case "Change Password":{
-        route = { path: "change-password", title: "change-password", type: "link" }
-        break;
-      }
+      // case "Change Password":{
+      //   route = { path: "change-password", title: "Change-password", type: "link" }
+      //   break;
+      // }
       case "Upload":{
         route =   {
           path: "/upload",
@@ -503,11 +503,11 @@ export class SidebarComponent implements OnInit {
       //   break;
       // }
        case "Bulk Downlaod":{
-        route = { path: "bulk-downlaod", title: "Bulk Downlaod", type: "link" }
+        route = { path: "bulk-downlaod", title: "Bulk Download", type: "link" }
         break;
       }
       case "Delete Files":{
-        route = { path: "delete-files", title: "Delete Files", type: "link" }
+        route = { path: "delete-files", title: "Bulk Delete", type: "link" }
         break;
       }
       case "Report":{

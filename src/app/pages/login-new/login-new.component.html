@@ -42,21 +42,23 @@
 <div class="login">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12 col-lg-7 p-0">
+      <div class="col-md-12 col-lg-6 p-0">
         <div class="login_logo text-center">
           <div class="login_img">
-          <img src="assets/logo.png"> 
-          <p>The power of memory</p>
+          <img src="assets/img/logo.png"> 
+          <!-- <p>The power of memory</p> -->
         </div>
         </div>
       </div>
-      <div class="col-md-12 col-lg-5 p-0">
+      <div class="col-md-12 col-lg-6">
         <div class="login_form d-flex align-content-around flex-wrap">
           <div class="login_field">
-          <div class="white_bg">
-            <h5>Sign In</h5>
+          <div class="login_heading d-flex justify-content-between pr-4 pl-4 pb-2">
+            <h5>Sign in</h5>
+            <a href="" routerLink="/forgot-password" class="ml-3">Forgot password?</a>
+          </div>
             <form [formGroup]="loginForm" (keyup.enter)="onSubmit()">
-                <div class="row pb-2">
+                <div class="row input_bg">
                   <div class="input-group input-group-icon">
                     <input type="email" placeholder="Username" formControlName="username"/>
                     <div class="input-icon"><img src="assets/img/email.svg"></div>
@@ -77,16 +79,12 @@
                   <!-- <ngx-recaptcha2 #captchaElem siteKey="6Lf0B58eAAAAAMA9umHGKya6yQprhUXGfumZyvJV" (success)="handleSuccess($event)" [size]="size"
                   [hl]="lang" [theme]="theme" [type]="type" formControlName="recaptcha">
                   </ngx-recaptcha2> -->
-
-
-
                 </div>
-                <button [disabled]="loginForm.invalid" (click)="onSubmit()">Sign In</button>
-                <button routerLink="/forgot-password" class="ml-3">Forgot Password</button>
-              </form>
+                <button [disabled]="loginForm.invalid" (click)="onSubmit()" class="sign_btn">Sign In</button>
+                <!-- <button routerLink="/forgot-password" class="ml-3">Forgot Password</button> -->
+            </form>
         </div>
-        </div>
-        <div class="about">
+        <!-- <div class="about">
           <img src="assets/about.png">
           <div class="row pt-3">
             <div class="col-md-5 pb-3">
@@ -108,7 +106,7 @@
               </ul>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     </div>

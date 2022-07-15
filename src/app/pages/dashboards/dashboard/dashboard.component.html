@@ -22,9 +22,9 @@
                                                         <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <li><a   (click)="FolderStruture('Cabinet')">Cabinet</a></li>
-                                                        <li><a  (click)="FolderStruture('Folder')">Folder</a></li>
-                                                        <li><a   (click)="FolderStruture('SubFolder')">Sub Folder</a></li>
+                                                        <li><a  style="font-size:10px;"  (click)="FolderStruture('Cabinet')">Cabinet</a></li>
+                                                        <li><a  style="font-size:10px;" (click)="FolderStruture('Folder')">Folder</a></li>
+                                                        <li><a  style="font-size:10px;" (click)="FolderStruture('SubFolder')">Sub Folder</a></li>
                                                     </ul>
                                                 </div>
 
@@ -46,7 +46,7 @@
                                                 <i class="fa fa-caret-down" aria-hidden="true">Sub Folder</i> -->
 
                                             </h3>
-                                            <p (click)="DLoadData('Folder')">Total Folder</p>
+                                            <p (click)="DLoadData('Folder')">{{Foldername}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                                         <img src="assets/img/metadata.png">
                                         <div class="card_box_txt">
                                             <h3 class="cursor-pointer" (click)="DLoadData('Metadata')">{{Metadata}} <i class="fa fa-caret-down" aria-hidden="true"></i></h3>
-                                            <p>Metadata</p>
+                                            <p>Template</p>
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@
                                 <div class="col-md-4">
                                     <div class="card">
                                         <div class="text_dropdown">
-                                            <h3>Storage Utilization </h3>
+                                            <h3>Storage Utilization in GB </h3>
                                             <div class="dropdown">
                                                 <button class="dropdown-toggle" type="button" data-toggle="dropdown">
                                                   <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
