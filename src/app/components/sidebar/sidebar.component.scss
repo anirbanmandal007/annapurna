@@ -272,8 +272,25 @@
     color: #FFCC00 !important;
 }
 .dropdown-item:hover, .dropdown-item:focus{
-    color: #CC0000;
+    background: #ffcc00;
+    color: #fff;
+    transition: all .6s ease-in;
 }
-.navbar .navbar-nav-hover .dropdown-menu.show:hover{
-    opacity: 1;
+.nav-item{
+    padding: 16px 0;
+}
+// .navbar .navbar-nav-hover .dropdown-menu.show:hover{
+    // opacity: 0;
+// }
+.dropdown-menu{
+    top: 65px;
+    border-top: 3px solid #ffcc00;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+    pointer-events: auto;
+    animation: show-navbar-dropdown 0.5s ease forwards;
 }
