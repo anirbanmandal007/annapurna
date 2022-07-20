@@ -123,15 +123,11 @@
                                 
               </div> -->
 
-              <div class="col-md-1">    
-                <button type="button" class="btn btn-primary" (click)="GetFilterSearch(1)" style="float: right;text-align: right;    padding: 5px 15px;">Search
+              <div class="col-md-2">    
+                <button type="button" class="btn submit_btn" (click)="GetFilterSearch(1)" style="padding: 5px 15px;margin-right: 10px;">Search
                   <!-- <i class="fa fa-refresh"></i> -->
-                </button>
-                                
-              </div>
-
-              <div class="col-md-1">    
-                <button type="button" class="btn btn-primary" (click)="OnLoad()" style="float: right;text-align: right;    padding: 5px 15px;">Refresh
+                </button>    
+                <button type="button" class="btn reset_btn" (click)="OnLoad()" style="padding: 5px 15px;">Refresh
                   <!-- <i class="fa fa-refresh"></i> -->
                 </button>
                                 
@@ -144,10 +140,12 @@
 
          
         <div class="card-body">
-          <button *ngIf="_isDownload == 'true'" type="button" tooltip="Download Files" style="padding:1px 1px 1px 1px;float: left; position: relative;
-          bottom: 15px;"
-          class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="DownloadBulkFiles()" >
-          <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-download actionIcon"></i></span>
+          <button *ngIf="_isDownload == 'true'" type="button" tooltip="Download Files"
+          class="btn btn-icon btn-icon-only rounded-circle search_icon_btn"  (click)="DownloadBulkFiles()" >
+          <span class="btn-inner--icon">
+            <img src="assets/img/file-download.png" class="actionIcon" id="actionIcon">
+            <!-- <i id="actionIcon" class="fa fa-download actionIcon"></i> -->
+          </span>
         </button>
 
         <!-- <button type="button" tooltip="Download Metadata Dump " style="padding:1px 1px 1px 1px;float: left; position: relative;
@@ -156,25 +154,28 @@
           <span class="btn-inner--icon"><i id="actionIcon" class="fas fa-file-download actionIcon"></i></span>
         </button> -->
 
-        <button *ngIf="_ShareLink == 'true'" type="button" tooltip="Share link" style="padding:1px 1px 1px 1px;float: left; position: relative;
-        bottom: 15px;
-        left: 15px;"
-        class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="ShareLink(ShareLinkFormPopup)" >
-        <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-share-alt actionIcon"></i></span>
+        <button *ngIf="_ShareLink == 'true'" type="button" tooltip="Share link"
+        class="btn btn-icon btn-icon-only rounded-circle search_icon_btn"  (click)="ShareLink(ShareLinkFormPopup)" >
+        <span class="btn-inner--icon">
+          <img src="assets/img/share_links.png" class="actionIcon" id="actionIcon">
+          <!-- <i id="actionIcon" class="fa fa-share-alt actionIcon"></i> -->
+        </span>
       </button>
       
-      <button *ngIf="_isEmail == 'true'" type="button" tooltip="Send E-Mail" style="padding:1px 1px 1px 1px;float: left; position: relative;
-      bottom: 15px;
-      left: 23px;"
-      class="btn btn-icon btn-secondary btn-icon-only rounded-circle"   (click)="SendBulkEmail(EmailFormPopup)">
-      <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-envelope actionIcon"></i></span>
+      <button *ngIf="_isEmail == 'true'" type="button" tooltip="Send E-Mail"
+      class="btn btn-icon btn-icon-only rounded-circle search_icon_btn"   (click)="SendBulkEmail(EmailFormPopup)">
+      <span class="btn-inner--icon">
+        <img src="assets/img/send-mail.png" class="actionIcon" id="actionIcon" style="width:75%">
+        <!-- <i id="actionIcon" class="fa fa-envelope actionIcon"></i> -->
+      </span>
     </button>
 
-    <button  type="button" tooltip="Export to CSV" style="padding:1px 1px 1px 1px;float: left; position: relative;
-    bottom: 15px;
-    left: 23px;"
-    class="btn btn-icon btn-secondary btn-icon-only rounded-circle"   (click)="ExporttoExcel()">
-    <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-file actionIcon"></i></span>
+    <button  type="button" tooltip="Export to CSV"
+    class="btn btn-icon btn-icon-only rounded-circle search_icon_btn"   (click)="ExporttoExcel()">
+    <span class="btn-inner--icon">
+      <img src="assets/img/export.png" class="actionIcon" id="actionIcon">
+      <!-- <i id="actionIcon" class="fa fa-file actionIcon"></i> -->
+    </span>
   </button>
    
       <!-- <div style="position: relative;bottom: 15px;">
@@ -364,7 +365,7 @@
                     </button>
                     <mat-menu #menu="matMenu">
                       <button mat-menu-item (click)="ViewDocument(ImageViewFormPopup,car, MetaDataFormPopup)" *ngIf="_isDocView == 'true'">
-                        <i class="material-icons">preview</i>
+                        <!-- <i class="material-icons">preview</i> -->
                         <span>Document View</span>
                       </button>
                       <!-- <button mat-menu-item (click)="MetaData(MetaDataFormPopup,car)">
@@ -372,7 +373,7 @@
                         <span>View Index Data</span>
                       </button> -->
                       <button mat-menu-item (click)="EditRowData(car)" *ngIf="_isEdit == 'true'">
-                        <i class="material-icons">edit</i>
+                        <!-- <i class="material-icons">edit</i> -->
                         <span>Edit Index Data</span>
                       </button>
                       <!-- <button mat-menu-item (click)="Setfavourite(car.ACC)">
@@ -381,7 +382,7 @@
                       </button> -->
                     
                       <button mat-menu-item (click)="DownloadFileAll(car.AccNo,car)" *ngIf="_isDownload == 'true'">
-                        <i class="material-icons">cloud_download</i>
+                        <!-- <i class="material-icons">cloud_download</i> -->
                         <span>Download  Files</span>
                       </button>
                       <!-- <button mat-menu-item (click)="UploadDocModal(AdvancedFormPopup,car)">
@@ -389,7 +390,7 @@
                         <span>Upload Document</span>
                       </button> -->
                       <button mat-menu-item (click)="DeleteFile(car)" *ngIf="_isDelete == 'true'">
-                        <i class="material-icons">delete</i>
+                        <!-- <i class="material-icons">delete</i> -->
                         <span>Delete File</span>
                       </button>
                     </mat-menu>

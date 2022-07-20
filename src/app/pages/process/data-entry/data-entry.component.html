@@ -310,7 +310,7 @@
                       {{car[col.field]}}
                     </td>
                     <td>
-                      <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-danger btn-icon-only rounded-circle" (click)="AddIndexing(BranchFormPopup,car)">
+                      <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon  btn-icon-only" (click)="AddIndexing(BranchFormPopup,car)">
                         <span class="btn-inner--icon"><i class="fa fa-plus"></i></span>
                       </button>
                     </td>
@@ -568,16 +568,16 @@
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                      <div class="resetsave" style="width: 100%;float: left;">
+                      <div class="resetsave pt-3" style="width: 100%;float: left;">
                         <div class="resetsavebts">
                       
-                        <button class='btn btn-success' (click)="onSubmit()">
+                        <button class='btn submit_btn' (click)="onSubmit()">
                           Approve
                         </button>
-                        <button class='btn btn-success' (click)="OnReject()">
+                        <button class='btn reset_btn' (click)="OnReject()">
                           Reject
                         </button>
-                        <button class='btn btn-warning' (click)="hidepopup()">
+                        <button class='btn close_btn' (click)="hidepopup()">
                           Close</button
                         >
                         </div>

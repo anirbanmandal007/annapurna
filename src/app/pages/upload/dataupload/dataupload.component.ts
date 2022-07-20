@@ -661,7 +661,13 @@ isValidationError: any;
          }
 
         else if(!(/^[\w\s]+$/.test(row[fieldIndex]))) { // Alpha-Numeric validation check
+         
+          if (fieldIndex !=8)
+          {
           cssClass = ' error alpha-numeric-only';
+          }
+         
+         // cssClass = ' error alpha-numeric-only';
         }
         break;
         

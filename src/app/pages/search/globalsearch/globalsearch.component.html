@@ -57,13 +57,19 @@
                                               <div *ngIf="_isDownload == 'true'" >
                                                 <button type="button" tooltip="Download Files" style="padding:1px 1px 1px 1px;float: left"
                                                   class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="DownloadBulkFiles()" >
-                                                  <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-download actionIcon"></i></span>
+                                                  <span class="btn-inner--icon">
+                                                    <img src="assets/img/file-download.png" class="actionIcon" id="actionIcon">
+                                                    <!-- <i id="actionIcon" class="fa fa-download actionIcon"></i> -->
+                                                  </span>
                                                 </button> 
                                               </div>
                                                 <div *ngIf="_ShareLink == 'true'" >
-                                                <button type="button" tooltip="Share link" style="padding:1px 1px 1px 1px;float: left"
-                                                class="btn btn-icon btn-secondary btn-icon-only rounded-circle"  (click)="ShareLink(ShareLinkFormPopup)" >
-                                                <span class="btn-inner--icon"><i id="actionIcon" class="fa fa-share-alt actionIcon"></i></span>
+                                                <button type="button" tooltip="Share link"
+                                                class="btn btn-icon btn-icon-only rounded-circle"  (click)="ShareLink(ShareLinkFormPopup)" >
+                                                <span class="btn-inner--icon">
+                                                  <img src="assets/img/share_links.png" class="actionIcon" id="actionIcon">
+                                                  <!-- <i id="actionIcon" class="fa fa-share-alt actionIcon"></i> -->
+                                                </span>
                                               </button>
                                               </div>
                                               <div *ngIf="_isEmail == 'true'" >

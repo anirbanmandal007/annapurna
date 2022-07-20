@@ -91,6 +91,7 @@ export class DashboardComponent implements OnInit {
      _IndexPendingList:any;
      first = 0;
   rows = 10;
+  Foldername:any ="Total Folder";
   _HeaderList:any;
   MakerUploaded:any;
   
@@ -111,9 +112,10 @@ export class DashboardComponent implements OnInit {
     const apiUrl=this._global.baseAPIUrl+'Status/GetStatusCount?userID=0&user_Token='+localStorage.getItem('User_Token')
     this._onlineExamService.getAllData(apiUrl).subscribe((data:any) => {     
 
-
+      console.log("data",data);
       data.forEach(ele =>{
-     //   console.log(ele.Activity); // 1, "string", false
+      console.log("ele.Activity",ele.Activity); // 1, "string", false
+      console.log("ele.Cnt",ele.Cnt); // 1, "string", false
 
         if (ele.Activity =="Checker")
         {
@@ -1441,15 +1443,18 @@ searchTable($event) {
     if (strfolder == "Folder")
     {
 this.Folder =  this.FolderCnt;
+this.Foldername ="Folder";
 
     }
     else if (strfolder == "Cabinet")
     {
       this.Folder =  this.CabinetCnt;
+      this.Foldername ="Cabinet";
     }
     else if (strfolder == "SubFolder")
     { 
-      this.Folder =  this.SubFolderCnt;      
+      this.Folder =  this.SubFolderCnt;   
+      this.Foldername ="Sub Folder";   
     }
 
 //alert(strfolder);

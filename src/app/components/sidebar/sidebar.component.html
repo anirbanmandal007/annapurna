@@ -145,7 +145,7 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a *ngFor="let childitems of menuitem.children" class="dropdown-item" [routerLink]="[menuitem.path, childitems.path]">
-            <span class="child-item-icon" [ngClass]="childitems.path ? childitems.path: ''"></span>
+            <!-- <span class="child-item-icon" [ngClass]="childitems.path ? childitems.path: ''"></span> -->
             {{ childitems.title }}
           </a>
         </div>
