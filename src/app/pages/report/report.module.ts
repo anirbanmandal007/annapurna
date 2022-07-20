@@ -20,11 +20,12 @@ import { MetadataComponent } from "./metadata/metadata.component";
 import { TagReportComponent } from "./TagReport/TagReport.component";
 
 import { EmailLogComponent } from "./EmailLog/EmailLog.component";
-
+import { PrintBarcodeComponent } from './print-barcode/print-barcode.component';
+import { NgxBarcodeModule } from 'ngx-barcode';
 
 
 @NgModule({
-  declarations: [StatusComponent,LogsComponent,MetadataComponent,TagReportComponent,SpaceComponent,EmailLogComponent],
+  declarations: [StatusComponent,LogsComponent,MetadataComponent,TagReportComponent,SpaceComponent,EmailLogComponent, PrintBarcodeComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(reportRoutes),
@@ -39,6 +40,7 @@ import { EmailLogComponent } from "./EmailLog/EmailLog.component";
     ModalModule.forRoot(),
     NgxPrintModule,
     TableModule,
+    NgxBarcodeModule 
   ]
 })
 export class ReportModule {}
