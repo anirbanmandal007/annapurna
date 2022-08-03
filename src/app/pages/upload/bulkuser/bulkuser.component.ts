@@ -177,7 +177,7 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
           console.log(this.records);
           console.log("_FilteredList",this._FilteredList);
 
-          this.prepareTableData(this._FilteredList,this._FilteredList);
+          this.prepareTableDataForCSV(this._FilteredList);
           
 
           (<HTMLInputElement>document.getElementById('csvReader')).value = '';
@@ -255,7 +255,7 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
   getHeaderArray(csvRecordsArr: any) {
     var  headers;
    // headers ="NewCBSAccountNo,ApplicationNo,CBSCUSTIC,Team,HandliedBy,ProductCode,Product,ProductDescription,JCCode,JCName,Zone,CustomerName,DBDate,FinalRemarks,DisbursedMonth";
-   headers ="Name,Username,Emailid,Password,MobileNumber,Role,Remarks";
+   headers =['Name','Username','Emailid','Password','MobileNumber','Role','Remarks'];
  
    // let headerArray = [];
     // for (let j = 0; j < headers.length; j++) {
@@ -438,6 +438,44 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
   headerList: any;
   immutableFormattedData: any;
   loading: boolean = true;
+
+  prepareTableDataForCSV(tableData) {
+    let formattedData = [];
+    let tableHeader: any = [
+      { field: 'srNo', header: "SR NO", index: 1 },
+      { field: 'Name', header: "Name", index: 1 },
+      { field: 'Username', header: 'USER NAME', index: 3 },
+      { field: 'Emailid', header: 'EMAIL ID', index: 2 },
+      { field: 'Password', header: 'PASSWORD', index: 3 },
+      { field: 'Moblienumber', header: 'MOBILE NUMBER', index: 3 },
+      { field: 'Role', header: 'ROLE', index: 3 },
+      { field: 'Remarks', header: 'REMARKS', index: 3 }
+    ];
+    console.log("this.formattedData", tableData);
+    tableData.forEach((el, index) => {
+      formattedData.push({
+        'srNo': parseInt(index + 1),
+        'Name': el[0],
+        'Username': el[1],
+        'Emailid': el[2],
+        'Password': el[3],
+        'Moblienumber': el[4],
+        'Role': el[5],
+        'Remarks': el[6]
+      
+      });
+   
+    });
+    this.headerList = tableHeader;
+  //}
+  
+    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+    this.formattedData = formattedData;
+    this.loading = false;
+  
+   // console.log("this.formattedData", this.formattedData);
+  }
+
   prepareTableData(tableData, headerList) {
     let formattedData = [];
    // alert(this.type);
