@@ -98,7 +98,7 @@ export class LoginNewComponent implements OnInit {
       else if(this.loginForm.get("username").value == "upload") {
         this.router.navigate(['upload/file-upload']);
       } else {
-        this.router.navigate(['search/quick-search']);       
+        this.router.navigate(['dashboards/Userdashboard']);       
 
       }
 

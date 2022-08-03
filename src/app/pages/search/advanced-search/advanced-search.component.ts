@@ -189,6 +189,8 @@ export class AdvancedSearchComponent implements OnInit {
         TList:[],
         filters: this.formBuilder.array([]),
         htmlContent: [''],
+        Subject:[''],
+        predefined:['']
       });
       this.getTemplate();
       this._PageNo = 1;
@@ -366,7 +368,37 @@ export class AdvancedSearchComponent implements OnInit {
       });
   
       }
-  
+
+      
+      
+favourite(Row: any) {
+
+
+  this.ContentSearchForm.patchValue({
+    ACC: Row.AccNo,
+    User_Token: localStorage.getItem('User_Token'),
+    userID: localStorage.getItem('UserID'),
+    DocID: Row.DocID
+  });
+
+  const that = this;
+  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/favourite';
+  this._onlineExamService.postData(this.ContentSearchForm.value,apiUrl)     
+  .subscribe( data => {
+      swal.fire({
+        title: "favourite!",
+        text: "File has been favourite.",
+        type: "success",
+        buttonsStyling: false,
+        confirmButtonClass: "btn btn-primary",
+      });
+    //  that.getSearchResult(that.ContentSearchForm.get('TemplateID').value);
+    });
+
+
+ 
+}
+
 
     // GetEntityList() {
     //   //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
@@ -1367,15 +1399,46 @@ GetFilterData(tempID:any) {
 
   }
 
+  // onSendEmail() {
+
+  //   if (this.selectedRows.length <=10)
+  //   {
+  // const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
+  // //  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/SendBulkTagFileOnMail?ID='+localStorage.getItem('UserID')+'&DocID='+1+'&_fileName='+ this.ContentSearchForm.controls['FileNo'].value +'&user_Token='+localStorage.getItem('User_Token');
+  // let toEmailString = ''; 
+  // this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+  // this.ContentSearchForm.value.ToEmailID = toEmailString;
+  //   this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
+  //     .subscribe(data => {
+  //       swal.fire({
+  //         title: "Email!",
+  //         text: "Email send successfully",
+  //         type: "success",
+  //         buttonsStyling: false,
+  //         confirmButtonClass: "btn btn-primary",
+  //       });
+
+  //     }); 
+  //     this.modalRef.hide();
+  //    // this.getSearchResult();   
+
+  //   }
+  //   else
+  //   {
+  //     this.ShowErrormessage("You can not send more than 10 files on mails.");
+  //   }
+  // }
+
+ 
   onSendEmail() {
 
     if (this.selectedRows.length <=10)
     {
   const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
   //  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/SendBulkTagFileOnMail?ID='+localStorage.getItem('UserID')+'&DocID='+1+'&_fileName='+ this.ContentSearchForm.controls['FileNo'].value +'&user_Token='+localStorage.getItem('User_Token');
-  let toEmailString = ''; 
-  this.emailReciepients.forEach(el => toEmailString += el.display + ',');
-  this.ContentSearchForm.value.ToEmailID = toEmailString;
+    let toEmailString = ''; 
+    this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+    this.ContentSearchForm.value.ToEmailID = toEmailString;
     this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
@@ -1396,6 +1459,7 @@ GetFilterData(tempID:any) {
       this.ShowErrormessage("You can not send more than 10 files on mails.");
     }
   }
+
 
   ExporttoExcel()
   {

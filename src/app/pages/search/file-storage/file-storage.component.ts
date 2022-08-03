@@ -270,7 +270,9 @@ export class FileStorageComponent implements OnInit, AfterViewInit {
       ValidDate:[''],
       IsAttachment:[''],
       Subject:[''],
-      predefined:['']
+      predefined:[''],
+      
+      
 
     });
 
@@ -1261,13 +1263,13 @@ viewFullFile(row:any)
   }
 
 
-  //
+  
 
   favourite(Row: any) {
     swal
       .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        // title: "Are you sure?",
+        // text: "You won't be able to revert this!",
         type: "warning",
         showCancelButton: true,
         buttonsStyling: false,
@@ -1297,6 +1299,35 @@ viewFullFile(row:any)
       });
       this.GetFileInfo('');
   }
+
+
+  // favourite(Row: any) {
+
+
+  //   this.FileStorageForm.patchValue({
+  //     ACC: Row.AccNo,
+  //     User_Token: localStorage.getItem('User_Token'),
+  //     userID: localStorage.getItem('UserID'),
+  //     DocID: Row.DocID
+  //   });
+
+  //   const that = this;
+  //   const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/favourite';
+  //   this._onlineExamService.postData(this.FileStorageForm.value,apiUrl)     
+  //   .subscribe( data => {
+  //       swal.fire({
+  //         title: "favourite!",
+  //         text: "File has been favourite.",
+  //         type: "success",
+  //         buttonsStyling: false,
+  //         confirmButtonClass: "btn btn-primary",
+  //       });
+  //     //  that.getSearchResult(that.ContentSearchForm.get('TemplateID').value);
+  //     });
+
+   
+  // //  this.GetFileInfo('');
+  // }
 
   // Model Popup For Docuemnt Inserstion 
 
@@ -1791,17 +1822,50 @@ this.modalRef.hide();
   // }
 
 
+  // onSendEmail() {
+
+  //   if (this.selectedRows.length <=10)
+  //   {
+
+  //   const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
+  //   // this.emailReciepients.forEach((el, i) => {
+  //     let toEmailString = ''; 
+  //     this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+  //     this.FileStorageForm.value.ToEmailID = toEmailString;
+  //     this._onlineExamService.postData(this.FileStorageForm.value, apiUrl)
+  //     .subscribe(data => {
+  //       swal.fire({
+  //         title: "Email!",
+  //         text: "Email send successfully",
+  //         type: "success",
+  //         buttonsStyling: false,
+  //         confirmButtonClass: "btn btn-primary",
+  //       });
+
+  //     });
+  //   // });
+  //   this.modalRef.hide();
+  //   //  this.getSearchResult();   
+  //   }
+  //   else
+  //   {
+  //     this.ShowErrormessage("You can not send more than 10 files on mails.");
+  //   }
+
+  // }
+
+
+    
   onSendEmail() {
 
     if (this.selectedRows.length <=10)
     {
-
-    const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
-    // this.emailReciepients.forEach((el, i) => {
-      let toEmailString = ''; 
-      this.emailReciepients.forEach(el => toEmailString += el.display + ',');
-      this.FileStorageForm.value.ToEmailID = toEmailString;
-      this._onlineExamService.postData(this.FileStorageForm.value, apiUrl)
+  const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
+  //  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/SendBulkTagFileOnMail?ID='+localStorage.getItem('UserID')+'&DocID='+1+'&_fileName='+ this.ContentSearchForm.controls['FileNo'].value +'&user_Token='+localStorage.getItem('User_Token');
+    let toEmailString = ''; 
+    this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+    this.FileStorageForm.value.ToEmailID = toEmailString;
+    this._onlineExamService.postData(this.FileStorageForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
           title: "Email!",
@@ -1811,16 +1875,15 @@ this.modalRef.hide();
           confirmButtonClass: "btn btn-primary",
         });
 
-      });
-    // });
-    this.modalRef.hide();
-    //  this.getSearchResult();   
+      }); 
+      this.modalRef.hide();
+     // this.getSearchResult();   
+
     }
     else
     {
       this.ShowErrormessage("You can not send more than 10 files on mails.");
     }
-
   }
 
   onSendEmailByShare() {

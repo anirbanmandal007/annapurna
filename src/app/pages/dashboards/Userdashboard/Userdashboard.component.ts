@@ -121,6 +121,7 @@ export class UserdashboardComponent implements OnInit {
   bsValue = new Date();
   bsRangeValue: Date[];
   maxDate = new Date();
+  Foldername:any ="Total Folder";
   editorConfig: AngularEditorConfig = {
     editable: true,
       spellcheck: true,
@@ -240,7 +241,33 @@ export class UserdashboardComponent implements OnInit {
 
   
   
-    
+//   FolderStruture(strfolder:any)
+//   {
+
+//   //  this.FolderCnt= ele.Cnt;
+//     // CabinetCnt:any;
+//      //SubFolderCnt:any;
+
+//     if (strfolder == "Folder")
+//     {
+// this.Folder =  this.FolderCnt;
+// this.Foldername ="Folder";
+
+//     }
+//     else if (strfolder == "Cabinet")
+//     {
+//       this.Folder =  this.CabinetCnt;
+//       this.Foldername ="Cabinet";
+//     }
+//     else if (strfolder == "SubFolder")
+//     { 
+//       this.Folder =  this.SubFolderCnt;   
+//       this.Foldername ="Sub Folder";   
+//     }
+
+// //alert(strfolder);
+
+//   }
 
 
 
@@ -337,10 +364,10 @@ console.log("Chart",data);
       }
      
 
-    //   if (ele.Activity =="Maker")
-    //   {
-    //  this.Maker= ele.Cnt;
-    //   }
+      if (ele.Activity =="Maker")
+      {
+     this.Maker= ele.Cnt;
+      }
       else if (ele.Activity =="Metadata")
       {
      this.Metadata= ele.Cnt;
@@ -559,6 +586,7 @@ loadChartsData() {
     pieSeries.legendSettings.valueText = '{value}'
     pieSeries.labels.template.maxWidth = 130;
     pieSeries.labels.template.wrap = true;
+    pieSeries.labels.template.disabled = true;
     // Add a legend
     activityChart.legend = new am4charts.Legend();
     activityChart.legend.position = "right";
@@ -601,6 +629,8 @@ loadChartsData() {
     categoryAxis.dataFields.category = "category";
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.renderer.minGridDistance = 30;
+    //categoryAxis.renderer.minGridDistance = 0;
+    //categoryAxis.renderer.minGridDistance = 30;
 
     var valueAxis = filesChart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.renderer.labels.template.fill = am4core.color("#005984");
@@ -608,7 +638,9 @@ loadChartsData() {
     var series = filesChart.series.push(new am4charts.ColumnSeries());
     series.dataFields.valueY = "value";
     series.dataFields.categoryX = "category";
+    //series =
     series.columns.template.strokeWidth = 1;
+   // series.columns.template.fixedWidthGrid="0,0";
     series.columns.template.tooltipText =  "{category}: {value}";
     /* Add data */
     filesChart.data = [{
@@ -1390,21 +1422,22 @@ DLoadData(type:any) {
     // CabinetCnt:any;
      //SubFolderCnt:any;
 
-    if (strfolder == "Folder")
-    {
-this.Folder =  this.FolderCnt;
-
-    }
-    else if (strfolder == "Cabinet")
-    {
-      this.Folder =  this.CabinetCnt;
-    }
-    else if (strfolder == "SubFolder")
-    { 
-      this.Folder =  this.SubFolderCnt;      
-    }
-
-//alert(strfolder);
+     if (strfolder == "Folder")
+     {
+ this.Folder =  this.FolderCnt;
+ this.Foldername ="Folder";
+ 
+     }
+     else if (strfolder == "Cabinet")
+     {
+       this.Folder =  this.CabinetCnt;
+       this.Foldername ="Cabinet";
+     }
+     else if (strfolder == "SubFolder")
+     { 
+       this.Folder =  this.SubFolderCnt;   
+       this.Foldername ="Sub Folder";   
+     }
 
   }
 

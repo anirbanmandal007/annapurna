@@ -321,7 +321,7 @@
                                 <div class="card card_box task">
                                     <img src="assets/img/task1.png">
                                     <div class="card_box_txt">
-                                        <h3 class="cursor-pointer" (click)="downloadData('Maker Pending')">{{MakerUploaded}}</h3>
+                                        <h3 class="cursor-pointer" (click)="downloadData('Checker Pending')">{{Maker}}</h3>
                                         <!-- <h3 class="cursor-pointer" (click)="DLoadData('TaskOverdue')">112</h3> -->
                                         <p>Task Overdue</p>
                                     </div>
@@ -331,7 +331,7 @@
                                 <div class="card card_box task_dur">
                                     <img src="assets/img/task2.png">
                                     <div class="card_box_txt">
-                                        <h3 class="cursor-pointer" (click)="DLoadData('TastDueThisWeek')">35 </h3>
+                                        <h3 class="cursor-pointer" (click)="DLoadData('Checker Pending')">{{Maker}} </h3>
                                         <p>Tasks Due This Week</p>
                                     </div>
                                 </div>
@@ -340,7 +340,7 @@
                                 <div class="card card_box tasks_blue">
                                     <img src="assets/img/task3.png">
                                     <div class="card_box_txt">
-                                        <h3 class="cursor-pointer" (click)="DLoadData('TastDueDate')">65</h3>
+                                        <h3 class="cursor-pointer" (click)="DLoadData('Checker Pending')">{{Maker}}</h3>
                                         <p>Tasks Due Today</p>
                                     </div>
                                 </div>
@@ -382,7 +382,7 @@
                                             <i class="fa fa-caret-down" aria-hidden="true">Sub Folder</i> -->
 
                                         </h3>
-                                        <p (click)="DLoadData('Folder')">Total Folder</p>
+                                        <p (click)="DLoadData('Folder')">{{Foldername}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -391,7 +391,7 @@
                                     <img src="assets/img/metadata.png">
                                     <div class="card_box_txt">
                                         <h3 class="cursor-pointer" (click)="DLoadData('Metadata')">{{Metadata}}<i class="fa fa-caret-down" aria-hidden="true"></i></h3>
-                                        <p>Metadata Charts</p>
+                                        <p>Template</p>
                                     </div>
                                 </div>
                             </div>

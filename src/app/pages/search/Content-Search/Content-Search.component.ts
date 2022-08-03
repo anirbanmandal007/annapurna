@@ -650,42 +650,46 @@ export class ContentSearchComponent implements OnInit {
       }
 
       favourite(Row: any) {
-        swal
-          .fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            type: "warning",
-            showCancelButton: true,
-            buttonsStyling: false,
-            confirmButtonClass: "btn btn-danger",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonClass: "btn btn-secondary",
-          })
-          .then((result) => {
-            if (result.value) {
-              this.ContentSearchForm.patchValue({
-                ACC: Row.AccNo,
-                User_Token: localStorage.getItem('User_Token'),
-                userID: localStorage.getItem('UserID'),
-                DocID: Row.DocID
-              });
 
-              const that = this;
-              const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/favourite';
-              this._onlineExamService.postData(this.ContentSearchForm.value,apiUrl)     
-              .subscribe( data => {
-                  swal.fire({
-                    title: "favourite!",
-                    text: "File has been favourite.",
-                    type: "success",
-                    buttonsStyling: false,
-                    confirmButtonClass: "btn btn-primary",
-                  });
-                //  that.getSearchResult(that.ContentSearchForm.get('TemplateID').value);
-                });
 
-            }
+        this.ContentSearchForm.patchValue({
+          ACC: Row.AccNo,
+          User_Token: localStorage.getItem('User_Token'),
+          userID: localStorage.getItem('UserID'),
+          DocID: Row.DocID
+        });
+
+        const that = this;
+        const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/favourite';
+        this._onlineExamService.postData(this.ContentSearchForm.value,apiUrl)     
+        .subscribe( data => {
+            swal.fire({
+              title: "favourite!",
+              text: "File has been favourite.",
+              type: "success",
+              buttonsStyling: false,
+              confirmButtonClass: "btn btn-primary",
+            });
+          //  that.getSearchResult(that.ContentSearchForm.get('TemplateID').value);
           });
+ 
+        // swal
+        //   .fire({
+        //     title: "Are you sure?",
+        //     text: "You won't be able to revert this!",
+        //     type: "warning",
+        //     showCancelButton: true,
+        //     buttonsStyling: false,
+        //     confirmButtonClass: "btn btn-danger",
+        //     confirmButtonText: "Yes, favourite it!",
+        //     cancelButtonClass: "btn btn-secondary",
+        //   })
+        //   .then((result) => {
+        //     if (result.value) {
+             
+
+        //     }
+        //   });
        
       }
 
@@ -1240,6 +1244,8 @@ GetFilterData(tempID:any) {
 
   }
   emailReciepients = [];
+
+  
   onSendEmail() {
 
     if (this.selectedRows.length <=10)

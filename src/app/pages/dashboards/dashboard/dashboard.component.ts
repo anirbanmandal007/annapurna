@@ -443,7 +443,8 @@ export class DashboardComponent implements OnInit {
     pieSeries.dataFields.category = "country";
 
     // Let's cut a hole in our Pie chart the size of 30% the radius
-    chart.innerRadius = am4core.percent(70);;
+  //  chart.innerRadius = am4core.percent(70);;
+  //pieSeries
     pieSeries.ticks.template.disabled = true;
     pieSeries.labels.template.hidden = true;
     pieSeries.tooltip.disabled = true;
@@ -453,7 +454,7 @@ export class DashboardComponent implements OnInit {
     pieSeries.legendSettings.valueText = '{value}'
     pieSeries.labels.template.maxWidth = 130;
     pieSeries.labels.template.wrap = true;
-
+    pieSeries.labels.template.disabled = true;
     // Add a legend
     chart.legend = new am4charts.Legend();
     chart.legend.itemContainers.template.events.on("hit", (ev: any) => {
@@ -461,12 +462,12 @@ export class DashboardComponent implements OnInit {
     });
 
     chart.data = [{
-      "country": "Used",
+      "country": "Utilized",
       "value": this.FileSize,
       "color": am4core.color("#f6a01a"),
       "labelColor": "#005984"
     }, {
-      "country": "Available Space",
+      "country": "Available",
       "value": this.TotalSize,
       "color": am4core.color("#e6e6e6"),
       "labelColor": "#005984"
@@ -491,20 +492,31 @@ export class DashboardComponent implements OnInit {
     pieSeries.labels.template.hidden = true;
     pieSeries.tooltip.disabled = true;
     pieSeries.slices.template.propertyFields.fill = "color";
-    pieSeries.slices.template.strokeWidth =1;
+    pieSeries.slices.template.strokeWidth =0;
+
+
+    //pieSeries.calculatePercent = true;
+    
    // pieSeries.labels.template.text = "{value}";
     pieSeries.legendSettings.valueText = '{value}'
     pieSeries.labels.template.maxWidth = 130;
     pieSeries.labels.template.wrap = true;
+  //  pieSeries.labels.template.truncate = true;
+    pieSeries.labels.template.disabled = true;
+
+    
     //chart2.legend.valueLabels.template.text = "{value.value}";
     // pieSeries.slices.template.strokeOpacity = 0;
 
     //alert(this.EmailNotSent);
     //alert(this.EmailSent);
     // Add a legend
+  
     chart2.legend = new am4charts.Legend();
     chart2.legend.position = "right";
     chart2.legend.valign = "middle";
+    //chart2.legend.valueLabels.template.disabled = true;
+    //chart2.legend.valueLabels.template.disabled = true;
     chart2.legend.itemContainers.template.events.on("hit", (ev: any) => {
       this.downloadData(ev.target.dataItem.dataContext.properties.category);
     });
@@ -537,6 +549,7 @@ export class DashboardComponent implements OnInit {
     pieSeries.legendSettings.valueText = '{count}'
     pieSeries.labels.template.maxWidth = 130;
     pieSeries.labels.template.wrap = true;
+    pieSeries.labels.template.disabled = true;
     // Add a legend
     ocrStatusChart.legend = new am4charts.Legend();
     ocrStatusChart.legend.itemContainers.template.events.on("hit", (ev: any) => {
@@ -623,6 +636,7 @@ export class DashboardComponent implements OnInit {
     pieSeries.legendSettings.valueText = '{value}'
     pieSeries.labels.template.maxWidth = 130;
     pieSeries.labels.template.wrap = true;
+    pieSeries.labels.template.disabled = true;
     // Add a legend
     docMetadataChart.legend = new am4charts.Legend();
     docMetadataChart.legend.position = "right";
@@ -664,7 +678,7 @@ export class DashboardComponent implements OnInit {
     pieSeries.legendSettings.valueText = '{count}'
     pieSeries.labels.template.maxWidth = 130;
     pieSeries.labels.template.wrap = true;
-    
+    pieSeries.labels.template.disabled = true;
     // Add a legend
     makerCheckedChart.legend = new am4charts.Legend();
     makerCheckedChart.legend.position = "right";
@@ -840,10 +854,8 @@ else if (this.type=="PDF" || this.type=="JPG" ||this.type=="tif" || this.type=="
   this.headerList = tableHeader;
 }
 
- 
- 
-
-else if (this.type=="Used" )
+  
+else if (this.type=="Utilized" )
 {
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },{ field: 'FileNo', header: 'FILE NO', index: 2 },

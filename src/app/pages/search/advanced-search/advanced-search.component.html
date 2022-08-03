@@ -514,6 +514,11 @@
                           <!-- <i class="material-icons">delete</i> -->
                           <span>Delete File</span>
                         </button>
+
+                        <button mat-menu-item (click)="favourite(car)">
+                          <!-- <i class="material-icons">favorite</i> -->
+                          <span>Favourite</span>
+                        </button>
                       </mat-menu>
 
                       
@@ -687,7 +692,7 @@
                   <div class="form-row">
                       
                       <div class="col-md-12 mb-3">
-                          <label class="form-control-label" for="ToEmailID">
+                          <label class="form-control-label" style="float:left;padding-right: 45px; padding-top: 12px;" for="ToEmailID">
                             To 
                           </label>
                           <!-- <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/> -->
@@ -702,23 +707,35 @@
                             [onAdding]="onAddedFunc"
                           >
                           </tag-input>
+                          <div class="col-md-9">
+                            <!-- <label class="form-control-label" for="Subject" style="float:left;padding-right: 45px; padding-top: 12px;" >
+                              Subject
+                               </label> -->
+                               <input class="form-control mt-2 mb-2" style="width:86%;"  formControlName="Subject" placeholder="Subject" type="text"/>
+                              
+                          </div>
+                          <div class="col-md-3" style="display: flex;justify-content:center;align-items: center;">
+                            <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Default Template">
+                            <label class="form-control-label" for="predefined" style="padding-top: 10px;">
+                              Default Template
+                            </label>
+                          </div>
+                          <div class="col-md-12 mb-3">
+                            
+                            <input type="text" formControlName="ValidDate"  placeholder="Valid Date" class="form-control"  bsDatepicker [bsValue]="bsValue"
+                            [bsConfig]="{
+                              isAnimated: true,
+                              containerClass: 'theme-red'
+                            }"
+                            [minDate]="today"
+                          />  
+                        
+                        </div>    
                           <br />
                           <angular-editor formControlName="htmlContent" [config]="editorConfig"></angular-editor>
                                                                                             
                       </div>
-                      <div class="col-md-12 mb-3">
-                          <label class="form-control-label" for="ValidDate">
-                            Expire On
-                          </label>
-                          <input type="text" formControlName="ValidDate"  placeholder="Valid Date" class="form-control"  bsDatepicker [bsValue]="bsValue"
-                          [bsConfig]="{
-                            isAnimated: true,
-                            containerClass: 'theme-red'
-                          }"
-                          [minDate]="today"
-                        />  
-                      
-                      </div>                            
+                                            
   
                       
                     </div>
@@ -745,7 +762,7 @@
                   <div class="form-row">
                       
                       <div class="col-md-12 mb-3">
-                          <label class="form-control-label" for="ToEmailID">
+                          <label class="form-control-label" style="float:left;padding-right: 45px; padding-top: 12px;" for="ToEmailID">
                             To 
                           </label>
                           <!-- <input formControlName="ToEmailID" placeholder="Email" type="email" class="form-control"/> -->
@@ -760,6 +777,18 @@
                           [onAdding]="onAddedFunc">
                         </tag-input>
                         <br />
+
+                        <div class="col-md-9">
+                       
+                             <input class="form-control mt-2 mb-2" style="width:86%;"  formControlName="Subject" placeholder="Subject" type="text"/>
+                            
+                        </div>
+                        <div class="col-md-3" style="display: flex;justify-content:center;align-items: center;">
+                          <input type="checkbox" style="height: 20px;width:20PX;margin-right: 10px;" checked="true" formControlName="predefined" name="predefined" value="Default Template">
+                          <label class="form-control-label" for="predefined" style="padding-top: 10px;">
+                            Default Template
+                          </label>
+                        </div>
                         <angular-editor formControlName="htmlContent" [config]="editorConfig"></angular-editor>
                                                            
                       </div>                           

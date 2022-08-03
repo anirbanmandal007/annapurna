@@ -1,15 +1,17 @@
 import { Globalconstants } from "../../../Helper/globalconstants";
 import { OnlineExamServiceService } from "../../../Services/online-exam-service.service";
-import { Component, OnInit, TemplateRef,EventEmitter,Output } from "@angular/core";
+import { Component, OnInit, TemplateRef,EventEmitter,Output,HostListener,ViewChild } from "@angular/core";
 //import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators,FormControl } from "@angular/forms";
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { AngularEditorConfig } from "@kolkov/angular-editor";
 import { ToastrService } from "ngx-toastr";
 import { HttpEventType, HttpClient } from '@angular/common/http';
 import swal from "sweetalert2";
+import { of, throwError } from "rxjs";
+import { TagInputComponent as SourceTagInput } from 'ngx-chips';
 import { saveAs } from 'file-saver';
 import { CommonService } from "src/app/Services/common.service";
 //import { Console } from "console";
@@ -77,10 +79,60 @@ export class BasicSearchComponent implements OnInit {
   today = new Date();
   fileExt:any;
 
+
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+      spellcheck: true,
+      height: '150px',
+      minHeight: '150px',
+      maxHeight: '150px',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Enter text here...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    // uploadUrl: 'v1/image',
+    // upload: (file: File) => {
+    //   return;
+    // },
+    // uploadWithCredentials: false,
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      ['bold', 'italic'],
+      ['fontSize']
+    ]
+  }
+
   _FileDetails:string [][] = [];
   
   @Output() public onUploadFinished = new EventEmitter();
-      
+  emailReciepientsShare = [];
     constructor(
       private modalService: BsModalService,
       private _onlineExamService: OnlineExamServiceService,
@@ -123,6 +175,9 @@ export class BasicSearchComponent implements OnInit {
       SubfolderID:[0], 
       RootID:[0],
       selectData:[0],
+      htmlContent: [''],
+      Subject:[''],
+      predefined:['']
   
       });
       this.getSearchResult(0);
@@ -756,52 +811,37 @@ GetFilterData(tempID:any) {
 
   }
 
-  onSendEmailByShare() {
+  // onSendEmailByShare() {
 
-    const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmailBulkFiles';
+  //   const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmailBulkFiles';
    
-    this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
-      .subscribe(data => {
-        swal.fire({
-          title: "Email!",
-          text: "Email send successfully",
-          type: "success",
-          buttonsStyling: false,
-          confirmButtonClass: "btn btn-primary",
-        });
+  //   this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
+  //     .subscribe(data => {
+  //       swal.fire({
+  //         title: "Email!",
+  //         text: "Email send successfully",
+  //         type: "success",
+  //         buttonsStyling: false,
+  //         confirmButtonClass: "btn btn-primary",
+  //       });
 
-      }); 
-      this.modalRef.hide();
+  //     }); 
+  //     this.modalRef.hide();
  
      
-  }
-  SendBulkEmail(template: TemplateRef<any>)
-  {
-    var that = this;
-  //console.log("Email", this.selectedRows);
-    let _CSVData= "";
-    for (let j = 0; j < this.selectedRows.length; j++) {          
-      _CSVData += this.selectedRows[j] + ',';
-      // headerArray.push(headers[j]);  
-     // console.log("CSV Data", _CSVData);
-    }
-    this.ContentSearchForm.controls['ACC'].setValue(_CSVData);
-    this.ContentSearchForm.controls['FileNo'].setValue(_CSVData);
-  
-    // if (_CSVData != null) {
-     
-    // }
-    this.modalRef = this.modalService.show(template);
+  // }
 
-  }
+  emailReciepients = [];
 
   onSendEmail() {
 
     if (this.selectedRows.length <=10)
     {
-     const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
+  const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
   //  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/SendBulkTagFileOnMail?ID='+localStorage.getItem('UserID')+'&DocID='+1+'&_fileName='+ this.ContentSearchForm.controls['FileNo'].value +'&user_Token='+localStorage.getItem('User_Token');
-    
+    let toEmailString = ''; 
+    this.emailReciepients.forEach(el => toEmailString += el.display + ',');
+    this.ContentSearchForm.value.ToEmailID = toEmailString;
     this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
       .subscribe(data => {
         swal.fire({
@@ -822,6 +862,78 @@ GetFilterData(tempID:any) {
       this.ShowErrormessage("You can not send more than 10 files on mails.");
     }
   }
+
+
+
+  onSendEmailByShare() {
+
+    const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmailBulkFiles';
+    let toEmailString = ''; 
+    this.emailReciepientsShare.forEach(el => toEmailString += el.display + ',');
+    this.ContentSearchForm.value.ToEmailID = toEmailString;
+    this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
+      .subscribe(data => {
+        swal.fire({
+          title: "Email!",
+          text: "Email send successfully",
+          type: "success",
+          buttonsStyling: false,
+          confirmButtonClass: "btn btn-primary",
+        });
+
+      }); 
+      this.modalRef.hide();
+ 
+     
+  }
+
+  SendBulkEmail(template: TemplateRef<any>)
+  {
+    var that = this;
+  //console.log("Email", this.selectedRows);
+    let _CSVData= "";
+    for (let j = 0; j < this.selectedRows.length; j++) {          
+      _CSVData += this.selectedRows[j] + ',';
+      // headerArray.push(headers[j]);  
+     // console.log("CSV Data", _CSVData);
+    }
+    this.ContentSearchForm.controls['ACC'].setValue(_CSVData);
+    this.ContentSearchForm.controls['FileNo'].setValue(_CSVData);
+  
+    // if (_CSVData != null) {
+     
+    // }
+    this.modalRef = this.modalService.show(template);
+
+  }
+
+  // onSendEmail() {
+
+  //   if (this.selectedRows.length <=10)
+  //   {
+  //    const apiUrl = this._global.baseAPIUrl + 'Mail/SendEmail';
+  // //  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/SendBulkTagFileOnMail?ID='+localStorage.getItem('UserID')+'&DocID='+1+'&_fileName='+ this.ContentSearchForm.controls['FileNo'].value +'&user_Token='+localStorage.getItem('User_Token');
+    
+  //   this._onlineExamService.postData(this.ContentSearchForm.value, apiUrl)
+  //     .subscribe(data => {
+  //       swal.fire({
+  //         title: "Email!",
+  //         text: "Email send successfully",
+  //         type: "success",
+  //         buttonsStyling: false,
+  //         confirmButtonClass: "btn btn-primary",
+  //       });
+
+  //     }); 
+  //     this.modalRef.hide();
+  //    // this.getSearchResult();   
+
+  //   }
+  //   else
+  //   {
+  //     this.ShowErrormessage("You can not send more than 10 files on mails.");
+  //   }
+  // }
 
   ExporttoExcel()
   {
@@ -975,5 +1087,106 @@ config = {
 //   clearOnSelection: false // clears search criteria when an option is selected if set to true, default is false
 //   inputDirection: 'ltr' // the direction of the search input can be rtl or ltr(default)
 // }
+
+
+favourite(Row: any) {
+
+
+  this.ContentSearchForm.patchValue({
+    ACC: Row.AccNo,
+    User_Token: localStorage.getItem('User_Token'),
+    userID: localStorage.getItem('UserID'),
+    DocID: Row.DocID
+  });
+
+  const that = this;
+  const apiUrl = this._global.baseAPIUrl + 'SearchFileStatus/favourite';
+  this._onlineExamService.postData(this.ContentSearchForm.value,apiUrl)     
+  .subscribe( data => {
+      swal.fire({
+        title: "favourite!",
+        text: "File has been favourite.",
+        type: "success",
+        buttonsStyling: false,
+        confirmButtonClass: "btn btn-primary",
+      });
+    //  that.getSearchResult(that.ContentSearchForm.get('TemplateID').value);
+    });
+
+  // swal
+  //   .fire({
+  //     title: "Are you sure?",
+  //     text: "You won't be able to revert this!",
+  //     type: "warning",
+  //     showCancelButton: true,
+  //     buttonsStyling: false,
+  //     confirmButtonClass: "btn btn-danger",
+  //     confirmButtonText: "Yes, favourite it!",
+  //     cancelButtonClass: "btn btn-secondary",
+  //   })
+  //   .then((result) => {
+  //     if (result.value) {
+       
+
+  //     }
+  //   });
+ 
+}
+
+
+@ViewChild('tagInput')
+tagInput: SourceTagInput;
+public validators = [ this.must_be_email.bind(this) ];
+public errorMessages = {
+    'must_be_email': 'Please be sure to use a valid email format'
+};
+public onAddedFunc = this.beforeAdd.bind(this);
+private addFirstAttemptFailed = false;
+
+private must_be_email(control: FormControl) {        
+
+    if (this.addFirstAttemptFailed && !this.validateEmail(control.value)) {
+        return { "must_be_email": true };
+    }
+    return null;
+}
+beforeAdd(tag: string) {
+
+  if (!this.validateEmail(tag)) {
+    if (!this.addFirstAttemptFailed) {
+      this.addFirstAttemptFailed = true;
+      this.tagInput.setInputValue(tag);
+    }
+
+    return throwError(this.errorMessages['must_be_email']);
+    //return of('').pipe(tap(() => setTimeout(() => this.tagInput.setInputValue(tag))));
+    
+  }
+  this.addFirstAttemptFailed = false;
+  return of(tag);
+}
+
+private validateEmail(text: string) {
+  var EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/i;
+  return (text && EMAIL_REGEXP.test(text));
+}
+
+onItemAdded(event) {
+  console.log(event);
+}
+
+@HostListener('document:paste', ['$event']) blockPaste(e: KeyboardEvent) {
+  e.preventDefault();
+}
+
+@HostListener('document:copy', ['$event']) blockCopy(e: KeyboardEvent) {
+  e.preventDefault();
+}
+
+@HostListener('document:cut', ['$event']) blockCut(e: KeyboardEvent) {
+  e.preventDefault();
+}
+
+
       
 }

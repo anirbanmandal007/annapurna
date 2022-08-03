@@ -17,6 +17,9 @@ import { DataUploadComponent } from './dataupload/dataupload.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import { SftpUploadComponent } from "./sftpupload/sftpupload.component";
 import { TableModule } from 'primeng/table';
+import { BulkUserComponent } from "./bulkuser/bulkuser.component";
+import { BulkFolderComponent } from "./bulkfolder/bulkfolder.component";
+import { BulkFolderMappingComponent } from "./bulkfoldermapping/bulkfoldermapping.component";
 
 //sftpuploadForm
 
@@ -24,7 +27,8 @@ import { TableModule } from 'primeng/table';
 //import { DepartmentComponent } from "./department/department.component";
 
 @NgModule({
-  declarations: [FileUploadComponent, DataUploadComponent,SftpUploadComponent],
+  declarations: [FileUploadComponent, DataUploadComponent,SftpUploadComponent, BulkUserComponent,
+     BulkFolderComponent, BulkFolderMappingComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(uploadRoutes),

@@ -287,7 +287,7 @@ export class EntityComponent implements OnInit {
       .then((result) => {
         if (result.value) {
           this.AddEntityForm.patchValue({
-            id: id
+            id: id.id
           });
           const apiUrl = this._global.baseAPIUrl + 'SubfolderController/Delete';
           this._onlineExamService.postData(this.AddEntityForm.value,apiUrl)     

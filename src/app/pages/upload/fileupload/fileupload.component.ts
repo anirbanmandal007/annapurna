@@ -436,8 +436,8 @@ if (this.myFiles.length >=1000)
           }
           if (this.FileUPloadForm.controls['BranchID'].value <= 0)
           {
-            this.showmessage("Select Customer");
-              return;
+            this.showmessage("Select folder");
+             // return;
 
           }
           if (this.FileUPloadForm.controls['TemplateID'].value <= 0)
@@ -449,7 +449,7 @@ if (this.myFiles.length >=1000)
           if (this.FileUPloadForm.controls['SubfolderID'].value <= 0)
           {
             this.showmessage("Select SubfolderID");
-              return;
+            //  return;
 
           }
           var _UplaodBy ='0';
@@ -612,7 +612,7 @@ let x = strmsg.split(',');
             if (this.FileUPloadForm.get('DeptID').value <=0 )
             {
                      this.showmessage("Please Select Department");
-                      return false;
+                      //return false;
             }
             return true;
       
