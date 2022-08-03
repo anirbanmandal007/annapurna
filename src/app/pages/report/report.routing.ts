@@ -5,6 +5,7 @@ import { MetadataComponent } from "./metadata/metadata.component";
 import { TagReportComponent } from "./TagReport/TagReport.component";
 import { SpaceComponent } from "./Space/Space.component";
 import { EmailLogComponent } from "./EmailLog/EmailLog.component";
+import { PrintBarcodeComponent } from "./print-barcode/print-barcode.component";
  
 
 export const reportRoutes: Routes = [
@@ -34,7 +35,11 @@ export const reportRoutes: Routes = [
       {
         path: "EmailLog",
         component: EmailLogComponent
-      },       
+      },
+      {
+        path: "print-barcode",
+        component: PrintBarcodeComponent
+      },      
       
     ]
 
