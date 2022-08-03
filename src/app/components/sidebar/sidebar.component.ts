@@ -379,6 +379,11 @@ export class SidebarComponent implements OnInit {
         route = { path: "bulkfoldermapping", title: "Bulk Folder Mapping", type: "link"}
          break;
        }
+       case "Sftp Upload": {
+        // route.children.push({ path: "file-upload", title: "File Upload", type: "link" })
+        route = { path: "sftpupload", title: "SFTP Upload", type: "link"}
+         break;
+       }
 
       case "Master": {
         route = {
