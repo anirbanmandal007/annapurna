@@ -297,7 +297,7 @@ searchTable($event) {
     const apiUrl =
       this._global.baseAPIUrl +
       "Admin/GetDetails?ID=" +
-      value +"&user_Token=" + localStorage.getItem('User_Token');
+      value.id +"&user_Token=" + localStorage.getItem('User_Token');
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       var that = this;
       that._SingleUser = data;
@@ -338,7 +338,7 @@ searchTable($event) {
       .then((result) => {
         if (result.value) {
           this.AddUserForm.patchValue({
-            id: id,
+            id: id.id,
             User_Token: localStorage.getItem('User_Token'),
           });
 

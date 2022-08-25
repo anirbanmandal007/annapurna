@@ -1175,17 +1175,17 @@ onItemAdded(event) {
   console.log(event);
 }
 
-@HostListener('document:paste', ['$event']) blockPaste(e: KeyboardEvent) {
-  e.preventDefault();
-}
+// @HostListener('document:paste', ['$event']) blockPaste(e: KeyboardEvent) {
+//   e.preventDefault();
+// }
 
-@HostListener('document:copy', ['$event']) blockCopy(e: KeyboardEvent) {
-  e.preventDefault();
-}
+// @HostListener('document:copy', ['$event']) blockCopy(e: KeyboardEvent) {
+//   e.preventDefault();
+// }
 
-@HostListener('document:cut', ['$event']) blockCut(e: KeyboardEvent) {
-  e.preventDefault();
-}
+// @HostListener('document:cut', ['$event']) blockCut(e: KeyboardEvent) {
+//   e.preventDefault();
+// }
 
 
       

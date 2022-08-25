@@ -25,9 +25,9 @@ font-weight: 500;
 font-family: 'Gill Sans MT';
 font-style: italic;
 }
-.login_form{
-  height:calc(100vh - 150px);
-}
+// .login_form{
+//   height:calc(100vh - 150px);
+// }
 .client_logo{
   display: flex;
   width: 40%;
@@ -256,11 +256,13 @@ color:#CC0000;
 .white_bg{
   padding: 15px;
 }
-.login_form{
-  padding: 80px 0;
-}
+
 }
 
 button[disabled] {
   opacity: 0.3;
 }
+.login_form{
+  // padding: 80px 0;
+  height: 100vh;
+ }

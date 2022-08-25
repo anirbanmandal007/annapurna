@@ -181,10 +181,7 @@ Role:any;
       this._PageIDAndChk += this.AddRoleForm.value.Roles[i].id +','+  this.AddRoleForm.value.Roles[i].isChecked +'#'
       // console.log("Parent");
       // console.log(this._PageIDAndChk);
-if (this.AddRoleForm.value.Roles[i].isChecked)
-{
-  _Flag=1;
-}
+
 
       if (this.AddRoleForm.value.Roles[i].subItems.length > 0)
       {
@@ -192,6 +189,11 @@ if (this.AddRoleForm.value.Roles[i].isChecked)
       this._PageIDAndChk += this.AddRoleForm.value.Roles[i].subItems[j].id +','+  this.AddRoleForm.value.Roles[i].subItems[j].isChecked +'#'
       // console.log("SubItem");
       // console.log(this._PageIDAndChk);
+
+      if (this.AddRoleForm.value.Roles[i].subItems[j].isChecked)
+{
+  _Flag=1;
+}
       }           
       }       
 
@@ -256,6 +258,8 @@ if (this.AddRoleForm.value.Roles[i].isChecked)
       this.router.navigate(['/usermanagement/roles']);
 
       }
+
+
       ShowErrormessage(data:any)
       {
         this.toastr.show(

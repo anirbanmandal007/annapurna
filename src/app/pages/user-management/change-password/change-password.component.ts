@@ -49,7 +49,7 @@ export class ChangePasswordComponent implements OnInit {
       currentpwd: ["", Validators.required],
       pwd: ["", [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/)]],
       confirmPass: ["", Validators.required],
-      recaptcha: ["", Validators.required],           
+      // recaptcha: ["", Validators.required],           
       User_Token: localStorage.getItem('User_Token') ,
       CreatedBy: localStorage.getItem('UserID')
 

@@ -311,6 +311,8 @@ export class AdvancedSearchComponent implements OnInit {
    
 });
 
+console.log("List" , this.ContentSearchForm.value);
+
 //this.ContentSearchForm.get('TempIDList').value
 //alert(this.ContentSearchForm.get('TList').value);
 
