@@ -556,10 +556,11 @@ export class SidebarComponent implements OnInit {
         route = { path: "EmailLog", title: "Email Log", type: "link" }
         break;
       }
-
-
-      
-      
+      case "Filestatus":{
+        route = { path: "Filestatus", title: "File Upload status", type: "link" }
+        break;
+      }
+ 
       // case "Database Log":{
       //   route = { path: "logs", title: "Logs", type: "link" }
       //   break;

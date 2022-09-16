@@ -6,7 +6,7 @@ import { TagReportComponent } from "./TagReport/TagReport.component";
 import { SpaceComponent } from "./Space/Space.component";
 import { EmailLogComponent } from "./EmailLog/EmailLog.component";
 import { PrintBarcodeComponent } from "./print-barcode/print-barcode.component";
- 
+import { FilestatusComponent } from "./Filestatus/Filestatus.component";
 
 export const reportRoutes: Routes = [
   {
@@ -39,6 +39,11 @@ export const reportRoutes: Routes = [
       {
         path: "print-barcode",
         component: PrintBarcodeComponent
+      }
+      ,
+      {
+        path: "Filestatus",
+        component: FilestatusComponent
       },      
       
     ]

@@ -22,10 +22,11 @@ import { TagReportComponent } from "./TagReport/TagReport.component";
 import { EmailLogComponent } from "./EmailLog/EmailLog.component";
 import { PrintBarcodeComponent } from './print-barcode/print-barcode.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
+import { FilestatusComponent } from "./Filestatus/Filestatus.component";
 
 
 @NgModule({
-  declarations: [StatusComponent,LogsComponent,MetadataComponent,TagReportComponent,SpaceComponent,EmailLogComponent, PrintBarcodeComponent],
+  declarations: [FilestatusComponent,StatusComponent,LogsComponent,MetadataComponent,TagReportComponent,SpaceComponent,EmailLogComponent, PrintBarcodeComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(reportRoutes),

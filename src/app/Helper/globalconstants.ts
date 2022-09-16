@@ -21,7 +21,7 @@ export class Globalconstants {
 //string = 'http://192.168.0.155/EDMS/api/';
 //string = 'https://annapurana.crownims.com/annapuranaDMS/api/';
 
-// string = 'https://DMSTest.crownims.com/DMSTestDMS/api/';
+ //string = 'https://DMSTest.crownims.com/DMSTestDMS/api/';
 //
 //string = 'http://172.25.1.170/Nayaradms/api/';
 
@@ -40,7 +40,7 @@ export class Globalconstants {
 
 //string = 'https://karvycapital.crownims.com/karycapitalDMS';
 
-string = 'https://IPL.crownims.com/IPLDMS/api/';////////
+//string = 'https://IPL.crownims.com/IPLDMS/api/';////////
 
 //string = 'https://rblegal.crownims.com/rblegalDMS/api/';////////
 //string = 'https://e-storage.crownims.com/rblegalDMS/api/';////////
@@ -71,6 +71,7 @@ string = 'https://IPL.crownims.com/IPLDMS/api/';////////
 //http://172.16.3.43/VisionRxLab/#/Login
 //ikeamumbai.crownims.com
 //https://dvois.crownims.com
-
+//string = 'http://114.79.129.13/DMSAPI/api/';
+string = 'https://orangecounty.crownims.com/orangecountyDMS/api/';
 }
  
